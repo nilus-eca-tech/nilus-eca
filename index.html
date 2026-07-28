@@ -160,7 +160,7 @@
             <!-- زر الحساب الفوري -->
             <div class="text-center mb-10">
                 <button onclick="calculateResults()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-10 py-4 rounded-2xl text-lg shadow-xl shadow-emerald-600/30 transition transform hover:-translate-y-0.5" data-i18n="calcBtn">
-                    احسب التقرير الوطني الشامل 🚀
+                    بدء التحليل الرقمي لأصول المناخ 🚀
                 </button>
             </div>
 
@@ -256,7 +256,7 @@
                 ndviLabel: "مؤشر الغطاء النباتي (NDVI)",
                 soilInputLabel: "معدل تخزين التربة (طن/هكتار)",
                 satNote: "🛰️ بيانات مستمدة من Sentinel-2 وحساسات IoT الميدانية.",
-                calcBtn: "احسب التقرير الوطني الشامل 🚀",
+                calcBtn: "بدء التحليل الرقمي لأصول المناخ 🚀",
                 resHeader: "📊 نتائج التحليل البيئي والتقني المعتمد",
                 r1: "إجمالي الانبعاثات الناتجة:",
                 r2: "الكربون الممتص بواسطة الأشجار والنخيل:",
@@ -303,7 +303,7 @@
                 ndviLabel: "NDVI Index",
                 soilInputLabel: "Soil Sequestration Rate (Ton/Hectare)",
                 satNote: "🛰️ Data derived from Sentinel-2 and field IoT sensors.",
-                calcBtn: "Calculate Comprehensive National Report 🚀",
+                calcBtn: "Start Digital Climate Asset Analysis 🚀",
                 resHeader: "📊 Certified Environmental & Technical Analysis Results",
                 r1: "Total Emissions Generated:",
                 r2: "Carbon Sequestrated by Trees & Palms:",
@@ -350,16 +350,10 @@
             
             const soilRate = parseFloat(document.getElementById('soilInput').value) || 0;
 
-            // حساب الانبعاثات (معادلات تقريبية معتمدة)
             const emissions = (diesel * 2.68 + fert * 1.3 + elec * 0.45) / 1000;
-            
-            // امتصاص الأشجار والنخيل
             const treesAbsorption = (palmCount * 0.05) + (orchardArea * 2.5);
-            
-            // تخزين التربة
             const soilAbsorption = orchardArea * soilRate;
             
-            // صافي الأثر
             const totalAbsorption = treesAbsorption + soilAbsorption;
             const netBalance = totalAbsorption - emissions;
 
