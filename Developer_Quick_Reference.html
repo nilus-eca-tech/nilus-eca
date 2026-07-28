@@ -1,0 +1,360 @@
+================================================================================
+🌾 NILUS ECA - CARBON FOOTPRINT CALCULATOR
+Developer Quick Reference Card
+================================================================================
+
+TO: Backend Development Team
+FROM: Mahmoud Nasr (Founder & CTO)
+DATE: June 2026
+PRIORITY: CRITICAL
+
+================================================================================
+THE MISSION (في دقيقة):
+================================================================================
+
+نبني وحدة حساب البصمة الكربونية بتتبع معايير ISO 14064 و IPCC 2019.
+كل حساب يجب يكون:
+  ✓ محسوب بدقة
+  ✓ موثق بمراجع IPCC
+  ✓ قابل للتدقيق (Audit Trail)
+  ✓ جاهز للاعتماد الدولي (Verra Certification)
+
+================================================================================
+4 MODULES - COPY THESE EXACT FORMULAS:
+================================================================================
+
+1️⃣ DIESEL FUEL (Scope 1 - Direct Emissions)
+────────────────────────────────────────────
+Input: fuel_liters (float)
+Formula: emissions_kg = fuel_liters * 2.68
+Output: kg CO₂e (then divide by 1000 for tonnes)
+Source: IPCC 2019 Table 3.2.1
+
+Example: 1000 L → 2680 kg CO₂e → 2.68 tonnes CO₂e
+
+Database Setup:
+  table: emission_factors
+  field: factor_name = "diesel_combustion"
+  field: factor_value = 2.68
+  field: unit = "kg CO₂e/L"
+  field: source_standard = "IPCC 2019 Table 3.2.1"
+  
+  ⚠️ NEVER HARDCODE 2.68! Make it configurable from admin panel!
+
+────────────────────────────────────────────────────────────────────────────
+
+2️⃣ NITROGEN FERTILIZER (Scope 1 + Scope 3)
+────────────────────────────────────────────
+Input: fertilizer_kg (float), fertilizer_type (string: "Urea", etc.)
+
+Step A: Get nitrogen content
+  nitrogen_fraction = {
+    "Urea": 0.467,
+    "Ammonium_Nitrate": 0.35,
+    "Ammonium_Sulphate": 0.21,
+    "DAP": 0.18,
+    "NPK_15_15_15": 0.15
+  }
+  n_content_kg = fertilizer_kg * nitrogen_fraction
+
+Step B: Calculate emissions
+  ef_direct = 4.16 (kg CO₂e per kg N) [IPCC 2019 Ch11]
+  ef_indirect = 0.30 (kg CO₂e per kg N) [IPCC 2019]
+  
+  emissions_direct_kg = n_content_kg * ef_direct
+  emissions_indirect_kg = n_content_kg * ef_indirect
+  emissions_total_kg = emissions_direct_kg + emissions_indirect_kg
+
+Example: 100 kg Urea
+  Step A: n_content = 100 * 0.467 = 46.7 kg N
+  Step B: 
+    direct = 46.7 * 4.16 = 194.27 kg CO₂e (Scope 1)
+    indirect = 46.7 * 0.30 = 14.01 kg CO₂e (Scope 3)
+    total = 208.28 kg CO₂e = 0.208 tonnes CO₂e
+
+Database Setup:
+  table 1: emission_factors
+    factor_name = "n2o_direct" → 4.16
+    factor_name = "n2o_indirect" → 0.30
+    source_standard = "IPCC 2019 Chapter 11"
+  
+  table 2: fertilizer_composition
+    fertilizer_type = "Urea" → n_percent = 46.7
+    fertilizer_type = "Ammonium_Nitrate" → n_percent = 35
+    [and others...]
+
+  ⚠️ MAKE BOTH CONFIGURABLE IN ADMIN PANEL!
+
+────────────────────────────────────────────────────────────────────────────
+
+3️⃣ ELECTRICITY (Scope 2 - Indirect Emissions)
+────────────────────────────────────────────
+Input: kwh_consumption (float), source_country (string, default: "Egypt")
+Formula: emissions_kg = kwh_consumption * 0.60
+Output: kg CO₂e
+Source: IEA 2024 + Egypt Ministry of Electricity
+
+Example: 13428 kWh/year → 8056.8 kg CO₂e → 8.06 tonnes CO₂e
+
+Database Setup:
+  table: emission_factors
+  field: factor_name = "electricity_egypt"
+  field: factor_value = 0.60
+  field: unit = "kg CO₂e/kWh"
+  field: source_standard = "IEA + Egypt MoE 2024"
+
+Grid Factors (add more countries later):
+  Egypt: 0.60
+  Saudi_Arabia: 0.65
+  UAE: 0.55
+  Sudan: 0.45
+
+────────────────────────────────────────────────────────────────────────────
+
+4️⃣ SOIL CARBON CHANGE (Scope 1 - Land Management)
+────────────────────────────────────────────
+Input: area_hectares (float), practice_type (enum)
+Mapping:
+  "Conventional_Tillage" → +0.3
+  "Conservation_Agriculture" → -0.5
+  "No_Till_With_Cover_Crop" → -1.0
+  "Agroforestry" → -2.0
+
+Formula: emissions_tonnes = area_hectares * factor
+
+Example: 100 ha × (-0.5) = -50 tonnes CO₂e/year
+(Negative = carbon sequestration/removal, which is GOOD!)
+
+Database Setup:
+  table: soil_carbon_practices
+  field: practice_name = "Conservation_Agriculture"
+  field: carbon_factor = -0.5
+  field: ipcc_reference = "IPCC 2019 Chapter 2"
+
+================================================================================
+API ENDPOINTS TO BUILD:
+================================================================================
+
+Endpoint 1: POST /api/v1/carbon/calculate/diesel
+Input:  { farm_id: int, fuel_liters: float, fuel_type: string }
+Output: { success: bool, data: { emissions_kg_co2e, emissions_tonnes_co2e }, 
+          metadata: { calculation_id, standard, timestamp } }
+
+Endpoint 2: POST /api/v1/carbon/calculate/fertilizer
+Input:  { farm_id: int, fertilizer_kg: float, fertilizer_type: string }
+Output: { success: bool, data: { n_content_kg, emissions_direct, 
+          emissions_indirect, emissions_total_tonnes_co2e, scope_breakdown },
+          metadata: { standard, gwp_n2o: 265 } }
+
+Endpoint 3: POST /api/v1/carbon/calculate/electricity
+Input:  { farm_id: int, kwh_consumption: float, source_country: string }
+Output: { success: bool, data: { emissions_kg_co2e, emissions_tonnes_co2e },
+          metadata: { grid_factor, fuel_mix } }
+
+Endpoint 4: POST /api/v1/carbon/calculate/soil
+Input:  { farm_id: int, area_hectares: float, practice_type: string }
+Output: { success: bool, data: { emissions_tonnes_co2e, is_sequestration },
+          metadata: { standard } }
+
+Endpoint 5: GET /api/v1/carbon/report/farm/{farm_id}?year=2026
+Output: { data: { scope_1_total, scope_2_total, scope_3_total, 
+          net_emissions, is_carbon_negative },
+          verra_eligibility: { credits_per_year, estimated_value } }
+
+================================================================================
+CRITICAL REQUIREMENTS:
+================================================================================
+
+🔴 RULE 1: NO HARDCODED NUMBERS!
+    ❌ WRONG: emissions = fuel * 2.68
+    ✅ CORRECT: emissions = fuel * database.get_factor("diesel")
+    
+    Why? IPCC updates standards. We need to update factors from admin panel
+    without touching code!
+
+────────────────────────────────────────────────────────────────────────────
+
+🔴 RULE 2: EVERY CALCULATION MUST HAVE AUDIT TRAIL
+    Every single calculation must log:
+      ✓ User ID who performed it
+      ✓ Timestamp (ISO 8601, UTC)
+      ✓ Emission factor used (and its version)
+      ✓ IPCC/standard reference
+      ✓ Verification status (pending/approved)
+    
+    This makes us audit-ready for Verra certification!
+
+────────────────────────────────────────────────────────────────────────────
+
+🔴 RULE 3: METADATA WITH EVERY RESPONSE
+    Every API response must include:
+      {
+        "metadata": {
+          "calculation_id": "...",
+          "standard": "IPCC 2019 Tier 1",
+          "standard_chapter": "Table 3.2.1 or Ch11 or etc.",
+          "timestamp": "2026-06-15T10:30:00Z",
+          "verified": false
+        }
+      }
+    
+    This is for auditors to trace calculations back to standards!
+
+────────────────────────────────────────────────────────────────────────────
+
+🔴 RULE 4: SCOPE CLASSIFICATION MUST BE EXPLICIT
+    Scope 1 (Direct): Diesel + N₂O from fertilizer + Soil carbon
+    Scope 2 (Indirect): Electricity purchased
+    Scope 3 (Supply chain): Fertilizer production emissions
+    
+    Every calculation output MUST include scope!
+
+────────────────────────────────────────────────────────────────────────────
+
+🔴 RULE 5: MAKE IT MULTI-UNIT READY
+    Support both:
+      • Kilograms AND tonnes
+      • Liters AND gallons
+      • Hectares AND feddans (ال feddan = 0.42 hectares)
+      • kWh AND MWh
+    
+    Conversion happens at API layer, storage in standard units.
+
+================================================================================
+DATABASE STRUCTURE (MINIMAL):
+================================================================================
+
+Table 1: emission_factors
+  id (INT, PK)
+  factor_name (VARCHAR) - unique per region
+  factor_value (DECIMAL)
+  unit (VARCHAR)
+  category (VARCHAR) - "Fuel", "Fertilizer", "Energy"
+  scope (VARCHAR) - "Scope 1", "Scope 2", "Scope 3"
+  applicable_region (VARCHAR) - "Egypt", "MENA", "Global"
+  source_standard (VARCHAR) - "IPCC 2019 Table 3.2.1"
+  last_updated (TIMESTAMP)
+  effective_from (DATE)
+  effective_to (DATE) - NULL = ongoing
+  created_by (INT) - admin user ID
+  updated_by (INT) - admin user ID
+
+Table 2: fertilizer_composition
+  id (INT, PK)
+  fertilizer_type (VARCHAR) - unique
+  n_percent (DECIMAL)
+  p_percent (DECIMAL)
+  k_percent (DECIMAL)
+  source (VARCHAR)
+
+Table 3: soil_carbon_practices
+  id (INT, PK)
+  practice_name (VARCHAR) - unique
+  carbon_factor (DECIMAL) - can be negative!
+  description (TEXT)
+  ipcc_reference (VARCHAR)
+
+Table 4: emission_calculations (AUDIT LOG!)
+  id (INT, PK)
+  farm_id (INT, FK)
+  calculation_date (DATE)
+  calculation_type (VARCHAR) - "diesel", "fertilizer", "electricity", "soil"
+  input_value (DECIMAL)
+  input_unit (VARCHAR)
+  emission_factor_id (INT, FK)
+  emission_factor_value (DECIMAL) - snapshot!
+  output_value (DECIMAL)
+  output_unit (VARCHAR) - "kg CO₂e" or "tonnes CO₂e"
+  scope (VARCHAR)
+  standard_reference (VARCHAR)
+  created_by (INT) - user ID
+  verified_by (INT) - admin ID (NULL if not verified)
+  verification_date (TIMESTAMP)
+  metadata (JSON) - additional context
+  created_at (TIMESTAMP)
+
+================================================================================
+TESTING CHECKLIST:
+================================================================================
+
+Before you say "DONE", these MUST pass:
+
+UNIT TESTS:
+  ✓ 1000 L diesel → 2.68 tonnes CO₂e
+  ✓ 100 kg urea → 0.208 tonnes CO₂e (0.194 Scope 1 + 0.014 Scope 3)
+  ✓ 13428 kWh → 8.06 tonnes CO₂e (Scope 2)
+  ✓ 100 ha conservation → -50 tonnes CO₂e (sequestration)
+  ✓ 100 ha conventional → +30 tonnes CO₂e (emission)
+
+INTEGRATION TESTS:
+  ✓ Can change emission factor from admin panel
+  ✓ API uses new factor immediately
+  ✓ Old calculation still shows original factor
+  ✓ Audit log shows who changed what
+
+EDGE CASES:
+  ✓ Zero input → error "must be > 0"
+  ✓ Negative input → error
+  ✓ Very large number (999999) → calculates correctly
+  ✓ Invalid fertilizer type → error with list of valid types
+  ✓ Missing required field → error with field name
+
+PERFORMANCE:
+  ✓ Single calculation < 100ms
+  ✓ Farm report with 365 entries < 500ms
+  ✓ Can handle 1000 requests/minute
+
+================================================================================
+TIMELINE:
+================================================================================
+
+Week 1:    Database setup + Admin panel for factors
+Week 2-3:  API endpoints (all 4 modules + reporting)
+Week 3:    Testing + Quality assurance
+Week 4:    Deployment + Verra compliance check
+
+Deadline: 30 days from start
+Status: BLOCKING - No other features until this is done
+
+================================================================================
+IF YOU GET STUCK:
+================================================================================
+
+Question about formulas?
+  → Check: /mnt/user-data/outputs/Farm_Carbon_Footprint_Calculator_ISO14064.docx
+
+Question about API structure?
+  → Check: /mnt/user-data/outputs/NILUS_Technical_Assignment_Letter.docx
+
+Question about QA/testing?
+  → Check: /mnt/user-data/outputs/QA_Checklist_and_Development_Guidelines.md
+
+Question about admin panel?
+  → Email me: mahmoudnasr144@gmail.com
+
+Urgent issue?
+  → Slack/WhatsApp: 01006269629
+
+================================================================================
+FINAL WORDS:
+================================================================================
+
+This module is the HEART of Nilus ECA.
+
+Everything depends on it being:
+  ✓ Correct (mathematically accurate)
+  ✓ Auditable (every calculation traced to IPCC)
+  ✓ Scalable (ready for 600,000 farms)
+  ✓ Compliant (ISO 14064 + Verra certified)
+
+You have 30 days. Questions?
+
+Let's build something great! 🚀
+
+────────────────────────────────────────────────────────────────────────────
+Mahmoud Nasr
+Founder & CTO, Nilus ECA
+📧 mahmoudnasr144@gmail.com
+📱 01006269629
+📍 Minya, Egypt
+────────────────────────────────────────────────────────────────────────────

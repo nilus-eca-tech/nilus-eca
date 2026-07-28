@@ -1,0 +1,504 @@
+# 🎯 QUALITY ASSURANCE CHECKLIST & DEVELOPMENT GUIDELINES
+## Nilus ECA - Carbon Footprint Calculator Module
+
+**Project:** Nilus ECA Platform  
+**Module:** Farm Carbon Footprint Calculator  
+**Prepared By:** Mahmoud Nasr (Founder & CTO)  
+**Date:** June 2026  
+**Status:** Ready for Development (Phase 1)
+
+---
+
+## 📋 PHASE 1: CORE IMPLEMENTATION (Weeks 1-4)
+
+### Sprint 1-2: Database & Configuration (Week 1-2)
+
+#### Task 1.1: Create Emission Factors Table
+- [ ] Implement `emission_factors` table in PostgreSQL
+- [ ] Add admin interface to modify factors without code changes
+- [ ] Insert default IPCC 2019 values:
+  - Diesel: 2.68 kg CO₂e/L
+  - N₂O Direct: 4.16 kg CO₂e/kg N
+  - N₂O Indirect: 0.30 kg CO₂e/kg N
+  - Electricity (Egypt): 0.60 kg CO₂e/kWh
+- [ ] Add versioning (effective_from, effective_to dates)
+- [ ] Create audit log for factor changes
+
+**QA Criteria:**
+```
+✓ Can retrieve factors from database (no hardcoding)
+✓ Admin panel allows factor updates
+✓ Historical versioning works correctly
+✓ API returns factor source and last_updated
+✓ Timezone handling is correct (UTC)
+✓ Data validation prevents negative values
+```
+
+#### Task 1.2: Create Fertilizer Composition Table
+- [ ] Implement `fertilizer_composition` table
+- [ ] Insert standard compositions:
+  - Urea: 46.7% N
+  - Ammonium Nitrate: 35% N
+  - Ammonium Sulphate: 21% N
+  - DAP: 18% N, 46% P
+  - NPK 15-15-15: 15% N, 15% P, 15% K
+- [ ] Make configurable from admin panel
+
+**QA Criteria:**
+```
+✓ Nitrogen percentages match IPCC standards
+✓ Can add new fertilizer types via admin
+✓ API returns composition with request
+✓ Validation prevents N% > 100%
+✓ Custom fertilizers can be added (user_input)
+```
+
+#### Task 1.3: Create Soil Carbon Practices Table
+- [ ] Implement `soil_carbon_practices` table
+- [ ] Insert default practice factors:
+  - Conventional Tillage: +0.3 tCO₂e/ha/yr
+  - Conservation Agriculture: -0.5 tCO₂e/ha/yr
+  - No-Till + Cover Crop: -1.0 tCO₂e/ha/yr
+  - Agroforestry: -2.0 tCO₂e/ha/yr
+- [ ] Link to crop types (optional for future use)
+
+**QA Criteria:**
+```
+✓ Factors match IPCC 2019 Chapter 2
+✓ Negative values work correctly (sequestration)
+✓ Admin can add new practices
+✓ Descriptions are clear for farmers
+```
+
+---
+
+### Sprint 3-4: API Endpoints (Week 2-3)
+
+#### Task 2.1: Diesel Calculation Endpoint
+- [ ] Implement `POST /api/v1/carbon/calculate/diesel`
+- [ ] Validate input (fuel_liters > 0)
+- [ ] Calculate: `emissions = fuel_liters × emission_factor`
+- [ ] Return JSON with full audit trail
+- [ ] Log calculation to `emission_calculations` table
+- [ ] Include metadata with IPCC reference
+
+**Code Template:**
+```python
+@app.post("/api/v1/carbon/calculate/diesel")
+def calculate_diesel_emissions(request: DieselEmissionRequest):
+    # 1. Validate input
+    if request.fuel_liters <= 0:
+        raise ValueError("fuel_liters must be > 0")
+    
+    # 2. Get emission factor from DB
+    ef = db.get_emission_factor("diesel", request.fuel_type)
+    
+    # 3. Calculate
+    emissions_kg = request.fuel_liters * ef.value
+    emissions_tonnes = emissions_kg / 1000
+    
+    # 4. Log to database
+    calculation = EmissionCalculation(
+        farm_id=request.farm_id,
+        calculation_type="diesel",
+        input_value=request.fuel_liters,
+        emission_factor_value=ef.value,
+        output_value=emissions_kg,
+        scope="Scope 1",
+        standard_reference=ef.source_standard
+    )
+    db.save(calculation)
+    
+    # 5. Return response with metadata
+    return {
+        "success": True,
+        "data": {
+            "emissions_kg_co2e": emissions_kg,
+            "emissions_tonnes_co2e": emissions_tonnes,
+            "scope": "Scope 1 - Direct"
+        },
+        "metadata": {
+            "calculation_id": calculation.id,
+            "standard": "IPCC 2019 Tier 1",
+            "emission_factor_source": ef.source_standard,
+            "timestamp": datetime.now().isoformat()
+        }
+    }
+```
+
+**QA Test Cases:**
+```
+✓ Input: 1000 liters → Output: 2.68 tonnes CO₂e
+✓ Input: 12000 liters (annual) → Output: 32.16 tonnes CO₂e
+✓ Input: 0 liters → Error: "must be > 0"
+✓ Input: -100 liters → Error: validation failed
+✓ Metadata includes IPCC reference
+✓ Calculation logged with user_id
+✓ Timestamp recorded in UTC
+✓ Can retrieve historical calculation
+```
+
+#### Task 2.2: Fertilizer Calculation Endpoint
+- [ ] Implement `POST /api/v1/carbon/calculate/fertilizer`
+- [ ] Get nitrogen fraction for fertilizer type
+- [ ] Calculate: `N_content = fertilizer_kg × N_fraction`
+- [ ] Calculate direct: `E_direct = N_content × 4.16`
+- [ ] Calculate indirect: `E_indirect = N_content × 0.30`
+- [ ] Total: `E_total = E_direct + E_indirect`
+- [ ] Return scope-wise breakdown
+
+**Code Template:**
+```python
+@app.post("/api/v1/carbon/calculate/fertilizer")
+def calculate_fertilizer_emissions(request: FertilizerEmissionRequest):
+    # 1. Validate
+    if request.fertilizer_kg <= 0:
+        raise ValueError("fertilizer_kg must be > 0")
+    
+    # 2. Get N content
+    fert_comp = db.get_fertilizer_composition(request.fertilizer_type)
+    n_content = request.fertilizer_kg * (fert_comp.n_percent / 100)
+    
+    # 3. Get emission factors
+    ef_direct = db.get_emission_factor("n2o_direct")  # 4.16
+    ef_indirect = db.get_emission_factor("n2o_indirect")  # 0.30
+    
+    # 4. Calculate
+    e_direct = n_content * ef_direct.value
+    e_indirect = n_content * ef_indirect.value
+    e_total = e_direct + e_indirect
+    e_total_tonnes = e_total / 1000
+    
+    # 5. Log both calculations
+    for scope, emission_value in [("Scope 1", e_direct), ("Scope 3", e_indirect)]:
+        calculation = EmissionCalculation(
+            farm_id=request.farm_id,
+            calculation_type="fertilizer",
+            scope=scope,
+            input_value=request.fertilizer_kg,
+            output_value=emission_value
+        )
+        db.save(calculation)
+    
+    # 6. Return response
+    return {
+        "success": True,
+        "data": {
+            "fertilizer_kg": request.fertilizer_kg,
+            "n_content_kg": n_content,
+            "emissions_direct_kg_co2e": e_direct,
+            "emissions_indirect_kg_co2e": e_indirect,
+            "emissions_total_tonnes_co2e": e_total_tonnes,
+            "scope_breakdown": {
+                "Scope 1": e_direct / 1000,
+                "Scope 3": e_indirect / 1000
+            }
+        },
+        "metadata": {
+            "standard": "IPCC 2019 Chapter 11",
+            "gwp_n2o": 265
+        }
+    }
+```
+
+**QA Test Cases:**
+```
+✓ Input: 100 kg Urea → N_content: 46.7 kg N
+✓ Direct: 46.7 × 4.16 = 194.27 kg CO₂e
+✓ Indirect: 46.7 × 0.30 = 14.01 kg CO₂e
+✓ Total: 0.208 tonnes CO₂e
+✓ Scope breakdown is correct (194.27 + 14.01 = 208.28)
+✓ Different fertilizer types calculate correctly
+✓ Custom fertilizer with user-input N% works
+✓ Metadata includes GWP value (265)
+✓ Both Scope 1 and Scope 3 are logged
+```
+
+#### Task 2.3: Electricity Calculation Endpoint
+- [ ] Implement `POST /api/v1/carbon/calculate/electricity`
+- [ ] Get grid emission factor by country
+- [ ] Calculate: `emissions = kwh × emission_factor`
+- [ ] Return Scope 2 classification
+
+**QA Test Cases:**
+```
+✓ Input: 13428 kWh → Output: 8.06 tonnes CO₂e
+✓ Grid factor: 0.60 kg CO₂e/kWh
+✓ Different countries have different factors
+✓ Metadata includes grid composition (fuel mix)
+✓ Regional variations (Egypt - Nile Hydro) work
+```
+
+#### Task 2.4: Soil Carbon Endpoint
+- [ ] Implement `POST /api/v1/carbon/calculate/soil`
+- [ ] Get practice factor (can be negative)
+- [ ] Calculate: `emissions = area_hectares × practice_factor`
+- [ ] Clearly indicate if sequestration (negative)
+
+**QA Test Cases:**
+```
+✓ Input: 100 ha, Conservation → Output: -50 tonnes CO₂e
+✓ Negative values display as "sequestration"
+✓ Conventional shows +0.3 correctly
+✓ No-Till shows -1.0 correctly
+✓ Interpretation message is clear
+```
+
+---
+
+## 🔍 PHASE 2: VALIDATION & INTEGRATION (Weeks 3-4)
+
+### Task 3.1: Aggregate Farm Report Endpoint
+- [ ] Implement `GET /api/v1/carbon/report/farm/{farm_id}`
+- [ ] Sum all calculations for year
+- [ ] Group by Scope (1, 2, 3)
+- [ ] Calculate net emissions
+- [ ] Detect if carbon-negative
+- [ ] Estimate Verra credits
+
+**QA Test Cases:**
+```
+✓ All modules calculate correctly
+✓ Scope totals are accurate
+✓ Net emissions = Scope1 + Scope2 + Scope3
+✓ Carbon-negative flag is correct
+✓ Verra credits estimated (net / 1000 × factor)
+✓ Report groups by category
+✓ Timestamp and verification status included
+```
+
+### Task 3.2: Comprehensive Logging & Audit Trail
+- [ ] Every calculation logs:
+  - [ ] User ID who performed it
+  - [ ] Timestamp (UTC)
+  - [ ] Emission factor version used
+  - [ ] IPCC/standard reference
+  - [ ] Verification status (pending/approved/rejected)
+  - [ ] Admin notes
+- [ ] Create audit report endpoint
+
+**QA Test Cases:**
+```
+✓ All calculations have user_id
+✓ All have timestamp in ISO 8601 format
+✓ Factor source is logged (immutable)
+✓ Can query calculation history by farm
+✓ Can export audit trail as CSV/PDF
+✓ Deleted calculations remain in archive
+```
+
+### Task 3.3: Data Validation & Error Handling
+- [ ] Validate all numeric inputs (no negatives for quantities)
+- [ ] Validate enum values (fuel_type, practice_type, etc.)
+- [ ] Provide clear error messages
+- [ ] Log validation failures
+- [ ] Return HTTP 400 for client errors, 500 for server errors
+
+**QA Test Cases:**
+```
+✓ Invalid fuel_type returns 400 with message
+✓ Missing required fields return 400
+✓ Division by zero prevented
+✓ Database connection errors return 500
+✓ Error messages are user-friendly (Arabic + English)
+✓ Invalid dates handled correctly
+```
+
+---
+
+## 📊 UNIT TEST REQUIREMENTS
+
+### Test File: `test_diesel_module.py`
+```python
+def test_diesel_emissions_1000_liters():
+    result = calculate_diesel_emissions(fuel_liters=1000)
+    assert result['emissions_tonnes_co2e'] == 2.68
+
+def test_diesel_emissions_12000_liters_annual():
+    result = calculate_diesel_emissions(fuel_liters=12000)
+    assert result['emissions_tonnes_co2e'] == 32.16
+
+def test_diesel_invalid_input_negative():
+    with pytest.raises(ValueError):
+        calculate_diesel_emissions(fuel_liters=-100)
+
+def test_diesel_metadata_includes_ipcc_reference():
+    result = calculate_diesel_emissions(fuel_liters=1000)
+    assert result['metadata']['standard'] == 'IPCC 2019 Tier 1'
+    assert 'IPCC' in result['metadata']['audit_reference']
+```
+
+### Test File: `test_fertilizer_module.py`
+```python
+def test_fertilizer_urea_100kg():
+    result = calculate_fertilizer_emissions(
+        fertilizer_kg=100,
+        fertilizer_type="Urea"
+    )
+    assert result['n_content_kg'] == 46.7
+    assert abs(result['emissions_total_tonnes_co2e'] - 0.208) < 0.001
+
+def test_fertilizer_scope_breakdown():
+    result = calculate_fertilizer_emissions(fertilizer_kg=100, type="Urea")
+    assert result['scope_breakdown']['Scope 1'] > result['scope_breakdown']['Scope 3']
+
+def test_fertilizer_custom_nitrogen_fraction():
+    result = calculate_fertilizer_emissions(
+        fertilizer_kg=100,
+        fertilizer_type="Custom",
+        n_percent=50.0
+    )
+    assert result['n_content_kg'] == 50.0
+```
+
+### Test File: `test_electricity_module.py`
+```python
+def test_electricity_egypt_grid():
+    result = calculate_electricity_emissions(
+        kwh_consumption=13428,
+        source_country="Egypt"
+    )
+    assert abs(result['emissions_tonnes_co2e'] - 8.06) < 0.01
+    assert result['scope'] == 'Scope 2 - Indirect'
+
+def test_electricity_different_grid():
+    result_egypt = calculate_electricity_emissions(13428, "Egypt")
+    result_saudi = calculate_electricity_emissions(13428, "Saudi_Arabia")
+    assert result_egypt['emissions_tonnes_co2e'] != result_saudi['emissions_tonnes_co2e']
+```
+
+### Test File: `test_soil_module.py`
+```python
+def test_soil_conservation_100ha():
+    result = calculate_soil_carbon(area_hectares=100, practice="Conservation_Agriculture")
+    assert result['emissions_tonnes_co2e'] == -50.0
+    assert result['is_sequestration'] == True
+
+def test_soil_conventional_100ha():
+    result = calculate_soil_carbon(area_hectares=100, practice="Conventional_Tillage")
+    assert result['emissions_tonnes_co2e'] == 30.0
+    assert result['is_sequestration'] == False
+```
+
+---
+
+## ✅ ACCEPTANCE CRITERIA (Final Delivery Checklist)
+
+### Code Quality
+- [ ] All code follows PEP 8 style guide (Python)
+- [ ] TypeScript strict mode enabled
+- [ ] JSDoc comments on all functions
+- [ ] No hardcoded values (all configurable)
+- [ ] 80%+ test coverage
+- [ ] No linting errors
+
+### Documentation
+- [ ] README with setup instructions
+- [ ] API documentation (Swagger/OpenAPI)
+- [ ] Database schema diagram
+- [ ] Example request/response for each endpoint
+- [ ] IPCC references documented
+- [ ] Emissions factor update procedure documented
+
+### Security
+- [ ] Input validation on all endpoints
+- [ ] SQL injection prevention (parameterized queries)
+- [ ] API authentication implemented
+- [ ] Audit logs cannot be tampered with
+- [ ] Sensitive data (API keys) not in code
+
+### Performance
+- [ ] Response time < 200ms for single calculation
+- [ ] Can handle 1000 requests/minute
+- [ ] Database queries optimized (indices created)
+- [ ] No memory leaks in calculations
+- [ ] Logging doesn't degrade performance
+
+### Compliance
+- [ ] IPCC 2019 standards followed
+- [ ] Verra VM0042 compatible
+- [ ] ISO 14064-2 alignment verified
+- [ ] Scope classifications correct
+- [ ] GWP values correct (CH₄=28, N₂O=265)
+
+### Deliverables
+- [ ] Source code in Git with clear commit history
+- [ ] Deployment scripts ready
+- [ ] Docker container prepared
+- [ ] Database migration scripts
+- [ ] Admin panel for factor management
+- [ ] User manual (Arabic + English)
+
+---
+
+## 🚀 DEPLOYMENT CHECKLIST
+
+### Pre-Deployment
+- [ ] Code review completed
+- [ ] All tests passing (100%)
+- [ ] Load testing done (1000 req/min)
+- [ ] Security audit passed
+- [ ] Database backups configured
+- [ ] Monitoring alerts setup
+
+### Deployment
+- [ ] Development environment deployed
+- [ ] Staging environment matches production
+- [ ] Database migrations applied
+- [ ] Emission factors initialized
+- [ ] Admin accounts created
+- [ ] API documentation published
+
+### Post-Deployment
+- [ ] Monitor error logs for 24 hours
+- [ ] Verify all endpoints functional
+- [ ] Test user workflows (create calc, view report)
+- [ ] Confirm audit logs working
+- [ ] Admin panel accessible
+- [ ] Performance metrics baseline established
+
+---
+
+## 📞 SUPPORT & ESCALATION
+
+### Weekly Sync Meetings
+- **Day:** Every Monday 10:00 AM (Cairo time)
+- **Duration:** 30 minutes
+- **Topics:** Progress, blockers, clarifications
+- **Attendees:** Dev team + Mahmoud (CTO)
+
+### Questions & Clarifications
+- Use GitHub Issues for technical questions
+- Tag with `[question]` if unclear about specs
+- I will respond within 24 hours
+
+### Emergency Support
+- Critical bugs: Direct Slack message
+- Code review blockers: Email + Slack
+- Integration issues: Request pair programming session
+
+---
+
+## 📚 ADDITIONAL RESOURCES
+
+### IPCC References
+- IPCC 2019 Refinement Guidelines: https://www.ipcc.ch/report/2019-refinement-to-the-2006-ipcc-guidelines/
+- Chapter 3 (Energy): Fuel combustion emission factors
+- Chapter 11 (Agriculture): N₂O emission factors
+- Chapter 2 (LULUCF): Soil carbon changes
+
+### Verra Standards
+- VCS Methodology VM0042 (Afforestation & Reforestation)
+- VM0015 (Grassland/Shrubland Conservation)
+
+### Tools
+- Postman collection: Will be provided
+- Database backup scripts: In /scripts folder
+- Admin panel source: React/TypeScript
+
+---
+
+**Document Prepared By:** Mahmoud Nasr, Founder & CTO  
+**Date:** June 2026  
+**Version:** 1.0 Final  
+**Status:** Ready for Development ✅
