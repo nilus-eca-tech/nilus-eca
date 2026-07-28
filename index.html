@@ -391,17 +391,38 @@
         }
 
         // دالة الحساب المتكاملة (الانبعاثات + الأشجار والنخيل + التربة والأقمار الصناعية)
-        function calculateIntegratedCarbon() {
-            const diesel = parseFloat(document.getElementById('dieselInput').value) || 0;
-            const fert = parseFloat(document.getElementById('fertInput').value) || 0;
-            const elec = parseFloat(document.getElementById('elecInput').value) || 0;
-            
-            const palmCount = parseFloat(document.getElementById('palmCountInput').value) || 0;
-            const orchardArea = parseFloat(document.getElementById('orchardAreaInput').value) || 0;
-            
-            const area = parseFloat(document.getElementById('areaInput').value) || 0;
-            const practiceFactor = parseFloat(document.getElementById('practiceSelect').value) || 0;
-            const ndviVal = parseFloat(document.getElementById('ndviSelect').value) || 0.5;
+        async function calculateIntegratedCarbon() {
+    const area = parseFloat(document.getElementById('areaInput').value) || 0;
+    const diesel = parseFloat(document.getElementById('dieselInput').value) || 0;
+    const fert = parseFloat(document.getElementById('fertInput').value) || 0;
+    const elec = parseFloat(document.getElementById('elecInput').value) || 0;
+    const palmCount = parseFloat(document.getElementById('palmCountInput').value) || 0;
+    const orchardArea = parseFloat(document.getElementById('orchardAreaInput').value) || 0;
+    const practiceFactor = parseFloat(document.getElementById('practiceSelect').value) || 0;
+    const ndviVal = parseFloat(document.getElementById('ndviSelect').value) || 0.5;
+
+    try {
+        // إرسال البيانات إلى سيرفر بايثون المحلي الذي قمت بتشغيله
+        const response = await fetch('http://127.0.0.1:5000/calculate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ area, diesel, fert, elec, palmCount, orchardArea, practiceFactor, ndviVal })
+        });
+
+        const data = await response.json();
+
+        // عرض النتائج القادمة من بايثون في لوحة النتائج بالموقع
+        document.getElementById('resultsBox').classList.remove('hidden');
+        document.getElementById('resTotalEmissions').innerText = data.total_emissions.toFixed(2);
+        document.getElementById('resTreeSeq').innerText = data.total_tree_seq.toFixed(2);
+        document.getElementById('resSoilSeq').innerText = data.total_soil_seq.toFixed(2);
+        document.getElementById('resNetCarbon').innerText = data.net_carbon.toFixed(2);
+
+    } catch (error) {
+        alert('تأكد من تشغيل سيرفر بايثون (app.py) في شاشة الأوامر.');
+        console.error(error);
+    }
+} const ndviVal = parseFloat(document.getElementById('ndviSelect').value) || 0.5;
 
             // 1. حساب الانبعاثات (طن CO2e)
             const dieselEmissions = (diesel * 2.68) / 1000;
