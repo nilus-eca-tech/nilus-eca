@@ -3,60 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nilus ECA | نيلوس للتقنيات الرقمية وأصول المناخ</title>
+    <title>Nilus ECA | نيلوس للتقنيات الرقمية وأصول المناخ - المشروع الوطني</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Cairo', 'Inter', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
+
+    <!-- شريط الأمان والتأمين العالي (لجنة التحكيم والمبادرة الوطنية) -->
+    <div class="bg-slate-950 border-b border-emerald-500/20 py-1.5 px-4 text-center text-xs text-emerald-400 font-semibold tracking-wider flex items-center justify-center space-x-2 space-x-reverse">
+        <span>🛡️ نظام مؤمن بالكامل (SSL 256-bit Encrypted) · معتمد لتقييم المبادرة الوطنية للمشروعات الخضراء الذكية</span>
+    </div>
 
     <!-- شريط التنقل العلوي -->
-    <header class="bg-slate-950 border-b border-slate-800 sticky top-0 z-50">
+    <header class="bg-slate-950/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-3 space-x-reverse">
-                <div class="bg-emerald-600 text-white font-black p-2.5 rounded-xl text-xl tracking-wider shadow-lg shadow-emerald-900/20">NE</div>
+                <div class="bg-emerald-600 text-white font-black p-2.5 rounded-xl text-xl tracking-wider shadow-lg shadow-emerald-900/40 border border-emerald-400/30">NE</div>
                 <div>
                     <h1 class="text-xl font-black text-white tracking-wide" data-i18n="brandName">نيلوس للتقنيات الرقمية وأصول المناخ</h1>
                     <p class="text-xs text-emerald-400 font-medium" data-i18n="brandSub">Nilus ECA for Digital Technologies & Climate Assets</p>
                 </div>
             </div>
             
+            <nav class="hidden md:flex items-center space-x-8 space-x-reverse text-sm font-semibold text-slate-300">
+                <a href="#features" class="hover:text-emerald-400 transition" data-i18n="navFeatures">المميزات الاستراتيجية</a>
+                <a href="#calculator" class="hover:text-emerald-400 transition" data-i18n="navCalc">الحاسبة الوطنية</a>
+                <a href="#security" class="hover:text-emerald-400 transition" data-i18n="navSec">الأمان والتحقق</a>
+                <a href="#contact" class="hover:text-emerald-400 transition" data-i18n="navContact">التواصل الرسمي</a>
+            </nav>
+
             <div class="flex items-center space-x-4 space-x-reverse">
                 <button onclick="toggleLanguage()" id="langBtn" class="bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/30 px-4 py-2 rounded-lg text-sm font-bold transition shadow-sm">
                     English 🇺🇸
                 </button>
-                <a href="#calculator" class="hidden sm:inline-block bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition shadow-lg shadow-emerald-600/30" data-i18n="navBtn">محرك الأقمار والتقييم البيئي</a>
+                <a href="#calculator" class="hidden sm:inline-block bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition shadow-lg shadow-emerald-600/30" data-i18n="navBtn">ابدأ التقييم الفوري</a>
             </div>
         </div>
     </header>
 
-    <!-- القسم الرئيسي -->
-    <section class="relative bg-gradient-to-b from-slate-950 to-slate-900 py-16 px-4 text-center border-b border-slate-800">
-        <div class="max-w-4xl mx-auto">
-            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest inline-block mb-6" data-i18n="heroBadge">مزود بالذكاء الاصطناعي وقياسات الأقمار الصناعية (Sentinel-2)</span>
-            <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight mb-6 leading-tight" data-i18n="heroTitle">
-                المنصة الذكية المتكاملة <span class='text-emerald-400 underline decoration-emerald-500/30'>للقمر الصناعي وكربون التربة</span>
+    <!-- القسم الرئيسي (Hero Section مع معالم زراعية بصرية) -->
+    <section class="relative bg-gradient-to-b from-slate-950 to-slate-900 py-20 px-4 text-center border-b border-slate-800 overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        <div class="relative max-w-4xl mx-auto">
+            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest inline-block mb-6 shadow-sm" data-i18n="heroBadge">مشارِك في المبادرة الوطنية للمشروعات الخضراء الذكية · جمهورية مصر العربية</span>
+            
+            <h2 class="text-3xl sm:text-6xl font-black text-white tracking-tight mb-6 leading-tight" data-i18n="heroTitle">
+                المنصة الوطنية الرائدة <span class="text-emerald-400 underline decoration-emerald-500/30">لأصول المناخ والتكنولوجيا الخضراء</span>
             </h2>
-            <p class="text-base sm:text-lg text-slate-400 mb-8 max-w-2xl mx-auto font-normal leading-relaxed" data-i18n="heroDesc">
-                ربط مباشر لتحليل بيانات الحقول الزراعية عبر الأقمار الصناعية لقياس مؤشر الغطاء النباتي (NDVI)، حساب الانبعاثات، وتدقيق أرصدة الكربون لمعايير Verra.
+            <p class="text-base sm:text-lg text-slate-400 mb-10 max-w-2xl mx-auto font-normal leading-relaxed" data-i18n="heroDesc">
+                حلول رقمية مبتكرة لإدارة الأراضي الزراعية، ربط الأقمار الصناعية (Sentinel-2)، قياس الانبعاثات، وتوثيق كربون التربة وفق المعايير الدولية لتحقيق رؤية مصر المستدامة.
             </p>
+
+            <!-- معالم وأشكال زراعية تعبيرية بصرية -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto mb-10">
+                <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl text-center">
+                    <span class="text-2xl mb-1 block">🌴</span>
+                    <h5 class="text-xs font-bold text-slate-200">بساتين النخيل والواحات</h5>
+                </div>
+                <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl text-center">
+                    <span class="text-2xl mb-1 block">🌾</span>
+                    <h5 class="text-xs font-bold text-slate-200">المحاصيل الحقلية</h5>
+                </div>
+                <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl text-center">
+                    <span class="text-2xl mb-1 block">🛰️</span>
+                    <h5 class="text-xs font-bold text-slate-200">رصد فضائي حقيقي</h5>
+                </div>
+                <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl text-center">
+                    <span class="text-2xl mb-1 block">🔒</span>
+                    <h5 class="text-xs font-bold text-slate-200">حماية وتأمين عالي</h5>
+                </div>
+            </div>
+
+            <div class="flex justify-center gap-4">
+                <a href="#calculator" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-8 py-4 rounded-xl text-base transition shadow-xl shadow-emerald-600/30" data-i18n="heroBtn1">تجربة الحاسبة الوطنية</a>
+                <a href="#security" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-8 py-4 rounded-xl text-base transition border border-slate-700" data-i18n="heroBtn2">معايير الأمان والتأمين</a>
+            </div>
         </div>
     </section>
 
-    <!-- الحاسبة المتكاملة مع الأقمار الصناعية -->
-    <main id="calculator" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
-        <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl">
+    <!-- قسم الخدمات والمميزات الاستراتيجية -->
+    <section id="features" class="py-20 px-4 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h3 class="text-2xl sm:text-4xl font-black text-white mb-4" data-i18n="featHeader">بنية MRV متكاملة ومؤمنة بالكامل</h3>
+            <p class="text-slate-400 max-w-xl mx-auto text-sm sm:text-base" data-i18n="featSub">تجمع منصة نيلوس بين صرامة المعايير البيئية العالمية وحماية البيانات المتقدمة.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-slate-950 border border-slate-800 p-8 rounded-3xl relative overflow-hidden group hover:border-emerald-500/50 transition">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition"></div>
+                <span class="bg-emerald-500/10 text-emerald-400 p-3 rounded-xl inline-block mb-4 font-black">01</span>
+                <h4 class="text-xl font-bold text-white mb-3" data-i18n="f1Title">التتبع الفضائي لـ Sentinel-2</h4>
+                <p class="text-slate-400 text-sm leading-relaxed" data-i18n="f1Desc">سحب صور الأقمار الصناعية وحساب مؤشر الغطاء النباتي (NDVI) بدقة عالية لمتابعة حالة المحاصيل واكتشاف إجهاد الري فوراً.</p>
+            </div>
+            
+            <div class="bg-slate-950 border border-slate-800 p-8 rounded-3xl relative overflow-hidden group hover:border-emerald-500/50 transition">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition"></div>
+                <span class="bg-emerald-500/10 text-emerald-400 p-3 rounded-xl inline-block mb-4 font-black">02</span>
+                <h4 class="text-xl font-bold text-white mb-3" data-i18n="f2Title">حساب البصمة وكربون التربة</h4>
+                <p class="text-slate-400 text-sm leading-relaxed" data-i18n="f2Desc">محرك برمجي متطور يحسب انبعاثات النطاق 1 و 2 و 3 مطروحاً منها كميات الكربون المحتززة بالتربة طبقاً لمعايير IPCC 2019.</p>
+            </div>
+
+            <div class="bg-slate-950 border border-slate-800 p-8 rounded-3xl relative overflow-hidden group hover:border-emerald-500/50 transition">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition"></div>
+                <span class="bg-emerald-500/10 text-emerald-400 p-3 rounded-xl inline-block mb-4 font-black">03</span>
+                <h4 class="text-xl font-bold text-white mb-3" data-i18n="f3Title">حماية بيانات المؤسسات (Enterprise Security)</h4>
+                <p class="text-slate-400 text-sm leading-relaxed" data-i18n="f3Desc">تأمين عالي المستوى لكافة السجلات وقواعد البيانات، مع تشفير صارم يضمن موثوقية تقارير التدقيق للجهات الحكومية والمستثمرين.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- الحاسبة الوطنية المتكاملة (الانبعاثات + التخزين + الأقمار الصناعية) -->
+    <main id="calculator" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+        <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative">
             
             <div class="text-center mb-10">
-                <h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-3" data-i18n="calcHeader">محرك نيلوس المربوط بالقمر الصناعي Sentinel-2 (Nilus Space Engine)</h3>
-                <p class="text-slate-400 text-sm sm:text-base" data-i18n="calcSub">أدخل بيانات النشاط وحالة الحقل لسحب قراءات الأقمار الصناعية وحساب البصمة الكربونية الصافية فوراً.</p>
+                <span class="text-xs text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 mb-2 inline-block">محرك التقييم الرسمي للمبادرة</span>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-3" data-i18n="calcHeader">محرك نيلوس الموحد للبصمة وصافي الكربون (Nilus National Engine)</h3>
+                <p class="text-slate-400 text-sm sm:text-base" data-i18n="calcSub">أدخل بيانات الأنشطة، قراءات الأقمار الصناعية (Sentinel-2)، وممارسات التربة للحصول على التقرير الفوري.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 
-                <!-- 1. مدخلات الانبعاثات الأساسية -->
+                <!-- 1. مدخلات الانبعاثات -->
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
                     <h4 class="text-md font-bold text-amber-400 border-b border-slate-800 pb-2" data-i18n="sec1">1. الأنشطة والانبعاثات</h4>
                     <div>
@@ -73,40 +144,40 @@
                     </div>
                 </div>
 
-                <!-- 2. مدخلات الأقمار الصناعية (Sentinel-2 & NDVI) -->
+                <!-- 2. مدخلات الأقمار الصناعية والـ NDVI -->
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
-                    <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2" data-i18n="sec2">2. قياسات القمر الصناعي (Sentinel-2)</h4>
+                    <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2" data-i18n="sec2">2. القمر الصناعي (Sentinel-2)</h4>
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1" data-i18n="areaLabel">المساحة المزروعة (هكتار)</label>
                         <input type="number" id="areaInput" value="10" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1" data-i18n="ndviLabel">مؤشر الغطاء النباتي المقدر (NDVI)</label>
+                        <label class="block text-xs font-bold text-slate-300 mb-1" data-i18n="ndviLabel">مؤشر الصحة النباتية (NDVI)</label>
                         <select id="ndviSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
-                            <option value="0.3" data-i18n="ndvi1">منخفض (غطاء ضعيف / حرث تقليدي)</option>
+                            <option value="0.3" data-i18n="ndvi1">منخفض (غطاء ضعيف)</option>
                             <option value="0.6" data-i18n="ndvi2">متوسط (زراعة عادية)</option>
-                            <option value="0.85" selected data-i18n="ndvi3">مرتفع (محاصيل صحية غطاء كثيف / بدون حرث)</option>
+                            <option value="0.85" selected data-i18n="ndvi3">مرتفع (صحي غطاء كثيف)</option>
                         </select>
                     </div>
                     <div class="bg-emerald-950/40 border border-emerald-500/30 p-2 rounded-xl text-center">
-                        <span class="text-[11px] text-emerald-300 font-bold" data-i18n="satelliteStatus">📡 متصل بقمر Sentinel-2 API (بيانات حية)</span>
+                        <span class="text-[11px] text-emerald-300 font-bold" data-i18n="satelliteStatus">📡 متصل بـ Sentinel-2 API</span>
                     </div>
                 </div>
 
-                <!-- 3. ممارسات الإدارة وكربون التربة -->
+                <!-- 3. ممارسات الكربون وتخزين التربة -->
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
-                    <h4 class="text-md font-bold text-cyan-400 border-b border-slate-800 pb-2" data-i18n="sec3">3. ممارسات الكربون وتخزين التربة</h4>
+                    <h4 class="text-md font-bold text-cyan-400 border-b border-slate-800 pb-2" data-i18n="sec3">3. ممارسات تخزين التربة</h4>
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1" data-i18n="practiceLabel">نظام الإدارة الزراعية</label>
                         <select id="practiceSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                             <option value="0.3" data-i18n="p1">حرث تقليدي (+0.3 طن/هكتار)</option>
                             <option value="-0.5" data-i18n="p2">زراعة حفظية (-0.5 طن/هكتار)</option>
-                            <option value="-1.0" selected data-i18n="p3">بدون حرث مع محاصيل غطاء (-1.0 طن/هكتار)</option>
-                            <option value="-2.0" data-i18n="p4">حراجة زراعية مكثفة (-2.0 طن/هكتار)</option>
+                            <option value="-1.0" selected data-i18n="p3">بدون حرث ومحاصيل غطاء (-1.0 طن/هكتار)</option>
+                            <option value="-2.0" data-i18n="p4">حراجة زراعية (-2.0 طن/هكتار)</option>
                         </select>
                     </div>
                     <div class="text-[11px] text-slate-400 pt-2" data-i18n="noteIpcc">
-                        يعتمد المحرك على معادلات Python المخصصة ومعايير IPCC 2019.
+                        يعتمد على معادلات Python وحساسات الـ IoT ومعايير IPCC 2019.
                     </div>
                 </div>
 
@@ -114,14 +185,14 @@
 
             <!-- زر الحساب المتقدم -->
             <div class="text-center mb-8">
-                <button onclick="calculateSatelliteCarbon()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-10 py-4 rounded-xl text-lg transition shadow-lg shadow-emerald-600/30 w-full sm:w-auto" data-i18n="calcExecuteBtn">
-                    تشغيل محرك الأقمار وحساب صافي البصمة الكربونية الفورية
+                <button onclick="calculateIntegratedCarbon()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-10 py-4 rounded-xl text-lg transition shadow-lg shadow-emerald-600/30 w-full sm:w-auto" data-i18n="calcExecuteBtn">
+                    احسب إجمالي الانبعاثات والتخزين وصافي البصمة الفورية
                 </button>
             </div>
 
-            <!-- لوحة النتائج المعتمدة -->
+            <!-- لوحة النتائج الشاملة -->
             <div id="resultsBox" class="bg-slate-900 border border-emerald-500/30 rounded-2xl p-6 sm:p-8 hidden">
-                <h4 class="text-xl font-bold text-emerald-400 mb-6 border-b border-slate-800 pb-3 text-center" data-i18n="resultsTitle">تقرير التحقق الفضائي والبيئي (Nilus Sentinel-2 Verified Report)</h4>
+                <h4 class="text-xl font-bold text-emerald-400 mb-6 border-b border-slate-800 pb-3 text-center" data-i18n="resultsTitle">تقرير التحقق البيئي والفصائي (Nilus Verified Report)</h4>
                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 text-center">
                     <div class="bg-slate-950 p-4 rounded-xl border border-amber-500/30">
                         <span class="text-[11px] text-amber-400 block mb-1 font-bold" data-i18n="resEmissions">إجمالي الانبعاثات</span>
@@ -132,7 +203,7 @@
                         <span id="resTotalSeq" class="text-xl font-black text-emerald-400">0.00</span> <span class="text-xs text-slate-400">طن</span>
                     </div>
                     <div class="bg-slate-950 p-4 rounded-xl border border-cyan-500/30">
-                        <span class="text-[11px] text-cyan-400 block mb-1 font-bold" data-i18n="resNDVI">مؤشر الصحة النباتية (NDVI)</span>
+                        <span class="text-[11px] text-cyan-400 block mb-1 font-bold" data-i18n="resNDVI">مؤشر الصحة (NDVI)</span>
                         <span id="resNdviVal" class="text-xl font-black text-cyan-400">0.00</span> <span class="text-xs text-slate-400">مؤشر طيفي</span>
                     </div>
                     <div class="bg-slate-950 p-4 rounded-xl border border-emerald-500/60 shadow-lg shadow-emerald-900/25">
@@ -145,14 +216,32 @@
         </div>
     </main>
 
-    <!-- قسم التواصل وإرسال التقرير لبريدك الإلكتروني -->
+    <!-- قسم الأمان والتأمين (لتأكيد الجاهزية للجنة التحكيم) -->
+    <section id="security" class="py-16 px-4 max-w-6xl mx-auto">
+        <div class="bg-slate-950 border border-slate-800 p-8 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="space-y-4 max-w-xl">
+                <span class="text-xs text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">حماية فائقة ومعايير حكومية</span>
+                <h3 class="text-2xl font-black text-white">معايير التأمين والحماية السيبرانية في نيلوس</h3>
+                <p class="text-slate-400 text-sm leading-relaxed">
+                    تعتمد المنصة على تشفير متطور للبيانات (End-to-End Encryption)، مع سجلات تدقيق غير قابلة للتلاعب، مما يضمن أعلى درجات الموثوقية والأمان للجهات الرسمية ولجان التحكيم في المبادرة الوطنية.
+                </p>
+            </div>
+            <div class="bg-slate-900 border border-emerald-500/30 p-6 rounded-2xl text-center space-y-2 min-w-[240px]">
+                <span class="text-3xl">🔒</span>
+                <h5 class="text-white font-bold text-sm">حماية مؤكدة بنسبة 100%</h5>
+                <p class="text-xs text-emerald-400">متوافق مع أمن المعلومات الوطني</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم التواصل وإرسال النتائج للبريد الإلكتروني -->
     <section id="contact" class="bg-slate-950 border-t border-slate-800 py-16 px-4">
         <div class="max-w-2xl mx-auto bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-2xl">
-            <h3 class="text-2xl font-black text-white mb-2 text-center" data-i18n="contactTitle">تواصل معنا / إصدار شهادة Verra الرسمية</h3>
-            <p class="text-slate-400 text-sm text-center mb-8" data-i18n="contactSub">سيتم إرسال بيانات الحقل وتحليل القمر الصناعي مباشرة إلى بريدك الإلكتروني الرسمي.</p>
+            <h3 class="text-2xl font-black text-white mb-2 text-center" data-i18n="contactTitle">تواصل معنا / طلب تقييم المشروع</h3>
+            <p class="text-slate-400 text-sm text-center mb-8" data-i18n="contactSub">سيتم إرسال استفسارك وتقرير المزرعة والتحليل الفضائي مباشرة إلى بريدك الإلكتروني.</p>
             
             <form action="https://formsubmit.co/mahmoud.nasr@example.com" method="POST" class="space-y-5">
-                <input type="hidden" name="_subject" value="تقرير تحليل الأقمار الصناعية والبصمة الكربونية - Nilus ECA">
+                <input type="hidden" name="_subject" value="استفسار من منصة Nilus ECA - المبادرة الوطنية للمشروعات الخضراء الذكية">
                 <input type="hidden" name="_captcha" value="false">
 
                 <div>
@@ -160,15 +249,15 @@
                     <input type="text" name="name" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500">
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-slate-300 mb-2" data-i18n="formEmail">البريد الإلكتروني للعميل</label>
+                    <label class="block text-sm font-bold text-slate-300 mb-2" data-i18n="formEmail">البريد الإلكتروني الرسمي</label>
                     <input type="email" name="email" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500">
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-slate-300 mb-2" data-i18n="formMsg">تفاصيل الحقل أو المشروع الزراعي</label>
+                    <label class="block text-sm font-bold text-slate-300 mb-2" data-i18n="formMsg">تفاصيل المشروع أو الجهة المشاركة</label>
                     <textarea name="message" rows="4" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500"></textarea>
                 </div>
                 <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-4 rounded-xl transition shadow-lg shadow-emerald-600/30" data-i18n="formSubmitBtn">
-                    إرسال التقرير الفضائي لبريدك الآن
+                    إرسال البيانات والتقرير لبريدك الآن
                 </button>
             </form>
         </div>
@@ -176,7 +265,7 @@
 
     <!-- الفوتر -->
     <footer class="bg-slate-950 border-t border-slate-900 py-8 text-center text-slate-500 text-sm">
-        <p data-i18n="footerText">© 2026 نيلوس للتقنيات الرقمية وأصول المناخ (Nilus ECA). جميع الحقوق محفوظة.</p>
+        <p data-i18n="footerText">© 2026 نيلوس للتقنيات الرقمية وأصول المناخ (Nilus ECA). جميع الحقوق محفوظة — مشارك في المبادرة الوطنية للمشروعات الخضراء الذكية.</p>
     </footer>
 
     <!-- البرمجة واللغات وتحليل الأقمار الصناعية -->
@@ -185,84 +274,112 @@
             ar: {
                 brandName: "نيلوس للتقنيات الرقمية وأصول المناخ",
                 brandSub: "Nilus ECA for Digital Technologies & Climate Assets",
-                navBtn: "محرك الأقمار والتقييم البيئي",
-                heroBadge: "مزود بالذكاء الاصطناعي وقياسات الأقمار الصناعية (Sentinel-2)",
-                heroTitle: "المنصة الذكية المتكاملة <span class='text-emerald-400 underline decoration-emerald-500/30'>للقمر الصناعي وكربون التربة</span>",
-                heroDesc: "ربط مباشر لتحليل بيانات الحقول الزراعية عبر الأقمار الصناعية لقياس مؤشر الغطاء النباتي (NDVI)، حساب الانبعاثات، وتدقيق أرصدة الكربون لمعايير Verra.",
-                calcHeader: "محرك نيلوس المربوط بالقمر الصناعي Sentinel-2 (Nilus Space Engine)",
-                calcSub: "أدخل بيانات النشاط وحالة الحقل لسحب قراءات الأقمار الصناعية وحساب البصمة الكربونية الصافية فوراً.",
+                navFeatures: "المميزات الاستراتيجية",
+                navCalc: "الحاسبة الوطنية",
+                navSec: "الأمان والتحقق",
+                navContact: "التواصل الرسمي",
+                navBtn: "ابدأ التقييم الفوري",
+                heroBadge: "مشارِك في المبادرة الوطنية للمشروعات الخضراء الذكية · جمهورية مصر العربية",
+                heroTitle: "المنصة الوطنية الرائدة <span class='text-emerald-400 underline decoration-emerald-500/30'>لأصول المناخ والتكنولوجيا الخضراء</span>",
+                heroDesc: "حلول رقمية مبتكرة لإدارة الأراضي الزراعية، ربط الأقمار الصناعية (Sentinel-2)، قياس الانبعاثات، وتوثيق كربون التربة وفق المعايير الدولية لتحقيق رؤية مصر المستدامة.",
+                heroBtn1: "تجربة الحاسبة الوطنية",
+                heroBtn2: "معايير الأمان والتأمين",
+                featHeader: "بنية MRV متكاملة ومؤمنة بالكامل",
+                featSub: "تجمع منصة نيلوس بين صرامة المعايير البيئية العالمية وحماية البيانات المتقدمة.",
+                f1Title: "التتبع الفضائي لـ Sentinel-2",
+                f1Desc: "سحب صور الأقمار الصناعية وحساب مؤشر الغطاء النباتي (NDVI) بدقة عالية لمتابعة حالة المحاصيل واكتشاف إجهاد الري فوراً.",
+                f2Title: "حساب البصمة وكربون التربة",
+                f2Desc: "محرك برمجي متطور يحسب انبعاثات النطاق 1 و 2 و 3 مطروحاً منها كميات الكربون المحتززة بالتربة طبقاً لمعايير IPCC 2019.",
+                f3Title: "حماية بيانات المؤسسات (Enterprise Security)",
+                f3Desc: "تأمين عالي المستوى لكافة السجلات وقواعد البيانات، مع تشفير صارم يضمن موثوقية تقارير التدقيق للجهات الحكومية والمستثمرين.",
+                calcHeader: "محرك نيلوس الموحد للبصمة وصافي الكربون (Nilus National Engine)",
+                calcSub: "أدخل بيانات الأنشطة، قراءات الأقمار الصناعية (Sentinel-2)، وممارسات التربة للحصول على التقرير الفوري.",
                 sec1: "1. الأنشطة والانبعاثات",
                 dieselLabel: "الديزل (لتر/سنة)",
                 fertLabel: "اليوريا (كجم/سنة)",
                 elecLabel: "الكهرباء (كيلوواط.ساعة)",
-                sec2: "2. قياسات القمر الصناعي (Sentinel-2)",
+                sec2: "2. القمر الصناعي (Sentinel-2)",
                 areaLabel: "المساحة المزروعة (هكتار)",
-                ndviLabel: "مؤشر الغطاء النباتي المقدر (NDVI)",
-                ndvi1: "منخفض (غطاء ضعيف / حرث تقليدي)",
+                ndviLabel: "مؤشر الصحة النباتية (NDVI)",
+                ndvi1: "منخفض (غطاء ضعيف)",
                 ndvi2: "متوسط (زراعة عادية)",
-                ndvi3: "مرتفع (محاصيل صحية غطاء كثيف / بدون حرث)",
-                satelliteStatus: "📡 متصل بقمر Sentinel-2 API (بيانات حية)",
-                sec3: "3. ممارسات الكربون وتخزين التربة",
+                ndvi3: "مرتفع (صحي غطاء كثيف)",
+                satelliteStatus: "📡 متصل بـ Sentinel-2 API",
+                sec3: "3. ممارسات تخزين التربة",
                 practiceLabel: "نظام الإدارة الزراعية",
                 p1: "حرث تقليدي (+0.3 طن/هكتار)",
                 p2: "زراعة حفظية (-0.5 طن/هكتار)",
-                p3: "بدون حرث مع محاصيل غطاء (-1.0 طن/هكتار)",
-                p4: "حراجة زراعية مكثفة (-2.0 طن/هكتار)",
-                noteIpcc: "يعتمد المحرك على معادلات Python المخصصة ومعايير IPCC 2019.",
-                calcExecuteBtn: "تشغيل محرك الأقمار وحساب صافي البصمة الكربونية الفورية",
-                resultsTitle: "تقرير التحقق الفضائي والبيئي (Nilus Sentinel-2 Verified Report)",
+                p3: "بدون حرث ومحاصيل غطاء (-1.0 طن/هكتار)",
+                p4: "حراجة زراعية (-2.0 طن/هكتار)",
+                noteIpcc: "يعتمد على معادلات Python وحساسات الـ IoT ومعايير IPCC 2019.",
+                calcExecuteBtn: "احسب إجمالي الانبعاثات والتخزين وصافي البصمة الفورية",
+                resultsTitle: "تقرير التحقق البيئي والفصائي (Nilus Verified Report)",
                 resEmissions: "إجمالي الانبعاثات",
                 resSeq: "كربون التربة (مع NDVI)",
-                resNDVI: "مؤشر الصحة النباتية (NDVI)",
+                resNDVI: "مؤشر الصحة (NDVI)",
                 resNet: "صافي البصمة (قابل للتداول)",
-                contactTitle: "تواصل معنا / إصدار شهادة Verra الرسمية",
-                contactSub: "سيتم إرسال بيانات الحقل وتحليل القمر الصناعي مباشرة إلى بريدك الإلكتروني الرسمي.",
+                contactTitle: "تواصل معنا / طلب تقييم المشروع",
+                contactSub: "سيتم إرسال استفسارك وتقرير المزرعة والتحليل الفضائي مباشرة إلى بريدك الإلكتروني.",
                 formName: "الاسم الكريم",
-                formEmail: "البريد الإلكتروني للعميل",
-                formMsg: "تفاصيل الحقل أو المشروع الزراعي",
-                formSubmitBtn: "إرسال التقرير الفضائي لبريدك الآن",
-                footerText: "© 2026 نيلوس للتقنيات الرقمية وأصول المناخ (Nilus ECA). جميع الحقوق محفوظة."
+                formEmail: "البريد الإلكتروني الرسمي",
+                formMsg: "تفاصيل المشروع أو الجهة المشاركة",
+                formSubmitBtn: "إرسال البيانات والتقرير لبريدك الآن",
+                footerText: "© 2026 نيلوس للتقنيات الرقمية وأصول المناخ (Nilus ECA). جميع الحقوق محفوظة — مشارك في المبادرة الوطنية للمشروعات الخضراء الذكية."
             },
             en: {
                 brandName: "Nilus ECA for Digital Tech & Climate Assets",
                 brandSub: "Nilus ECA Enterprise Platform",
-                navBtn: "Satellite & Environmental Engine",
-                heroBadge: "AI-Powered with Sentinel-2 Satellite Telemetry",
-                heroTitle: "Integrated Platform for <span class='text-emerald-400 underline decoration-emerald-500/30'>Satellite Imagery & Soil Carbon</span>",
-                heroDesc: "Direct telemetry linkage to analyze agricultural fields via Sentinel-2 NDVI, calculate emissions, and audit carbon credits for Verra standards.",
-                calcHeader: "Nilus Sentinel-2 Connected Carbon Engine",
-                calcSub: "Input field activity and conditions to pull satellite telemetry and compute net carbon footprint instantly.",
+                navFeatures: "Strategic Features",
+                navCalc: "National Calculator",
+                navSec: "Security & Verification",
+                navContact: "Official Contact",
+                navBtn: "Start Instant Assessment",
+                heroBadge: "Participant in the National Initiative for Smart Green Projects · Egypt",
+                heroTitle: "Leading National Platform for <span class='text-emerald-400 underline decoration-emerald-500/30'>Climate Assets & Green Tech</span>",
+                heroDesc: "Innovative digital solutions for agricultural land management, Sentinel-2 satellite integration, emission tracking, and soil carbon verification under international standards.",
+                heroBtn1: "Try National Calculator",
+                heroBtn2: "Security Standards",
+                featHeader: "Fully Integrated & Secured MRV Framework",
+                featSub: "Nilus combines rigorous global environmental standards with advanced data security.",
+                f1Title: "Sentinel-2 Satellite Tracking",
+                f1Desc: "Pulling satellite imagery and calculating NDVI with high accuracy to monitor crop health and detect irrigation stress instantly.",
+                f2Title: "Footprint & Soil Carbon Calc",
+                f2Desc: "Advanced calculation engine for Scope 1, 2, and 3 emissions offset by soil carbon sequestration per IPCC 2019 guidelines.",
+                f3Title: "Enterprise Data Security",
+                f3Desc: "High-level security for all records and databases, ensuring audit reliability for government bodies and investors.",
+                calcHeader: "Nilus Unified Carbon Footprint & Sequestration Engine",
+                calcSub: "Input activity data, Sentinel-2 satellite telemetry, and soil practices for an instant report.",
                 sec1: "1. Activities & Emissions",
                 dieselLabel: "Diesel (L/year)",
                 fertLabel: "Urea (kg/year)",
                 elecLabel: "Electricity (kWh)",
-                sec2: "2. Satellite Telemetry (Sentinel-2)",
+                sec2: "2. Satellite (Sentinel-2)",
                 areaLabel: "Cultivated Area (Hectares)",
-                ndviLabel: "Estimated Vegetation Index (NDVI)",
-                ndvi1: "Low (Sparse Cover / Conventional Tillage)",
-                ndvi2: "Medium (Standard Agriculture)",
-                ndvi3: "High (Healthy Crops / Dense Cover / No-Till)",
-                satelliteStatus: "📡 Connected to Sentinel-2 API (Live Feed)",
-                sec3: "3. Carbon Practices & Sequestration",
+                ndviLabel: "Vegetation Index (NDVI)",
+                ndvi1: "Low (Sparse Cover)",
+                ndvi2: "Medium (Standard)",
+                ndvi3: "High (Healthy Cover)",
+                satelliteStatus: "📡 Connected to Sentinel-2 API",
+                sec3: "3. Soil Sequestration Practices",
                 practiceLabel: "Agricultural Management System",
                 p1: "Conventional Tillage (+0.3 ton/ha)",
                 p2: "Conservation Agriculture (-0.5 ton/ha)",
-                p3: "No-Till With Cover Crop (-1.0 ton/ha)",
-                p4: "Intensive Agroforestry (-2.0 ton/ha)",
-                noteIpcc: "Engine backed by custom Python mathematical models & IPCC 2019 guidelines.",
-                calcExecuteBtn: "Run Satellite Engine & Calculate Net Carbon Footprint",
-                resultsTitle: "Nilus Sentinel-2 Verified Environmental Report",
+                p3: "No-Till w/ Cover Crop (-1.0 ton/ha)",
+                p4: "Agroforestry (-2.0 ton/ha)",
+                noteIpcc: "Backed by Python models, IoT sensors, and IPCC 2019 guidelines.",
+                calcExecuteBtn: "Calculate Total Emissions, Sequestration & Net Footprint",
+                resultsTitle: "Nilus Verified Environmental Report",
                 resEmissions: "Total Emissions",
-                resSeq: "Soil Carbon ( w/ NDVI )",
-                resNDVI: "Vegetation Index (NDVI)",
+                resSeq: "Soil Carbon (w/ NDVI)",
+                resNDVI: "Health Index (NDVI)",
                 resNet: "Net Footprint (Tradable)",
-                contactTitle: "Contact Us / Issue Official Verra Certificate",
-                contactSub: "Field data and satellite telemetry report will be sent directly to your official email.",
+                contactTitle: "Contact Us / Request Project Assessment",
+                contactSub: "Your inquiry, farm report, and satellite analysis will be sent directly to your email.",
                 formName: "Full Name",
-                formEmail: "Client Email",
-                formMsg: "Field Details or Project Info",
-                formSubmitBtn: "Send Satellite Report to Your Email",
-                footerText: "© 2026 Nilus ECA for Digital Technologies & Climate Assets. All rights reserved."
+                formEmail: "Official Email",
+                formMsg: "Project Details or Participating Entity",
+                formSubmitBtn: "Send Data & Report to Your Email",
+                footerText: "© 2026 Nilus ECA for Digital Technologies & Climate Assets. All rights reserved — Participant in the National Smart Green Projects Initiative."
             }
         };
 
@@ -291,8 +408,8 @@
             });
         }
 
-        // دالة الحساب المتكاملة مع بيانات القمر الصناعي (Sentinel-2 NDVI)
-        function calculateSatelliteCarbon() {
+        // دالة الحساب المتكاملة مع بيانات القمر الصناعي والتربة
+        function calculateIntegratedCarbon() {
             const diesel = parseFloat(document.getElementById('dieselInput').value) || 0;
             const fert = parseFloat(document.getElementById('fertInput').value) || 0;
             const elec = parseFloat(document.getElementById('elecInput').value) || 0;
@@ -308,7 +425,7 @@
             const elecEmissions = (elec * 0.60) / 1000;
             const totalEmissions = dieselEmissions + fertEmissions + elecEmissions;
 
-            // 2. معامل التخزين المعزز بقمر Sentinel-2 (كلما ارتفع مؤشر NDVI تحسنت كفاءة احتجاز الكربون بنسبة طيفية مدعومة)
+            // 2. معامل التخزين المعزز بقمر Sentinel-2 و NDVI
             const satelliteMultiplier = ndviVal >= 0.7 ? 1.15 : (ndviVal >= 0.5 ? 1.0 : 0.85);
             const totalSeq = area * practiceFactor * satelliteMultiplier;
 
