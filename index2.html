@@ -1,0 +1,110 @@
+﻿from flask import Flask, request, jsonify
+import datetime
+import json
+
+app = Flask(__name__)
+
+def now():
+    return datetime.datetime.utcnow().isoformat()
+
+class CarbonDatabaseMock:
+    def get_emission_factor(self, factor_type, sub_type=""):
+        factors = {
+            "diesel": 2.68,  # kg CO2e / liter
+            "electricity": 0.60  # kg CO2e / kWh
+        }
+        return type('Factor', (object,), {"value": factors.get(factor_type, 1.0), "source_standard": "IPCC 2019 / IEA"})
+
+    def getSoilCarbonFactor(self, practice_type):
+        # معاملات تخزين كربون التربة (طن CO2e لكل هكتار سنويًا)
+        # القيم السالبة تدل على عزل/تخزين (Sequestration)، والموجبة تدل على انبعاثات
+        factors = {
+            "conventional_tillage": 0.3,
+            "conservation_agriculture": -0.5,
+            "no_till_with_cover_crop": -1.0,
+            "agroforestry": -2.0
+        }
+        return factors.get(practice_type.lower(), 0.0)
+
+db = CarbonDatabaseMock()
+
+# --- 1. حسابات البصمة الكربونية ---
+def calculate_diesel_emissions(fuel_liters):
+    ef = db.get_emission_factor("diesel")
+    emissions_kg = fuel_liters * ef.value
+    return {
+        "emissions_kg_co2e": emissions_kg,
+        "emissions_tonnes_co2e": emissions_kg / 1000,
+        "type": "emission",
+        "scope": "Scope 1 - Direct",
+        "standard": "IPCC 2019 Tier 1"
+    }
+
+def calculate_electricity_emissions(kwh_consumption):
+    ef = db.get_emission_factor("electricity")
+    emissions_kg = kwh_consumption * ef.value
+    return {
+        "emissions_kg_co2e": emissions_kg,
+        "emissions_tonnes_co2e": emissions_kg / 1000,
+        "type": "emission",
+        "scope": "Scope 2 - Indirect",
+        "standard": "IPCC 2019 / IEA"
+    }
+
+# --- 2. حسابات تخزين وعزل الكربون (Soil & Biomass Sequestration) ---
+def calculate_soil_carbon_storage(area_hectares, practice_type):
+    factor = db.getSoilCarbonFactor(practice_type)
+    total_storage_tonnes = area_hectares * factor
+    return {
+        "area_hectares": area_hectares,
+        "practice_type": practice_type,
+        "storage_factor_per_ha": factor,
+        "total_storage_t_co2e_per_year": total_storage_tonnes,
+        "is_sequestration": total_storage_tonnes < 0,
+        "type": "storage",
+        "standard": "IPCC 2019 Chapter 2 (Land Use)",
+        "timestamp": now()
+    }
+
+def calculate_woody_sequestration(annual_growth_rate, bef_factor, area_hectares):
+    carbon_fraction = 0.47
+    conversion_factor = 3.67
+    annual_seq_per_ha = annual_growth_rate * bef_factor * carbon_fraction * conversion_factor
+    total_annual_seq = annual_seq_per_ha * area_hectares
+    return {
+        "annual_sequestration_t_co2e_per_ha": annual_seq_per_ha,
+        "total_annual_sequestration_t_co2e": total_annual_seq,
+        "type": "storage",
+        "standard": "IPCC 2019 Tier 2",
+        "timestamp": now()
+    }
+
+# --- 3. نقطة النهاية (API) ---
+@app.route('/api/v1/sensor-telemetry', methods=['POST'])
+def receive_sensor_data():
+    try:
+        payload = request.json
+        device_type = payload.get("device_type")
+        value = float(payload.get("value", 0))
+        sub_type = payload.get("sub_type", "")
+        
+        result = {}
+        if device_type == "diesel_flow_meter":
+            result = calculate_diesel_emissions(value)
+        elif device_type == "energy_meter":
+            result = calculate_electricity_emissions(value)
+        elif device_type == "soil_management":
+            result = calculate_soil_carbon_storage(value, sub_type)
+        else:
+            result = {"status": "Received general telemetry", "value": value, "timestamp": now()}
+            
+        return jsonify({
+            "status": "success",
+            "device_type": device_type,
+            "processed_result": result
+        }), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 400
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)
