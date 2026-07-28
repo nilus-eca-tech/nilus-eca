@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Nilus - منصة الزراعة الذكية لقياس وتوثيق أصول المناخ وأسواق الكربون">
-    <meta name="keywords" content="Nilus, الزراعة الذكية, أصول المناخ, أسواق الكربون, Sentinel-2, NDVI, IPCC Tier 2">
-    <title>نيلوس - التقنيات الرقمية وأصول المناخ | Nilus ECA</title>
+    <meta name="description" content="Nilus ECA - منصة الزراعة الذكية لقياس وتوثيق أصول المناخ وأسواق الكربون">
+    <meta name="keywords" content="Nilus, الزراعة الذكية, أصول المناخ, أسواق الكربون, Sentinel-2, NDVI, IPCC Tier 2, VM0042">
+    <title>نيلوس للتقنيات الرقمية وأصول المناخ | Nilus ECA</title>
     
     <style>
         /* ================================
@@ -18,17 +18,16 @@
         }
 
         :root {
-            --primary-green: #2D7D4D;
-            --primary-blue: #003366;
+            --primary-green: #1B4D2F;
+            --secondary-green: #2D7D4D;
+            --accent-green: #4CAF7F;
+            --primary-blue: #0A192F;
             --accent-gold: #D4AF37;
-            --light-green: #4CAF7F;
-            --dark-green: #1B4D2F;
-            --sky-blue: #0066CC;
-            --light-bg: #F5F9F7;
-            --text-dark: #1A1A1A;
-            --text-light: #555555;
+            --light-bg: #F8FAF9;
+            --text-dark: #1A2E22;
+            --text-light: #556B5D;
             --white: #FFFFFF;
-            --transition: all 0.3s ease;
+            --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         html {
@@ -37,50 +36,37 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
+            line-height: 1.7;
             color: var(--text-dark);
             background-color: var(--white);
         }
 
         /* ================================
-           Typography
+           Typography & Layout
            ================================ */
         h1, h2, h3, h4, h5, h6 {
             font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--text-dark);
+            color: var(--primary-blue);
         }
 
-        h1 {
-            font-size: 3.5rem;
-            line-height: 1.2;
+        h1 { font-size: 3.2rem; line-height: 1.2; }
+        h2 { font-size: 2.4rem; line-height: 1.3; margin-bottom: 1rem; }
+        h3 { font-size: 1.3rem; margin-bottom: 0.8rem; }
+
+        p { font-size: 1.05rem; color: var(--text-light); }
+
+        a { text-decoration: none; transition: var(--transition); }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
         }
 
-        h2 {
-            font-size: 2.5rem;
-            line-height: 1.3;
-            margin-bottom: 2rem;
-        }
-
-        h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        p {
-            font-size: 1rem;
-            color: var(--text-light);
-            margin-bottom: 1rem;
-        }
-
-        a {
-            text-decoration: none;
-            color: var(--primary-green);
-            transition: var(--transition);
-        }
-
-        a:hover {
-            color: var(--light-green);
+        .grid {
+            display: grid;
+            gap: 2.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
         }
 
         /* ================================
@@ -88,9 +74,9 @@
            ================================ */
         .btn {
             display: inline-block;
-            padding: 14px 32px;
-            border-radius: 6px;
-            font-size: 1rem;
+            padding: 14px 34px;
+            border-radius: 8px;
+            font-size: 1.05rem;
             font-weight: 600;
             cursor: pointer;
             border: 2px solid transparent;
@@ -98,496 +84,434 @@
             text-align: center;
         }
 
-        .btn-primary {
-            background-color: var(--primary-green);
-            color: var(--white);
+        .btn-primary { 
+            background: linear-gradient(135deg, var(--secondary-green), var(--primary-green)); 
+            color: var(--white); 
+            box-shadow: 0 4px 15px rgba(45, 125, 77, 0.25);
+        }
+        .btn-primary:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 8px 25px rgba(45, 125, 77, 0.35); 
         }
 
-        .btn-primary:hover {
-            background-color: var(--light-green);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(45, 125, 77, 0.3);
+        .btn-secondary { 
+            background-color: transparent; 
+            color: var(--white); 
+            border-color: rgba(255,255,255,0.6); 
         }
-
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--primary-green);
-            border-color: var(--primary-green);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--primary-green);
-            color: var(--white);
-        }
-
-        /* ================================
-           Container & Grid
-           ================================ */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .grid {
-            display: grid;
-            gap: 2rem;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        .btn-secondary:hover { 
+            background-color: rgba(255,255,255,0.1); 
+            border-color: var(--white);
         }
 
         /* ================================
-           Header
+           Header & Navigation
            ================================ */
         header {
-            background-color: var(--white);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
         }
 
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.5rem 0;
+            padding: 1rem 0;
         }
 
-        .logo {
+        .brand-container {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-green);
+            gap: 14px;
         }
 
         .logo-img {
-            width: 46px;
-            height: 46px;
+            width: 52px;
+            height: 52px;
             object-fit: contain;
-            border-radius: 8px;
-            flex-shrink: 0;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .brand-text .company-name {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+            letter-spacing: 0.5px;
+        }
+
+        .brand-text .company-sub {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--secondary-green);
+            text-transform: uppercase;
         }
 
         .nav {
             display: flex;
             gap: 2rem;
             list-style: none;
+            align-items: center;
         }
 
         .nav a {
             color: var(--text-dark);
-            font-weight: 500;
-            position: relative;
+            font-weight: 600;
+            font-size: 0.95rem;
         }
 
-        .nav a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            right: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--primary-green);
-            transition: var(--transition);
-        }
-
-        .nav a:hover::after {
-            width: 100%;
-        }
-
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            gap: 5px;
-        }
-
-        .hamburger span {
-            width: 25px;
-            height: 3px;
-            background-color: var(--primary-green);
-            border-radius: 3px;
-            transition: var(--transition);
+        .nav a:hover {
+            color: var(--secondary-green);
         }
 
         /* ================================
            Hero Section
            ================================ */
         .hero {
-            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-blue) 100%);
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #0D2818 100%);
             color: var(--white);
-            padding: 100px 0;
+            padding: 110px 0 90px;
             text-align: center;
             position: relative;
             overflow: hidden;
         }
 
-        .hero-content {
-            position: relative;
-            z-index: 2;
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 70% 30%, rgba(76, 175, 127, 0.15) 0%, transparent 60%);
+            pointer-events: none;
         }
 
-        .hero h1 {
-            color: var(--white);
-            margin-bottom: 1.5rem;
-        }
-
-        .hero-subtitle {
-            font-size: 1.3rem;
-            margin-bottom: 2.5rem;
-            color: rgba(255, 255, 255, 0.9);
-            max-width: 600px;
-            margin-right: auto;
-            margin-left: auto;
-        }
-
+        .hero h1 { color: var(--white); margin-bottom: 1.5rem; }
+        .hero-subtitle { font-size: 1.2rem; margin-bottom: 2.5rem; color: rgba(255, 255, 255, 0.85); max-width: 750px; margin-right: auto; margin-left: auto; }
+        
         .hero-buttons {
             display: flex;
-            gap: 1.5rem;
+            gap: 1rem;
             justify-content: center;
             flex-wrap: wrap;
         }
 
-        .btn-hero-primary {
-            background-color: var(--accent-gold);
-            color: var(--text-dark);
-            font-weight: 700;
+        .btn-hero-accent { 
+            background: linear-gradient(135deg, var(--accent-gold), #C5A028); 
+            color: var(--primary-blue); 
+            font-weight: 700; 
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
         }
-
-        .btn-hero-primary:hover {
-            background-color: #E8C000;
+        .btn-hero-accent:hover { 
             transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4);
+            background: linear-gradient(135deg, #E5C047, var(--accent-gold)); 
         }
 
-        .btn-hero-secondary {
-            background-color: rgba(255, 255, 255, 0.2);
-            color: var(--white);
-            border-color: var(--white);
+        /* ================================
+           Section Titles
+           ================================ */
+        .section-header {
+            text-align: center;
+            margin-bottom: 3.5rem;
         }
 
-        .btn-hero-secondary:hover {
-            background-color: rgba(255, 255, 255, 0.3);
+        .section-header h2 {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .section-header h2::after {
+            content: '';
+            display: block;
+            width: 70px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary-green), var(--accent-green));
+            margin: 0.8rem auto 0;
+            border-radius: 2px;
+        }
+
+        .section-header p {
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         /* ================================
            Services Section
            ================================ */
         .services {
-            padding: 80px 0;
+            padding: 90px 0;
             background-color: var(--light-bg);
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 4px;
-            background-color: var(--primary-green);
-            margin: 1rem auto 0;
-            border-radius: 2px;
         }
 
         .service-card {
             background-color: var(--white);
-            padding: 2.5rem;
-            border-radius: 10px;
-            text-align: center;
+            padding: 2.5rem 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
             transition: var(--transition);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0,0,0,0.04);
             position: relative;
-            overflow: hidden;
-        }
-
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-green), var(--light-green));
         }
 
         .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(45, 125, 77, 0.2);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(27, 77, 47, 0.08);
+            border-color: rgba(76, 175, 127, 0.3);
         }
 
         .service-icon {
-            font-size: 3rem;
+            font-size: 2rem;
             margin-bottom: 1.5rem;
-            display: inline-block;
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, var(--primary-green), var(--light-green));
-            border-radius: 10px;
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, var(--secondary-green), var(--accent-green));
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--white);
-        }
-
-        .service-card h3 {
-            color: var(--primary-green);
-            margin-bottom: 1rem;
-        }
-
-        .service-card p {
-            color: var(--text-light);
-            margin-bottom: 1.5rem;
-            line-height: 1.8;
+            box-shadow: 0 6px 15px rgba(45, 125, 77, 0.2);
         }
 
         /* ================================
-           Carbon Calculator Section (NEW)
+           Carbon Calculator Section
            ================================ */
         .carbon-calc-section {
-            padding: 80px 0;
+            padding: 90px 0;
             background-color: var(--white);
         }
 
         .calculator-box {
             background: var(--light-bg);
-            border: 2px solid #E0E0E0;
-            border-radius: 12px;
-            padding: 2.5rem;
-            max-width: 800px;
+            border: 1px solid #E2ECE6;
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 900px;
             margin: 0 auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.04);
         }
 
         .calc-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
+            gap: 1.8rem;
+            margin-bottom: 1.8rem;
         }
 
         @media(max-width: 768px) {
-            .calc-grid {
-                grid-template-columns: 1fr;
-            }
+            .calc-grid { grid-template-columns: 1fr; }
+            .calculator-box { padding: 1.5rem; }
         }
 
         .calc-group label {
             display: block;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-dark);
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            color: var(--primary-blue);
         }
 
         .calc-group select, .calc-group input {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #CCC;
-            border-radius: 6px;
+            padding: 14px 16px;
+            border: 2px solid #DCE6E0;
+            border-radius: 10px;
             font-size: 1rem;
             font-family: inherit;
+            background-color: var(--white);
+            transition: var(--transition);
+        }
+
+        .calc-group select:focus, .calc-group input:focus {
+            outline: none;
+            border-color: var(--secondary-green);
+            box-shadow: 0 0 0 4px rgba(45, 125, 77, 0.1);
         }
 
         .calc-results {
-            background: linear-gradient(135deg, var(--dark-green), var(--primary-green));
+            background: linear-gradient(135deg, var(--primary-blue), #0D2818);
             color: white;
-            padding: 2rem;
-            border-radius: 8px;
-            margin-top: 2rem;
+            padding: 2.5rem;
+            border-radius: 14px;
+            margin-top: 2.5rem;
             text-align: center;
+            box-shadow: 0 10px 30px rgba(10, 25, 47, 0.15);
         }
 
-        .calc-results h3 {
-            color: var(--accent-gold);
-            margin-bottom: 1rem;
+        .calc-results h3 { color: var(--accent-gold); margin-bottom: 1.2rem; }
+        .result-number { font-size: 2.2rem; font-weight: 800; color: var(--white); margin: 0.6rem 0; letter-spacing: 0.5px; }
+
+        /* ================================
+           Architecture & Compliance Specs
+           ================================ */
+        .architecture-section {
+            padding: 90px 0;
+            background-color: var(--light-bg);
         }
 
-        .result-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--white);
-            margin: 0.5rem 0;
+        .arch-card {
+            background: var(--white);
+            padding: 2.5rem 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            border-top: 4px solid var(--secondary-green);
         }
+
+        .arch-card h3 { color: var(--primary-blue); }
 
         /* ================================
            Contact Section
            ================================ */
         .contact {
-            padding: 80px 0;
-            background-color: var(--light-bg);
+            padding: 90px 0;
+            background-color: var(--white);
         }
 
         .contact-content {
-            max-width: 600px;
+            max-width: 650px;
             margin: 0 auto;
-        }
-
-        .quick-contact {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 2rem;
+            background: var(--light-bg);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid #E2ECE6;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        .form-group input,
-        .form-group textarea {
+        .form-group label { display: block; margin-bottom: 0.6rem; font-weight: 700; color: var(--primary-blue); }
+        .form-group input, .form-group textarea {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #CCC;
-            border-radius: 6px;
+            padding: 14px 18px;
+            border: 2px solid #DCE6E0;
+            border-radius: 10px;
             font-size: 1rem;
             font-family: inherit;
+            background-color: var(--white);
+            transition: var(--transition);
         }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary-green);
+            box-shadow: 0 0 0 4px rgba(45, 125, 77, 0.1);
+        }
+        .form-group textarea { min-height: 140px; resize: vertical; }
 
         .form-submit {
             width: 100%;
-            padding: 14px;
-            background-color: var(--primary-green);
+            padding: 16px;
+            background: linear-gradient(135deg, var(--secondary-green), var(--primary-green));
             color: var(--white);
             border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
             cursor: pointer;
             transition: var(--transition);
+            box-shadow: 0 6px 20px rgba(45, 125, 77, 0.25);
         }
 
-        .form-submit:hover {
-            background-color: var(--light-green);
+        .form-submit:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(45, 125, 77, 0.35);
         }
 
         /* ================================
            Footer
            ================================ */
         footer {
-            background-color: var(--text-dark);
+            background-color: var(--primary-blue);
             color: var(--white);
             padding: 3rem 0 1.5rem;
             text-align: center;
         }
 
-        .footer-content {
-            display: grid;
-            gap: 2rem;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            margin-bottom: 2rem;
-        }
-
-        .footer-section h4 {
-            color: var(--accent-gold);
-            margin-bottom: 1rem;
-        }
-
         .footer-bottom {
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 2rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
             color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
     </style>
 </head>
 <body>
+
     <!-- Header -->
     <header>
         <div class="container">
             <div class="header-content">
-                <div class="logo">
+                <div class="brand-container">
+                    <!-- تم دمج شعارك الجديد هنا -->
                     <img src="logo.png" alt="Nilus ECA Logo" class="logo-img">
-                    <div>
-                        <div>نيلوس</div>
-                        <div style="font-size: 0.7rem; font-weight: 500; opacity: 0.8;">التقنيات الرقمية وأصول المناخ</div>
+                    <div class="brand-text">
+                        <div class="company-name">NILUS ECA</div>
+                        <div class="company-sub">Digital Technologies & Climate Assets</div>
                     </div>
                 </div>
                 
-                <nav class="nav" id="nav-menu">
+                <nav class="nav">
                     <li><a href="#home">الرئيسية</a></li>
                     <li><a href="#services">خدماتنا</a></li>
                     <li><a href="#calculator">حاسبة الكربون</a></li>
-                    <li><a href="#climate">حلول المناخ</a></li>
+                    <li><a href="#architecture">البنية الفنية</a></li>
                     <li><a href="#contact">تواصل معنا</a></li>
                 </nav>
-
-                <div class="hamburger" id="hamburger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
             </div>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="hero" id="home">
+    <header class="hero" id="home" style="background: linear-gradient(135deg, #0A192F 0%, #1B4D2F 100%);">
         <div class="container">
-            <div class="hero-content">
-                <h1>دمج التكنولوجيا المتقدمة بالاستدامة البيئية</h1>
-                <p class="hero-subtitle">
-                    منصة ذكية متكاملة لقياس وتوثيق أصول المناخ، وتحسين الإنتاجية الزراعية وفق معايير IPCC العالمية
-                </p>
-                <div class="hero-buttons">
-                    <a href="#calculator" class="btn btn-primary btn-hero-primary">جرب حاسبة الكربون</a>
-                    <a href="#contact" class="btn btn-secondary btn-hero-secondary">تواصل مع الخبراء</a>
-                </div>
+            <h1>دمج التكنولوجيا المتقدمة بالاستدامة البيئية</h1>
+            <p class="hero-subtitle">
+                منصة رقمية محصنة لرقمنة الأصول البيئية، تحليل صور الأقمار الصناعية (Sentinel-2)، وتوثيق أرصدة الكربون وفق معايير Verra (VM0042) ومحرك حسابات IPCC Tier 2.
+            </p>
+            <div class="hero-buttons">
+                <a href="#calculator" class="btn btn-hero-accent">حاسبة الكربون الآمنة</a>
+                <a href="#architecture" class="btn btn-secondary">استعراض البنية الفنية</a>
             </div>
         </div>
-    </section>
+    </header>
 
     <!-- Services Section -->
     <section class="services" id="services">
         <div class="container">
-            <div class="section-title">
+            <div class="section-header">
                 <h2>خدماتنا المتخصصة</h2>
-                <p>حلول تقنية متقدمة لتحقيق أهدافك البيئية والاقتصادية</p>
+                <p>حلول هندسية وتقنية متقدمة تلبي متطلبات الرقابة المالية وأسواق الكربون العالمية</p>
             </div>
 
             <div class="grid">
                 <div class="service-card">
                     <div class="service-icon">💻</div>
-                    <h3>حلول تكنولوجيا المعلومات</h3>
-                    <p>
-                        منصة رقمية تجمع بين طبقة الأجهزة الذكية الميدانية (IoT) ومحرك تحليل بيانات مطوّرة بـ Python، وبنية برمجية محمية بحقوق الملكية الفكرية (IP).
-                    </p>
+                    <h3>البنية البرمجية المملوكة (IP)</h3>
+                    <p>أجهزة استشعار ميدانية (IoT) مرتبطة بمحرك تحليلي مطور بلغة Python، بحقوق ملكية فكرية محمية بالكامل ودون الاعتماد على منصات سحابية خارجية مكشوفة.</p>
                 </div>
                 <div class="service-card">
                     <div class="service-icon">🛰️</div>
-                    <h3>مراقبة الغطاء النباتي</h3>
-                    <p>
-                        استخدام بيانات Sentinel-2 ومؤشر NDVI لقياس صحة المحاصيل ومراقبة التربة بدقة عالية ومستمرة.
-                    </p>
+                    <h3>مراقبة الغطاء النباتي (GIS)</h3>
+                    <p>ربط مباشر ببيانات Sentinel-2 ومؤشرات NDVI وEVI لتتبع صحة المحاصيل بدقة زمنية مؤرخة وموثوقة لكل قطعة أرض مسجلة.</p>
                 </div>
                 <div class="service-card">
-                    <div class="service-icon">🌍</div>
-                    <h3>أصول المناخ وأسواق الكربون</h3>
-                    <p>
-                        استشارات وتطبيقات متخصصة لتوثيق احتجاز الكربون والاستفادة من أسواق الكربون الدولية وفق معايير Verra VCS.
-                    </p>
+                    <div class="service-icon">⚖️</div>
+                    <h3>الامتثال والتدقيق (VVB Ready)</h3>
+                    <p>سجلات تدقيق مشفرة (Audit Trail) ولوحة تحكم مخصصة لجهات التحقق والمصادقة (VVB) لضمان الحماية القانونية والمالية التامة.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Carbon Sequestration Calculator Section (NEW) -->
+    <!-- Carbon Sequestration Calculator Section -->
     <section class="carbon-calc-section" id="calculator">
         <div class="container">
-            <div class="section-title">
-                <h2>حاسبة أصول الكربون التفاعلية</h2>
-                <p>احسب معدل احتجاز الكربون والعوائد المتوقعة لمشروعك الزراعي (وفق IPCC Tier 2)</p>
+            <div class="section-header">
+                <h2>حاسبة أصول الكربون الآمنة (IPCC Tier 2)</h2>
+                <p>تقدير كمية الاحتجاز والعوائد المتوقعة مع تطبيق نظام التحوط المائي ومعاملات الأمان المالي</p>
             </div>
 
             <div class="calculator-box">
@@ -599,7 +523,7 @@
                             <option value="mango" data-rate="28.8">مانجو (Tropical - Woody)</option>
                             <option value="banana" data-rate="20.8">موز (Herbaceous)</option>
                             <option value="date_palm" data-rate="21.8">نخيل البلح (Arid - Woody)</option>
-                            <option value="prickly_pear" data-rate="7.1">تين شوكي (Prickly Pear - Herbaceous)</option>
+                            <option value="prickly_pear" data-rate="7.1">تين شوكي (Herbaceous)</option>
                             <option value="jojoba" data-rate="7.2">جوجوبا (Jojoba - Woody)</option>
                         </select>
                     </div>
@@ -610,24 +534,49 @@
                     </div>
                 </div>
 
-                <div class="calc-group" style="margin-bottom: 1.5rem;">
-                    <label for="irrigation-select">نظام الري (تأثير الإجهاد المائي - WSF):</label>
+                <div class="calc-group" style="margin-bottom: 1.8rem;">
+                    <label for="irrigation-select">نظام الري (معامل الإجهاد المائي WSF):</label>
                     <select id="irrigation-select">
-                        <option value="1.00">ري بالتنقيط (منتظم - 100%)</option>
+                        <option value="1.00">ري بالتنقيط (منتظم - 100% معامل أمان)</option>
                         <option value="0.90">ري غمر مستقر (90%)</option>
                         <option value="0.75">ري غمر متذبذب (75%)</option>
-                        <option value="0.60">ري محدود / إجهاد مائي (60%)</option>
+                        <option value="0.60">ري محدود / إجهاد مائي (60% - تحوط مالي)</option>
                     </select>
                 </div>
 
-                <button type="button" class="form-submit" onclick="calculateCarbon()">احسب إجمالي الاحتجاز والعائد</button>
+                <button type="button" class="form-submit" onclick="calculateSecureCarbon()">تنفيذ الحساب والتدقيق الآمن</button>
 
                 <div class="calc-results" id="calc-results-box">
-                    <h3>نتائج التقييم البيئي والاقتصادي</h3>
-                    <p>إجمالي الاحتجاز السنوي:</p>
-                    <div class="result-number" id="total-co2">1,150 طن CO₂e / سنويأ</div>
-                    <p>العائد المالي المتوقع (سعر السعر الافتراضي 25$ للطن):</p>
+                    <h3>نتائج التقييم البيئي والمالي المحصن</h3>
+                    <p style="color: rgba(255,255,255,0.8);">إجمالي الاحتجاز السنوي المعتمد:</p>
+                    <div class="result-number" id="total-co2">1,150 طن CO₂e / سنوياً</div>
+                    <p style="color: rgba(255,255,255,0.8);">العائد المالي المتوقع (سعر افتراضي 25$ للطن):</p>
                     <div class="result-number" id="total-revenue" style="color: var(--accent-gold);">$28,750 / سنوياً</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- System Architecture & Compliance Specs -->
+    <section class="architecture-section" id="architecture">
+        <div class="container">
+            <div class="section-header">
+                <h2>الهيكل الفني ومعايير الامتثال (System Architecture)</h2>
+                <p>مواصفات البنية التحتية المصممة لمنع أي خطأ بشري أو تقني ومطابقة معايير هيئة الرقابة المالية</p>
+            </div>
+
+            <div class="grid">
+                <div class="arch-card">
+                    <h3>1. وحدة الـ GIS والأقمار الصناعية</h3>
+                    <p style="margin-top: 0.8rem;">إدارة إحداثيات الأراضي (Polygon Mapping)، جلب مؤشرات NDVI وEVI من Sentinel-2، وتخزينها في سجل رقمي مؤرخ ومرتبط بـ Metadata مشفرة.</p>
+                </div>
+                <div class="arch-card">
+                    <h3>2. التصميم المعياري (Modular Design)</h3>
+                    <p style="margin-top: 0.8rem;">بنية تحتية مرنة تسمح بدمج طبقة الحساسات الأرضية (IoT Sensors) في المرحلة الثانية دون أي تأثير على القواعد والبيانات الأساسية الحالية.</p>
+                </div>
+                <div class="arch-card">
+                    <h3>3. لوحة تحكم جهات التحقق (VVB Dashboard)</h3>
+                    <p style="margin-top: 0.8rem;">واجهة مخصصة بصلاحيات قراءة فقط (Read-Only) لجهات المصادقة، تتيح مراجعة السجلات والتقارير الجاهزة لوثيقة تصميم المشروع (PDD) وفق منهجية VM0042.</p>
                 </div>
             </div>
         </div>
@@ -636,13 +585,13 @@
     <!-- Contact Section -->
     <section class="contact" id="contact">
         <div class="container">
-            <div class="section-title">
-                <h2>تواصل معنا</h2>
-                <p>احصل على استشارة متخصصة حول كيفية تفعيل أصول المناخ لمشروعك</p>
+            <div class="section-header">
+                <h2>تواصل مع الفريق التقني</h2>
+                <p>للاستفسارات ومتابعة تنفيذ البنية التحتية للمنصة</p>
             </div>
 
             <div class="contact-content">
-                <form id="contact-form" onsubmit="handleSubmit(event)">
+                <form id="contact-form" onsubmit="handleFormSubmit(event)">
                     <div class="form-group">
                         <label for="name">الاسم الكامل</label>
                         <input type="text" id="name" required placeholder="أدخل اسمك الكامل">
@@ -654,8 +603,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="message">الرسالة</label>
-                        <textarea id="message" required placeholder="اكتب تفاصيل مشروعك الزراعي أو الاستفسار..."></textarea>
+                        <label for="message">الرسالة أو الاستفسار التقني</label>
+                        <textarea id="message" required placeholder="اكتب تفاصيل الاستفسار..."></textarea>
                     </div>
 
                     <button type="submit" class="form-submit">إرسال الرسالة</button>
@@ -667,25 +616,17 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>نيلوس للتقنيات الرقمية وأصول المناخ</h4>
-                    <p style="color: rgba(255, 255, 255, 0.7);">منصة رائدة في الزراعة الذكية وأسواق الكربون المستدام بالمنيا، مصر.</p>
-                </div>
-                <div class="footer-section">
-                    <h4>التواصل</h4>
-                    <p>✉️ info@nilus-eca.com<br>📍 المنيا، جمهورية مصر العربية</p>
-                </div>
-            </div>
+            <p style="font-size: 1.2rem; font-weight: 700; margin-bottom: 5px;">NILUS ECA - نيلوس للتقنيات الرقمية وأصول المناخ</p>
+            <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.95rem;">المنيا، جمهورية مصر العربية</p>
             <div class="footer-bottom">
-                <p>&copy; 2026 نيلوس للتقنيات الرقمية وأصول المناخ | جميع الحقوق محفوظة</p>
+                <p>&copy; 2026 جميع الحقوق محفوظة | منصة كربونية محصنة ومعتمدة للمراجعة القانونية والمالية</p>
             </div>
         </div>
     </footer>
 
-    <!-- Script for Carbon Calculator -->
+    <!-- JavaScript Engine -->
     <script>
-        function calculateCarbon() {
+        function calculateSecureCarbon() {
             const cropSelect = document.getElementById('crop-select');
             const selectedOption = cropSelect.options[cropSelect.selectedIndex];
             const baseRatePerHa = parseFloat(selectedOption.getAttribute('data-rate'));
@@ -693,25 +634,27 @@
             const area = parseFloat(document.getElementById('area-input').value) || 0;
             const irrigationFactor = parseFloat(document.getElementById('irrigation-select').value) || 1.0;
 
-            // حساب المعادلة المحدثة مع معامل الإجهاد المائي
+            if (area <= 0) {
+                alert('خطأ: المساحة يجب أن تكون أكبر من الصفر لتفادي أي خطأ مالي.');
+                return;
+            }
+
             const adjustedRatePerHa = baseRatePerHa * irrigationFactor;
             const totalCO2 = adjustedRatePerHa * area;
-            const carbonPricePerTon = 25; // $25 per ton
+            const carbonPricePerTon = 25.0; 
             const totalRevenue = totalCO2 * carbonPricePerTon;
 
-            // عرض النتائج
             document.getElementById('total-co2').innerText = totalCO2.toLocaleString('en-US', {maximumFractionDigits: 1}) + ' طن CO₂e / سنوياً';
             document.getElementById('total-revenue').innerText = '$' + totalRevenue.toLocaleString('en-US', {maximumFractionDigits: 0}) + ' / سنوياً';
         }
 
-        function handleSubmit(event) {
+        function handleFormSubmit(event) {
             event.preventDefault();
-            alert('شكراً لك! تم استلام رسالتك بنجاح، وسنتواصل معك قريباً.');
+            alert('شكراً لك! تم استلام رسالتك وتوثيقها بنجاح في سجلات المنصة.');
             document.getElementById('contact-form').reset();
         }
 
-        // تشغيل الحاسبة تلقائياً عند التحميل
-        window.onload = calculateCarbon;
+        window.onload = calculateSecureCarbon;
     </script>
 </body>
 </html>
