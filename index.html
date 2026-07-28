@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Nilus - منصة الزراعة الذكية لقياس وتوثيق أصول المناخ وأسواق الكربون">
-    <meta name="keywords" content="Nilus, الزراعة الذكية, أصول المناخ, أسواق الكربون, Sentinel-2, NDVI">
+    <meta name="keywords" content="Nilus, الزراعة الذكية, أصول المناخ, أسواق الكربون, Sentinel-2, NDVI, IPCC Tier 2">
     <title>نيلوس - التقنيات الرقمية وأصول المناخ | Nilus ECA</title>
     
     <style>
@@ -162,18 +162,6 @@
             color: var(--primary-green);
         }
 
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary-green), var(--light-green));
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-size: 1.5rem;
-        }
-
         .logo-img {
             width: 46px;
             height: 46px;
@@ -236,31 +224,6 @@
             overflow: hidden;
         }
 
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 500px;
-            height: 500px;
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -5%;
-            width: 400px;
-            height: 400px;
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-            animation: float 8s ease-in-out infinite;
-            animation-delay: 2s;
-        }
-
         .hero-content {
             position: relative;
             z-index: 2;
@@ -269,7 +232,6 @@
         .hero h1 {
             color: var(--white);
             margin-bottom: 1.5rem;
-            animation: slideInDown 0.8s ease-out;
         }
 
         .hero-subtitle {
@@ -279,7 +241,6 @@
             max-width: 600px;
             margin-right: auto;
             margin-left: auto;
-            animation: slideInUp 0.8s ease-out;
         }
 
         .hero-buttons {
@@ -287,9 +248,6 @@
             gap: 1.5rem;
             justify-content: center;
             flex-wrap: wrap;
-            animation: fadeIn 1s ease-out;
-            animation-delay: 0.3s;
-            animation-fill-mode: both;
         }
 
         .btn-hero-primary {
@@ -312,7 +270,6 @@
 
         .btn-hero-secondary:hover {
             background-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
         }
 
         /* ================================
@@ -389,12 +346,72 @@
             line-height: 1.8;
         }
 
-        .service-card a {
-            color: var(--primary-green);
+        /* ================================
+           Carbon Calculator Section (NEW)
+           ================================ */
+        .carbon-calc-section {
+            padding: 80px 0;
+            background-color: var(--white);
+        }
+
+        .calculator-box {
+            background: var(--light-bg);
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            padding: 2.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media(max-width: 768px) {
+            .calc-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .calc-group label {
+            display: block;
             font-weight: 600;
-            display: inline-flex;
-            gap: 0.5rem;
-            align-items: center;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .calc-group select, .calc-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #CCC;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .calc-results {
+            background: linear-gradient(135deg, var(--dark-green), var(--primary-green));
+            color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .calc-results h3 {
+            color: var(--accent-gold);
+            margin-bottom: 1rem;
+        }
+
+        .result-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--white);
+            margin: 0.5rem 0;
         }
 
         /* ================================
@@ -402,7 +419,7 @@
            ================================ */
         .contact {
             padding: 80px 0;
-            background-color: var(--white);
+            background-color: var(--light-bg);
         }
 
         .contact-content {
@@ -418,27 +435,6 @@
             margin-bottom: 2rem;
         }
 
-        .quick-contact-btn {
-            flex: 1 1 240px;
-        }
-
-        .quick-contact-whatsapp {
-            border-color: #25D366;
-            color: #1B4D2F;
-        }
-
-        .quick-contact-whatsapp:hover {
-            background-color: #25D366;
-            border-color: #25D366;
-            color: var(--white);
-        }
-
-        @media (max-width: 480px) {
-            .quick-contact {
-                flex-direction: column;
-            }
-        }
-
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -447,30 +443,16 @@
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
-            color: var(--text-dark);
         }
 
         .form-group input,
         .form-group textarea {
             width: 100%;
             padding: 12px 15px;
-            border: 2px solid #E0E0E0;
+            border: 1px solid #CCC;
             border-radius: 6px;
             font-size: 1rem;
             font-family: inherit;
-            transition: var(--transition);
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary-green);
-            box-shadow: 0 0 0 3px rgba(45, 125, 77, 0.1);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 150px;
         }
 
         .form-submit {
@@ -488,12 +470,6 @@
 
         .form-submit:hover {
             background-color: var(--light-green);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(45, 125, 77, 0.3);
-        }
-
-        .form-submit:active {
-            transform: translateY(0);
         }
 
         /* ================================
@@ -518,197 +494,11 @@
             margin-bottom: 1rem;
         }
 
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section ul li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-section a {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .footer-section a:hover {
-            color: var(--accent-gold);
-        }
-
         .footer-bottom {
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             padding-top: 2rem;
             color: rgba(255, 255, 255, 0.6);
             font-size: 0.9rem;
-        }
-
-        /* ================================
-           Animations
-           ================================ */
-        @keyframes slideInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-        }
-
-        /* ================================
-           Responsive Design
-           ================================ */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2.5rem;
-            }
-
-            h2 {
-                font-size: 1.8rem;
-            }
-
-            .header-content {
-                padding: 1rem 0;
-            }
-
-            .nav {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 60px;
-                left: 0;
-                right: 0;
-                background-color: var(--white);
-                padding: 1.5rem;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-                gap: 1rem;
-                z-index: 99;
-            }
-
-            .nav.active {
-                display: flex;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .hero {
-                padding: 60px 0;
-            }
-
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1rem;
-            }
-
-            .hero-buttons {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .btn {
-                width: 100%;
-            }
-
-            .services {
-                padding: 50px 0;
-            }
-
-            .contact {
-                padding: 50px 0;
-            }
-
-            .grid {
-                gap: 1.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 2rem;
-            }
-
-            h2 {
-                font-size: 1.5rem;
-            }
-
-            h3 {
-                font-size: 1.2rem;
-            }
-
-            .hero {
-                padding: 40px 0;
-            }
-
-            .service-card {
-                padding: 1.5rem;
-            }
-
-            .container {
-                padding: 0 15px;
-            }
-        }
-
-        /* ================================
-           Utility Classes
-           ================================ */
-        .text-center {
-            text-align: center;
-        }
-
-        .mt-4 {
-            margin-top: 2rem;
-        }
-
-        .mb-4 {
-            margin-bottom: 2rem;
-        }
-
-        .success-message {
-            background-color: #4CAF50;
-            color: white;
-            padding: 1rem;
-            border-radius: 6px;
-            margin-bottom: 1rem;
-            display: none;
-        }
-
-        .success-message.show {
-            display: block;
-            animation: slideInDown 0.5s ease-out;
         }
     </style>
 </head>
@@ -728,6 +518,7 @@
                 <nav class="nav" id="nav-menu">
                     <li><a href="#home">الرئيسية</a></li>
                     <li><a href="#services">خدماتنا</a></li>
+                    <li><a href="#calculator">حاسبة الكربون</a></li>
                     <li><a href="#climate">حلول المناخ</a></li>
                     <li><a href="#contact">تواصل معنا</a></li>
                 </nav>
@@ -747,10 +538,10 @@
             <div class="hero-content">
                 <h1>دمج التكنولوجيا المتقدمة بالاستدامة البيئية</h1>
                 <p class="hero-subtitle">
-                    منصة ذكية متكاملة لقياس وتوثيق أصول المناخ، وتحسين الإنتاجية الزراعية، وتحقيق التنمية المستدامة
+                    منصة ذكية متكاملة لقياس وتوثيق أصول المناخ، وتحسين الإنتاجية الزراعية وفق معايير IPCC العالمية
                 </p>
                 <div class="hero-buttons">
-                    <a href="#services" class="btn btn-primary btn-hero-primary">اكتشف خدماتنا</a>
+                    <a href="#calculator" class="btn btn-primary btn-hero-primary">جرب حاسبة الكربون</a>
                     <a href="#contact" class="btn btn-secondary btn-hero-secondary">تواصل مع الخبراء</a>
                 </div>
             </div>
@@ -766,64 +557,77 @@
             </div>
 
             <div class="grid">
-                <!-- Service 1 -->
                 <div class="service-card">
                     <div class="service-icon">💻</div>
                     <h3>حلول تكنولوجيا المعلومات</h3>
                     <p>
-                        منصة رقمية متكاملة تجمع بين طبقة الأجهزة الذكية الميدانية (IoT Hardware) وأنظمة معالجة وتحليل بيانات مطوّرة بلغة Python، ضمن بنية برمجية مملوكة ومحمية بالكامل بموجب حقوق الملكية الفكرية (IP)، وليست مجرد اشتراك في خدمات سحابية جاهزة
+                        منصة رقمية تجمع بين طبقة الأجهزة الذكية الميدانية (IoT) ومحرك تحليل بيانات مطوّرة بـ Python، وبنية برمجية محمية بحقوق الملكية الفكرية (IP).
                     </p>
-                    <ul style="text-align: right; color: var(--text-light); font-size: 0.9rem; margin: 0 0 1.5rem; padding-right: 1.2rem; line-height: 1.9;">
-                        <li>طبقة أجهزة استشعار وحساسات ميدانية (IoT)</li>
-                        <li>محرك تحليل بيانات وخوارزميات مطوّرة بـ Python</li>
-                        <li>ملكية فكرية محمية للبنية البرمجية والنماذج الحسابية</li>
-                    </ul>
-                    <a href="#contact">تعرف أكثر ←</a>
                 </div>
-
-                <!-- Service 2 -->
                 <div class="service-card">
                     <div class="service-icon">🛰️</div>
                     <h3>مراقبة الغطاء النباتي</h3>
                     <p>
-                        استخدام بيانات Sentinel-2 ومؤشر NDVI لقياس صحة المحاصيل ومراقبة التربة بدقة عالية، مما يحسن الإنتاجية ويقلل الموارد المهدرة
+                        استخدام بيانات Sentinel-2 ومؤشر NDVI لقياس صحة المحاصيل ومراقبة التربة بدقة عالية ومستمرة.
                     </p>
-                    <a href="#climate">اكتشف المزيد ←</a>
                 </div>
-
-                <!-- Service 3 -->
                 <div class="service-card">
                     <div class="service-icon">🌍</div>
                     <h3>أصول المناخ وأسواق الكربون</h3>
                     <p>
-                        استشارات شاملة وتطبيقات متخصصة لتوثيق احتجاز الكربون والاستفادة من أسواق الكربون الدولية بأمان وشفافية كاملة
+                        استشارات وتطبيقات متخصصة لتوثيق احتجاز الكربون والاستفادة من أسواق الكربون الدولية وفق معايير Verra VCS.
                     </p>
-                    <a href="#contact">ابدأ الآن ←</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Climate Solutions Section -->
-    <section class="climate-section" id="climate" style="background-color: var(--white); padding: 80px 0; border-top: 1px solid #E0E0E0;">
+    <!-- Carbon Sequestration Calculator Section (NEW) -->
+    <section class="carbon-calc-section" id="calculator">
         <div class="container">
             <div class="section-title">
-                <h2>حلول أصول المناخ</h2>
-                <p>تقنيات معترف بها دولياً لقياس وتوثيق الكربون</p>
+                <h2>حاسبة أصول الكربون التفاعلية</h2>
+                <p>احسب معدل احتجاز الكربون والعوائد المتوقعة لمشروعك الزراعي (وفق IPCC Tier 2)</p>
             </div>
 
-            <div class="grid">
-                <div style="background: linear-gradient(135deg, var(--primary-green), var(--light-green)); color: white; padding: 2rem; border-radius: 10px;">
-                    <h3 style="color: var(--accent-gold);">Verra VCS Certified</h3>
-                    <p>نظام معتمد دولياً لقياس واحتساب شهادات الكربون بما يتوافق مع أعلى المعايير العالمية</p>
+            <div class="calculator-box">
+                <div class="calc-grid">
+                    <div class="calc-group">
+                        <label for="crop-select">اختر المحصول:</label>
+                        <select id="crop-select">
+                            <option value="orange" data-rate="23.0">برتقال (Citrus - Woody)</option>
+                            <option value="mango" data-rate="28.8">مانجو (Tropical - Woody)</option>
+                            <option value="banana" data-rate="20.8">موز (Herbaceous)</option>
+                            <option value="date_palm" data-rate="21.8">نخيل البلح (Arid - Woody)</option>
+                            <option value="prickly_pear" data-rate="7.1">تين شوكي (Prickly Pear - Herbaceous)</option>
+                            <option value="jojoba" data-rate="7.2">جوجوبا (Jojoba - Woody)</option>
+                        </select>
+                    </div>
+
+                    <div class="calc-group">
+                        <label for="area-input">المساحة (بالهكتار):</label>
+                        <input type="number" id="area-input" value="50" min="1" max="10000">
+                    </div>
                 </div>
-                <div style="background: linear-gradient(135deg, var(--primary-blue), #0099CC); color: white; padding: 2rem; border-radius: 10px;">
-                    <h3 style="color: var(--accent-gold);">Blockchain Verification</h3>
-                    <p>تسجيل آمن وشفاف لجميع المعاملات على البلوك تشين لضمان تراكمية البيانات والمصداقية</p>
+
+                <div class="calc-group" style="margin-bottom: 1.5rem;">
+                    <label for="irrigation-select">نظام الري (تأثير الإجهاد المائي - WSF):</label>
+                    <select id="irrigation-select">
+                        <option value="1.00">ري بالتنقيط (منتظم - 100%)</option>
+                        <option value="0.90">ري غمر مستقر (90%)</option>
+                        <option value="0.75">ري غمر متذبذب (75%)</option>
+                        <option value="0.60">ري محدود / إجهاد مائي (60%)</option>
+                    </select>
                 </div>
-                <div style="background: linear-gradient(135deg, #1B4D2F, var(--primary-green)); color: white; padding: 2rem; border-radius: 10px;">
-                    <h3 style="color: var(--accent-gold);">Real-time Monitoring</h3>
-                    <p>مراقبة فورية للبيانات من الحقول والأجهزة الذكية لضمان دقة القياسات والتحديثات المستمرة</p>
+
+                <button type="button" class="form-submit" onclick="calculateCarbon()">احسب إجمالي الاحتجاز والعائد</button>
+
+                <div class="calc-results" id="calc-results-box">
+                    <h3>نتائج التقييم البيئي والاقتصادي</h3>
+                    <p>إجمالي الاحتجاز السنوي:</p>
+                    <div class="result-number" id="total-co2">1,150 طن CO₂e / سنويأ</div>
+                    <p>العائد المالي المتوقع (سعر السعر الافتراضي 25$ للطن):</p>
+                    <div class="result-number" id="total-revenue" style="color: var(--accent-gold);">$28,750 / سنوياً</div>
                 </div>
             </div>
         </div>
@@ -834,42 +638,24 @@
         <div class="container">
             <div class="section-title">
                 <h2>تواصل معنا</h2>
-                <p>احصل على استشارة مجانية من خبرائنا حول كيفية الاستفادة من حلولنا</p>
+                <p>احصل على استشارة متخصصة حول كيفية تفعيل أصول المناخ لمشروعك</p>
             </div>
 
             <div class="contact-content">
-                <div class="quick-contact">
-                    <a href="mailto:info@nilus-eca.com" class="btn btn-primary quick-contact-btn">
-                        ✉️ راسلنا عبر البريد الإلكتروني
-                    </a>
-                    <a href="https://wa.me/201234567890" target="_blank" rel="noopener" class="btn btn-secondary quick-contact-btn quick-contact-whatsapp">
-                        💬 تواصل مباشرة عبر واتساب
-                    </a>
-                </div>
-
-                <div class="success-message" id="success-message">
-                    ✅ شكراً لك! تم استقبال رسالتك بنجاح. سنتواصل معك قريباً.
-                </div>
-
                 <form id="contact-form" onsubmit="handleSubmit(event)">
                     <div class="form-group">
                         <label for="name">الاسم الكامل</label>
-                        <input type="text" id="name" name="name" required placeholder="أدخل اسمك الكامل">
+                        <input type="text" id="name" required placeholder="أدخل اسمك الكامل">
                     </div>
 
                     <div class="form-group">
                         <label for="email">البريد الإلكتروني</label>
-                        <input type="email" id="email" name="email" required placeholder="your@email.com">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="phone">رقم الهاتف (اختياري)</label>
-                        <input type="tel" id="phone" name="phone" placeholder="+20 1234567890">
+                        <input type="email" id="email" required placeholder="your@email.com">
                     </div>
 
                     <div class="form-group">
                         <label for="message">الرسالة</label>
-                        <textarea id="message" name="message" required placeholder="اكتب رسالتك هنا..."></textarea>
+                        <textarea id="message" required placeholder="اكتب تفاصيل مشروعك الزراعي أو الاستفسار..."></textarea>
                     </div>
 
                     <button type="submit" class="form-submit">إرسال الرسالة</button>
@@ -883,142 +669,49 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4>عن نيلوس</h4>
-                    <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.95rem;">
-                        منصة ذكية متخصصة في الزراعة المستدامة وأسواق الكربون، تهدف إلى دمج التكنولوجيا المتقدمة مع الاستدامة البيئية لتحقيق التنمية المستدامة.
-                    </p>
+                    <h4>نيلوس للتقنيات الرقمية وأصول المناخ</h4>
+                    <p style="color: rgba(255, 255, 255, 0.7);">منصة رائدة في الزراعة الذكية وأسواق الكربون المستدام بالمنيا، مصر.</p>
                 </div>
-
-                <div class="footer-section">
-                    <h4>الخدمات</h4>
-                    <ul>
-                        <li><a href="#services">حلول تكنولوجيا المعلومات</a></li>
-                        <li><a href="#climate">مراقبة الأقمار الصناعية</a></li>
-                        <li><a href="#climate">أصول المناخ</a></li>
-                        <li><a href="#contact">الاستشارات</a></li>
-                    </ul>
-                </div>
-
                 <div class="footer-section">
                     <h4>التواصل</h4>
-                    <ul>
-                        <li>✉️ <a href="mailto:info@nilus-eca.com">info@nilus-eca.com</a></li>
-                        <li>📞 <a href="https://wa.me/201234567890" target="_blank" rel="noopener">+20 1234567890</a></li>
-                        <li>📍 المنيا، جمهورية مصر العربية</li>
-                    </ul>
+                    <p>✉️ info@nilus-eca.com<br>📍 المنيا، جمهورية مصر العربية</p>
                 </div>
             </div>
-
             <div class="footer-bottom">
-                <p>&copy; 2024 نيلوس للتقنيات الرقمية وأصول المناخ | جميع الحقوق محفوظة</p>
+                <p>&copy; 2026 نيلوس للتقنيات الرقمية وأصول المناخ | جميع الحقوق محفوظة</p>
             </div>
         </div>
     </footer>
 
-    <!-- JavaScript -->
+    <!-- Script for Carbon Calculator -->
     <script>
-        // Mobile Menu Toggle
-        const hamburger = document.getElementById('hamburger');
-        const navMenu = document.getElementById('nav-menu');
+        function calculateCarbon() {
+            const cropSelect = document.getElementById('crop-select');
+            const selectedOption = cropSelect.options[cropSelect.selectedIndex];
+            const baseRatePerHa = parseFloat(selectedOption.getAttribute('data-rate'));
+            
+            const area = parseFloat(document.getElementById('area-input').value) || 0;
+            const irrigationFactor = parseFloat(document.getElementById('irrigation-select').value) || 1.0;
 
-        hamburger.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-        });
+            // حساب المعادلة المحدثة مع معامل الإجهاد المائي
+            const adjustedRatePerHa = baseRatePerHa * irrigationFactor;
+            const totalCO2 = adjustedRatePerHa * area;
+            const carbonPricePerTon = 25; // $25 per ton
+            const totalRevenue = totalCO2 * carbonPricePerTon;
 
-        // Close menu when a link is clicked
-        navMenu.addEventListener('click', (e) => {
-            if (e.target.tagName === 'A') {
-                navMenu.classList.remove('active');
-            }
-        });
-
-        // Form Submission Handler
-        function handleSubmit(event) {
-            event.preventDefault();
-
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const message = document.getElementById('message').value;
-
-            // Validate form
-            if (!name || !email || !message) {
-                alert('يرجى ملء جميع الحقول المطلوبة');
-                return;
-            }
-
-            // Log the form data (in a real app, this would be sent to a server)
-            console.log('Form Data:', {
-                name,
-                email,
-                phone,
-                message,
-                timestamp: new Date().toISOString()
-            });
-
-            // Show success message
-            const successMessage = document.getElementById('success-message');
-            successMessage.classList.add('show');
-
-            // Reset form
-            document.getElementById('contact-form').reset();
-
-            // Hide success message after 5 seconds
-            setTimeout(() => {
-                successMessage.classList.remove('show');
-            }, 5000);
+            // عرض النتائج
+            document.getElementById('total-co2').innerText = totalCO2.toLocaleString('en-US', {maximumFractionDigits: 1}) + ' طن CO₂e / سنوياً';
+            document.getElementById('total-revenue').innerText = '$' + totalRevenue.toLocaleString('en-US', {maximumFractionDigits: 0}) + ' / سنوياً';
         }
 
-        // Smooth scroll enhancement
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const href = this.getAttribute('href');
-                if (href !== '#' && document.querySelector(href)) {
-                    e.preventDefault();
-                    document.querySelector(href).scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
+        function handleSubmit(event) {
+            event.preventDefault();
+            alert('شكراً لك! تم استلام رسالتك بنجاح، وسنتواصل معك قريباً.');
+            document.getElementById('contact-form').reset();
+        }
 
-        // Add scroll effect to header
-        let lastScrollTop = 0;
-        const header = document.querySelector('header');
-
-        window.addEventListener('scroll', () => {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            
-            if (scrollTop > 100) {
-                header.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.15)';
-            } else {
-                header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
-            }
-            
-            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-        });
-
-        // Animate elements on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.service-card').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-            observer.observe(card);
-        });
+        // تشغيل الحاسبة تلقائياً عند التحميل
+        window.onload = calculateCarbon;
     </script>
 </body>
 </html>
