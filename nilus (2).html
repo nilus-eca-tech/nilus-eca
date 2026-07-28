@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>»—‰«„Ã «·≈œ«—… «·–ﬂÌ… ·√’Ê· «·„‰«Œ | Nilus ECA</title>
+    <style>
+        :root {
+            --primary: #1B4D2F;
+            --secondary: #2D7D4D;
+            --accent: #4CAF7F;
+            --dark: #0A192F;
+            --gold: #D4AF37;
+            --light: #F8FAF9;
+            --white: #FFFFFF;
+            --gray: #E2ECE6;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--light); color: var(--dark); line-height: 1.6; }
+
+        header {
+            background: linear-gradient(135deg, var(--dark), var(--primary));
+            color: var(--white);
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        header p { color: rgba(255,255,255,0.8); font-size: 1rem; }
+
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media(max-width: 900px) {
+            .app-grid { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            border: 1px solid var(--gray);
+            margin-bottom: 25px;
+        }
+
+        .card h2 { font-size: 1.3rem; color: var(--primary); margin-bottom: 20px; border-bottom: 2px solid var(--gray); padding-bottom: 10px; }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.95rem; }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: var(--white);
+            transition: all 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--secondary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(45, 125, 77, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: var(--white);
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(45, 125, 77, 0.2);
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(45, 125, 77, 0.3); }
+
+        .results-box {
+            background: linear-gradient(135deg, var(--dark), #112B20);
+            color: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        .results-box h3 { color: var(--gold); margin-bottom: 15px; font-size: 1.1rem; }
+        .result-item { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
+        .result-value { font-weight: 700; color: var(--accent); }
+
+        .sensor-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .sensor-card {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--gray);
+            text-align: center;
+        }
+        .sensor-card h4 { font-size: 0.85rem; color: #666; margin-bottom: 5px; }
+        .sensor-card .val { font-size: 1.4rem; font-weight: 800; color: var(--primary); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        th, td { padding: 10px; text-align: right; border-bottom: 1px solid var(--gray); }
+        th { background-color: var(--light); color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>NILUS ECA - ÊÕœ… «·≈œ«—… «·„Ìœ«‰Ì… Ê«· Õ·Ì·</h1>
+            <p>»—‰«„Ã „ ﬂ«„· ·„ «»⁄… «·√—«÷Ì°  Õ·Ì· „ƒ‘—«  «·√ﬁ„«— «·’‰«⁄Ì…° ÊÕ”«» √—’œ… «·ﬂ—»Ê‰ (Tier 2)</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="app-grid">
+            
+            <!-- «·⁄„Êœ «·√Ì„‰: Õ«”»… «·ﬂ—»Ê‰ Ê≈œ«—… «·ÕﬁÊ· -->
+            <div>
+                <div class="card">
+                    <h2>≈œ«—… «·Õﬁ· ÊÕ”«» √—’œ… «·ﬂ—»Ê‰</h2>
+                    <form id="fieldForm" onsubmit="processFieldData(event)">
+                        <div class="form-group">
+                            <label for="fieldName">«”„ «·Õﬁ· / «·„“—⁄…</label>
+                            <input type="text" id="fieldName" value="„“—⁄… «·«” ’·«Õ - «·„‰Ì«" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cropType">‰Ê⁄ «·„Õ’Ê· («·‘Ã—Ì / «·‰»« Ì)</label>
+                            <select id="cropType">
+                                <option value="23.0">»— ﬁ«· (Citrus - Woody) [23 ÿ‰/Âﬂ «—]</option>
+                                <option value="28.8">„«‰ÃÊ (Tropical - Woody) [28.8 ÿ‰/Âﬂ «—]</option>
+                                <option value="21.8">‰ŒÌ· «·»·Õ (Arid - Woody) [21.8 ÿ‰/Âﬂ «—]</option>
+                                <option value="7.2">ÃÊÃÊ»« (Jojoba) [7.2 ÿ‰/Âﬂ «—]</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="areaSize">«·„”«Õ… (»«·Âﬂ «—)</label>
+                            <input type="number" id="areaSize" value="40" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="irrigationSystem">‰Ÿ«„ «·—Ì („⁄«„· «· ÕÊÿ «·„«∆Ì)</label>
+                            <select id="irrigationSystem">
+                                <option value="1.0">—Ì »«· ‰ﬁÌÿ „‰ Ÿ„ (100%)</option>
+                                <option value="0.85">—Ì €„— / ≈ÃÂ«œ Œ›Ì› (85% -  ÕÊÿ)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn">Õ”«» Ê Õ·Ì· √’Ê· «·ﬂ—»Ê‰</button>
+                    </form>
+
+                    <div class="results-box" id="calcResults">
+                        <h3>‰ «∆Ã «·ﬁÌ«” Ê«· ÕﬁÌﬁ «·„«·Ì</h3>
+                        <div class="result-item"><span>≈Ã„«·Ì «·«Õ Ã«“ «·”‰ÊÌ:</span> <span class="result-value" id="resCO2">920.0 ÿ‰ CO?e</span></div>
+                        <div class="result-item"><span>«·⁄«∆œ «·„ Êﬁ⁄ (25$ ··ÿ‰):</span> <span class="result-value" id="resRevenue">$23,000</span></div>
+                        <div class="result-item"><span>Õ«·… «·«„ À«· (Verra/VVB):</span> <span class="result-value" style="color: var(--gold);">Ã«Â“ ·· œﬁÌﬁ (Ready)</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- «·⁄„Êœ «·√Ì”—: „Õ«ﬂ«… «·Õ”«”«  Ê„ƒ‘—«  «·√ﬁ„«— «·’‰«⁄Ì… (Sentinel-2 & IoT) -->
+            <div>
+                <div class="card">
+                    <h2>„ƒ‘—«  «·Õ”«”«  «·√—÷Ì… Ê’Ê— «·√ﬁ„«— «·’‰«⁄Ì…</h2>
+                    <div class="sensor-grid">
+                        <div class="sensor-card">
+                            <h4>„ƒ‘— «·€ÿ«¡ «·‰»« Ì (NDVI)</h4>
+                            <div class="val" id="ndviVal">0.78</div>
+                            <small style="color: #2D7D4D;">’Õ… „„ «“… ··„Õ’Ê·</small>
+                        </div>
+                        <div class="sensor-card">
+                            <h4>—ÿÊ»… «· —»… (IoT Sensor)</h4>
+                            <div class="val" id="soilVal">28.4%</div>
+                            <small style="color: #2D7D4D;">„⁄œ· —Ì „À«·Ì</small>
+                        </div>
+                        <div class="sensor-card" style="margin-top: 15px;">
+                            <h4>œ—Ã… Õ—«—… «· —»…</h4>
+                            <div class="val">26.5 ∞C</div>
+                            <small style="color: #666;">„” ﬁ—</small>
+                        </div>
+                        <div class="sensor-card" style="margin-top: 15px;">
+                            <h4>œﬁ… «·≈Õœ«ÀÌ«  (GPS)</h4>
+                            <div class="val">± 1.2m</div>
+                            <small style="color: #666;">„ƒ—‘› »«·ﬂ«„·</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>”Ã· «· œﬁÌﬁ «·—ﬁ„Ì (Audit Trail)</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>«· «—ÌŒ Ê«·Êﬁ </th>
+                                <th>«·⁄„·Ì…</th>
+                                <th>«·Õ«·…</th>
+                            </tr>
+                        </thead>
+                        <tbody id="auditTable">
+                            <tr>
+                                <td>2026-07-28 18:10</td>
+                                <td> ÕœÌÀ ≈Õœ«ÀÌ«  «·Õﬁ· (Polygon)</td>
+                                <td style="color: var(--secondary); font-weight: bold;">„⁄ „œ</td>
+                            </tr>
+                            <tr>
+                                <td>2026-07-28 12:00</td>
+                                <td>ﬁ—«¡… »Ì«‰«  Sentinel-2 NDVI</td>
+                                <td style="color: var(--secondary); font-weight: bold;">„ﬂ „·</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function processFieldData(event) {
+            event.preventDefault();
+            
+            const cropRate = parseFloat(document.getElementById('cropType').value);
+            const area = parseFloat(document.getElementById('areaSize').value);
+            const irrFactor = parseFloat(document.getElementById('irrigationSystem').value);
+
+            const totalCO2 = cropRate * area * irrFactor;
+            const revenue = totalCO2 * 25.0;
+
+            document.getElementById('resCO2').innerText = totalCO2.toLocaleString('en-US', {maximumFractionDigits: 1}) + ' ÿ‰ CO?e';
+            document.getElementById('resRevenue').innerText = '$' + revenue.toLocaleString('en-US', {maximumFractionDigits: 0});
+
+            //  ÕœÌÀ ”Ã· «· œﬁÌﬁ
+            const table = document.getElementById('auditTable');
+            const now = new Date().toISOString().slice(0, 16).replace('T', ' ');
+            const newRow = table.insertRow(0);
+            newRow.innerHTML = `<td>${now}</td><td>≈⁄«œ… Õ”«» «·√’Ê· «·ﬂ—»Ê‰Ì…</td><td style="color: var(--secondary); font-weight: bold;">„ÕœÀ</td>`;
+            
+            alert(' „  ÕœÌÀ «·Õ”«»«  Ê≈œ—«Ã «·”Ã· «·—ﬁ„Ì »‰Ã«Õ!');
+        }
+    </script>
+</body>
+</html>
