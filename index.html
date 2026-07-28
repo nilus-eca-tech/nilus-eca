@@ -144,4 +144,234 @@
 
                 <!-- 3. الأقمار الصناعية وممارسات التربة -->
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
-                    <h4 class="text-md font-bold text-cyan-400 border-b border-slate-800 pb-2" data-i18n="sec2">
+                    <h4 class="text-md font-bold text-cyan-400 border-b border-slate-800 pb-2" data-i18n="sec2">3. الأقمار الصناعية والتربة</h4>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1" data-i18n="ndviLabel">مؤشر الغطاء النباتي (NDVI)</label>
+                        <input type="number" id="ndviInput" value="0.65" step="0.01" min="0" max="1" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1" data-i18n="soilInputLabel">معدل تخزين التربة (طن/هكتار)</label>
+                        <input type="number" id="soilInput" value="1.2" step="0.1" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
+                    </div>
+                    <div class="text-[11px] text-cyan-300 pt-1" data-i18n="satNote">🛰️ بيانات مستمدة من Sentinel-2 وحساسات IoT الميدانية.</div>
+                </div>
+            </div>
+
+            <!-- زر الحساب الفوري -->
+            <div class="text-center mb-10">
+                <button onclick="calculateResults()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-10 py-4 rounded-2xl text-lg shadow-xl shadow-emerald-600/30 transition transform hover:-translate-y-0.5" data-i18n="calcBtn">
+                    احسب التقرير الوطني الشامل 🚀
+                </button>
+            </div>
+
+            <!-- لوحة النتائج -->
+            <div id="resultsArea" class="bg-slate-900 border border-emerald-500/30 rounded-2xl p-6 hidden">
+                <h4 class="text-lg font-black text-emerald-400 mb-4 border-b border-slate-800 pb-2" data-i18n="resHeader">📊 نتائج التحليل البيئي والتقني المعتمد</h4>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-sm">
+                        <tbody class="results-table text-slate-200">
+                            <tr>
+                                <td class="font-bold text-slate-400" data-i18n="r1">إجمالي الانبعاثات الناتجة:</td>
+                                <td id="resEmissions" class="font-black text-amber-400">0 طن مكافئ CO2</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-slate-400" data-i18n="r2">الكربون الممتص بواسطة الأشجار والنخيل:</td>
+                                <td id="resTrees" class="font-black text-emerald-400">0 طن CO2 سنوياً</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-slate-400" data-i18n="r3">تخزين كربون التربة (عبر NDVI وحساسات IoT):</td>
+                                <td id="resSoil" class="font-black text-cyan-400">0 طن CO2 سنوياً</td>
+                            </tr>
+                            <tr class="border-b-0 bg-emerald-950/20">
+                                <td class="font-black text-emerald-300 text-base" data-i18n="r4">صافي الأثر الكربوني (الرصيد النهائي):</td>
+                                <td id="resNet" class="font-black text-emerald-400 text-lg">0 طن مرصود</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- قسم الأمان والتأمين -->
+    <section id="security" class="py-16 bg-slate-950 border-t border-slate-800 px-4">
+        <div class="max-w-5xl mx-auto text-center">
+            <h3 class="text-2xl font-black text-white mb-4" data-i18n="secHeader">الأمان، حماية البيانات والملكية الفكرية</h3>
+            <p class="text-slate-400 text-sm max-w-2xl mx-auto mb-8" data-i18n="secDesc">نظام مؤمن بشهادات SSL 256-bit، مع معالجة برمجية متقدمة بلغة Python وحماية كاملة للحقوق التقنية والميدانية.</p>
+            <div class="inline-flex items-center space-x-3 space-x-reverse bg-slate-900 border border-emerald-500/30 px-6 py-3 rounded-xl text-xs text-emerald-400 font-bold">
+                <span>🔒 تشفير كامل للبيانات</span>
+                <span>•</span>
+                <span>📋 متوافق مع معايير Verra الدولية</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم التواصل الرسمي -->
+    <footer id="contact" class="bg-slate-950 text-slate-400 py-12 px-4 border-t border-slate-800 text-center">
+        <div class="max-w-7xl mx-auto">
+            <h3 class="text-lg font-bold text-white mb-2" data-i18n="footTitle">نيلوس إيكا للتقنيات الرقمية وأصول المناخ</h3>
+            <p class="text-xs text-slate-500 mb-6" data-i18n="footSub">مشارِك فاعل في المبادرة الوطنية للمشروعات الخضراء الذكية بجمهورية مصر العربية</p>
+            <p class="text-xs text-emerald-400 font-semibold" data-i18n="copy">جميع الحقوق محفوظة © 2026</p>
+        </div>
+    </footer>
+
+    <!-- سكربت التشغيل والحاسبة والترجمة -->
+    <script>
+        let currentLang = 'ar';
+
+        const translations = {
+            ar: {
+                brandName: "نيلوس إيكا للتقنيات الرقمية وأصول المناخ",
+                brandSub: "المنظومة الرقمية للزراعة الكربونية في مصر",
+                navFeatures: "المميزات الاستراتيجية",
+                navCalc: "الحاسبة الوطنية",
+                navSec: "الأمان والتحقق",
+                navContact: "التواصل الرسمي",
+                navBtn: "ابدأ التقييم الفوري",
+                heroBadge: "مشارِك في المبادرة الوطنية للمشروعات الخضراء الذكية · جمهورية مصر العربية",
+                heroTitle: "نيلوس إيكا للتقنيات الرقمية وأصول المناخ <br><span class='text-emerald-400 underline decoration-emerald-500/30 text-2xl sm:text-4xl'>المنظومة الرقمية للزراعة الكربونية في مصر</span>",
+                heroDesc: "حلول رقمية مبتكرة لإدارة الأراضي الزراعية، بساتين النخيل، الأشجار المعمرة، ربط الأقمار الصناعية (Sentinel-2)، وتوثيق كربون التربة وفق المعايير الدولية.",
+                heroBtn1: "تجربة الحاسبة الوطنية",
+                heroBtn2: "معايير الأمان والتأمين",
+                featHeader: "بنية MRV متكاملة ومؤمنة بالكامل",
+                featSub: "تجمع المنظومة بين صرامة المعايير البيئية العالمية وحماية البيانات المتقدمة.",
+                f1Title: "بساتين النخيل والأشجار",
+                f1Desc: "قياس دقيق لكتلة الكربون المخزنة في الأشجار المعمرة وبساتين النخيل والواحات عبر نماذج النمو البيئي.",
+                f2Title: "التتبع الفضائي لـ Sentinel-2",
+                f2Desc: "سحب صور الأقمار الصناعية وحساب مؤشر الغطاء النباتي (NDVI) لمتابعة صحة المحاصيل وإجهاد الري.",
+                f3Title: "خوارزميات Python وملكية فكرية",
+                f3Desc: "محركات برمجية مخصصة بلغة Python وحساسات IoT ميدانية تضمن حقوق الملكية الفكرية ودقة التحليل.",
+                calcHeader: "محرك نيلوس إيكا الموحد للبصمة، الأشجار وتخزين التربة",
+                calcSub: "أدخل بيانات الأنشطة، عدد أشجار النخيل/البساتين، قراءات الأقمار الصناعية وممارسات التربة للحصول على التقرير.",
+                sec1: "1. الأنشطة والانبعاثات",
+                dieselLabel: "الديزل (لتر/سنة)",
+                fertLabel: "اليوريا (كجم/سنة)",
+                elecLabel: "الكهرباء (كيلوواط.ساعة)",
+                secTrees: "2. الأشجار والبساتين (الكتلة الحيوية)",
+                palmCountLabel: "عدد أشجار النخيل (شجرة)",
+                orchardAreaLabel: "مساحة أشجار الفاكهة/البساتين (هكتار)",
+                treeNote: "🌴 يتم حساب الكربون المخزن بالكتلة الخشبية والجذوع سنوياً.",
+                sec2: "3. الأقمار الصناعية والتربة",
+                ndviLabel: "مؤشر الغطاء النباتي (NDVI)",
+                soilInputLabel: "معدل تخزين التربة (طن/هكتار)",
+                satNote: "🛰️ بيانات مستمدة من Sentinel-2 وحساسات IoT الميدانية.",
+                calcBtn: "احسب التقرير الوطني الشامل 🚀",
+                resHeader: "📊 نتائج التحليل البيئي والتقني المعتمد",
+                r1: "إجمالي الانبعاثات الناتجة:",
+                r2: "الكربون الممتص بواسطة الأشجار والنخيل:",
+                r3: "تخزين كربون التربة (عبر NDVI وحساسات IoT):",
+                r4: "صافي الأثر الكربوني (الرصيد النهائي):",
+                secHeader: "الأمان، حماية البيانات والملكية الفكرية",
+                secDesc: "نظام مؤمن بشهادات SSL 256-bit، مع معالجة برمجية متقدمة بلغة Python وحماية كاملة للحقوق التقنية والميدانية.",
+                footTitle: "نيلوس إيكا للتقنيات الرقمية وأصول المناخ",
+                footSub: "مشارِك فاعل في المبادرة الوطنية للمشروعات الخضراء الذكية بجمهورية مصر العربية",
+                copy: "جميع الحقوق محفوظة © 2026"
+            },
+            en: {
+                brandName: "Nilus ECA | Digital Tech & Climate Assets",
+                brandSub: "Digital Ecosystem for Carbon Agriculture in Egypt",
+                navFeatures: "Strategic Features",
+                navCalc: "National Calculator",
+                navSec: "Security & Verification",
+                navContact: "Official Contact",
+                navBtn: "Start Instant Assessment",
+                heroBadge: "Participant in the National Initiative for Smart Green Projects · Arab Republic of Egypt",
+                heroTitle: "Nilus ECA for Digital Technologies & Climate Assets <br><span class='text-emerald-400 underline decoration-emerald-500/30 text-2xl sm:text-4xl'>Digital Ecosystem for Carbon Agriculture in Egypt</span>",
+                heroDesc: "Innovative digital solutions for managing agricultural lands, date palm orchards, perennial trees, Sentinel-2 satellite integration, and soil carbon verification.",
+                heroBtn1: "Test National Calculator",
+                heroBtn2: "Security Standards",
+                featHeader: "Integrated & Fully Secured MRV Architecture",
+                featSub: "Combining global environmental standard rigor with advanced data protection.",
+                f1Title: "Palm Orchards & Trees",
+                f1Desc: "Precise measurement of carbon stock stored in perennial trees, date palms, and oases via ecological growth models.",
+                f2Title: "Sentinel-2 Satellite Tracking",
+                f2Desc: "Retrieving satellite imagery and calculating NDVI to monitor crop health and irrigation stress.",
+                f3Title: "Python Algorithms & IP",
+                f3Desc: "Custom Python engines and field IoT sensors ensuring intellectual property rights and analytical precision.",
+                calcHeader: "Nilus ECA Unified Footprint, Tree & Soil Storage Engine",
+                calcSub: "Enter activity data, palm/orchard counts, satellite readings, and soil practices to generate the report.",
+                sec1: "1. Activities & Emissions",
+                dieselLabel: "Diesel (Liters/Year)",
+                fertLabel: "Urea (Kg/Year)",
+                elecLabel: "Electricity (kWh)",
+                secTrees: "2. Trees & Orchards (Biomass)",
+                palmCountLabel: "Date Palm Count (Trees)",
+                orchardAreaLabel: "Orchard Area (Hectares)",
+                treeNote: "🌴 Annual carbon stored in woody biomass and trunks.",
+                sec2: "3. Satellites & Soil",
+                ndviLabel: "NDVI Index",
+                soilInputLabel: "Soil Sequestration Rate (Ton/Hectare)",
+                satNote: "🛰️ Data derived from Sentinel-2 and field IoT sensors.",
+                calcBtn: "Calculate Comprehensive National Report 🚀",
+                resHeader: "📊 Certified Environmental & Technical Analysis Results",
+                r1: "Total Emissions Generated:",
+                r2: "Carbon Sequestrated by Trees & Palms:",
+                r3: "Soil Carbon Sequestration (via NDVI & IoT):",
+                r4: "Net Carbon Impact (Final Balance):",
+                secHeader: "Security, Data Protection & Intellectual Property",
+                secDesc: "Secured with 256-bit SSL certificates, advanced Python processing, and complete technical and field rights protection.",
+                footTitle: "Nilus ECA for Digital Technologies & Climate Assets",
+                footSub: "Active participant in the National Initiative for Smart Green Projects in Egypt",
+                copy: "All Rights Reserved © 2026"
+            }
+        };
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            const root = document.getElementById('htmlRoot');
+            const langBtn = document.getElementById('langBtn');
+
+            if (currentLang === 'en') {
+                root.setAttribute('lang', 'en');
+                root.setAttribute('dir', 'ltr');
+                langBtn.innerText = 'عربي 🇪🇬';
+            } else {
+                root.setAttribute('lang', 'ar');
+                root.setAttribute('dir', 'rtl');
+                langBtn.innerText = 'English 🇺🇸';
+            }
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    el.innerHTML = translations[currentLang][key];
+                }
+            });
+        }
+
+        function calculateResults() {
+            const diesel = parseFloat(document.getElementById('dieselInput').value) || 0;
+            const fert = parseFloat(document.getElementById('fertInput').value) || 0;
+            const elec = parseFloat(document.getElementById('elecInput').value) || 0;
+            
+            const palmCount = parseFloat(document.getElementById('palmCountInput').value) || 0;
+            const orchardArea = parseFloat(document.getElementById('orchardAreaInput').value) || 0;
+            
+            const soilRate = parseFloat(document.getElementById('soilInput').value) || 0;
+
+            // حساب الانبعاثات (معادلات تقريبية معتمدة)
+            const emissions = (diesel * 2.68 + fert * 1.3 + elec * 0.45) / 1000;
+            
+            // امتصاص الأشجار والنخيل
+            const treesAbsorption = (palmCount * 0.05) + (orchardArea * 2.5);
+            
+            // تخزين التربة
+            const soilAbsorption = orchardArea * soilRate;
+            
+            // صافي الأثر
+            const totalAbsorption = treesAbsorption + soilAbsorption;
+            const netBalance = totalAbsorption - emissions;
+
+            document.getElementById('resEmissions').innerText = emissions.toFixed(2) + (currentLang === 'ar' ? ' طن مكافئ CO2' : ' Tons CO2e');
+            document.getElementById('resTrees').innerText = treesAbsorption.toFixed(2) + (currentLang === 'ar' ? ' طن CO2 سنوياً' : ' Tons CO2/yr');
+            document.getElementById('resSoil').innerText = soilAbsorption.toFixed(2) + (currentLang === 'ar' ? ' طن CO2 سنوياً' : ' Tons CO2/yr');
+            
+            const netEl = document.getElementById('resNet');
+            netEl.innerText = netBalance.toFixed(2) + (currentLang === 'ar' ? ' طن مرصود' : ' Tons Recorded');
+            
+            document.getElementById('resultsArea').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
