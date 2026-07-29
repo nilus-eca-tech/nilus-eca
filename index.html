@@ -96,11 +96,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="ownerName" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="ownerLabel">اسم المالك / مستفيد العوائد</label>
-                        <input type="text" id="ownerName" placeholder="مثال: محمود محمد نصر" aria-label="اسم المالك" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-emerald-500 focus:outline-none">
+                        <input type="text" id="ownerName" placeholder="مثال: اسم المستفيد الثلاثي" aria-label="اسم المالك" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-emerald-500 focus:outline-none">
                     </div>
                     <div>
                         <label for="locationName" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="locLabel">منطقة الأرض / المحافظة</label>
-                        <input type="text" id="locationName" placeholder="مثال: المنيا - دماريس" aria-label="منطقة الأرض والمحافظة" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-emerald-500 focus:outline-none">
+                        <input type="text" id="locationName" placeholder="مثال: محافظة - المركز / القرية" aria-label="منطقة الأرض والمحافظة" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-emerald-500 focus:outline-none">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
@@ -425,7 +425,6 @@
             const orchardArea = parseFloat(document.getElementById('orchardAreaInput').value);
             const ndvi = parseFloat(document.getElementById('ndviInput').value);
 
-            // Validation (التحقق من المدخلات وبيانات الحيازة)
             if (!ownerName) {
                 showToast(currentLang === 'ar' ? 'الرجاء إدخال اسم المالك أو المستفيد لتوثيق العوائد' : 'Please enter owner name for credit attribution', 'error');
                 return;
@@ -444,7 +443,6 @@
             const totalAbsorption = treesAbsorption + soilAbsorption;
             const netBalance = totalAbsorption - emissions;
 
-            // عرض البيانات الموثقة
             document.getElementById('resOwnerName').innerText = ownerName + (locationName ? ` (${locationName})` : '');
             document.getElementById('resGpsCoords').innerText = (lat && lng) ? `Lat: ${lat}, Lng: ${lng}` : (currentLang === 'ar' ? 'محدد عبر المنطقة العامة' : 'Set by general region');
 
@@ -461,7 +459,6 @@
         function fetchSatelliteAPI() {
             const statusEl = document.getElementById('apiStatus');
             const ndviInput = document.getElementById('ndviInput');
-            const lat = document.getElementById('gpsLat').value;
             
             statusEl.innerText = currentLang === 'ar' ? '⏳ جاري استعلام إحداثيات GPS من Sentinel-2 API...' : '⏳ Querying GPS coordinates from Sentinel-2...';
             
