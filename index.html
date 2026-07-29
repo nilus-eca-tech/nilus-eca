@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlRoot">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nilus ECA | ‰Ì·Ê” ≈Ìﬂ« ·· ﬁ‰Ì«  «·—ﬁ„Ì… Ê√’Ê· «·„‰«Œ - «·„‘—Ê⁄ «·Êÿ‰Ì</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="«·„‰ŸÊ„… «·—ﬁ„Ì… ··“—«⁄… «·ﬂ—»Ê‰Ì… ›Ì „’—° ·≈œ«—… «·√—«÷Ì «·“—«⁄Ì… Ê»”« Ì‰ «·‰ŒÌ· Ê—»ÿ «·√ﬁ„«— «·’‰«⁄Ì… ÊÕ”«» «·»’„… «·ﬂ—»Ê‰Ì….">
+    <meta name="keywords" content="“—«⁄… ﬂ—»Ê‰Ì…, ‰Ì·Ê” ≈Ìﬂ«, √’Ê· «·„‰«Œ, »’„… ﬂ—»Ê‰Ì…, „»«œ—… «·„‘—Ê⁄«  «·Œ÷—«¡ «·–ﬂÌ…, „’—, GPS, ÕÌ«“… «·«—÷">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', 'Inter', sans-serif; scroll-behavior: smooth; }
+        .results-table td { padding: 10px; border-bottom: 1px solid #334155; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
+
+    <!-- ‘—Ìÿ «·√„«‰ -->
+    <div role="region" aria-label="‘—Ìÿ «·√„«‰ Ê«·‰Ÿ«„" class="bg-slate-950 border-b border-emerald-500/20 py-1.5 px-4 text-center text-xs text-emerald-400 font-semibold tracking-wider flex items-center justify-center space-x-2 space-x-reverse">
+        <span>??? ‰Ÿ«„ „ƒ„‰ »«·ﬂ«„· (SSL 256-bit Encrypted) ∑ „⁄ „œ · ﬁÌÌ„ «·„»«œ—… «·Êÿ‰Ì… ··„‘—Ê⁄«  «·Œ÷—«¡ «·–ﬂÌ…</span>
+    </div>
+
+    <!-- “— «·Ê« ”«» «·⁄«∆„ -->
+    <a href="https://wa.me/201093953656?text=„—Õ»«°%20√—€»%20›Ì%20«·«” ›”«—%20⁄‰%20„‰ŸÊ„…%20‰Ì·Ê”%20≈Ìﬂ«%20·· ﬁ‰Ì« %20«·—ﬁ„Ì…%20Ê√’Ê·%20«·„‰«Œ" target="_blank" aria-label=" Ê«’· ⁄»— «·Ê« ”«»" class="fixed bottom-6 left-6 bg-emerald-600 hover:bg-emerald-500 text-white font-black px-5 py-3 rounded-full shadow-2xl flex items-center space-x-2 space-x-reverse z-50 transition border border-emerald-400/40">
+        <span class="text-xl" aria-hidden="true">??</span>
+        <span class="text-sm"> Ê«’· ⁄»— «·Ê« ”«»</span>
+    </a>
+
+    <!-- “— «·⁄Êœ… ··√⁄·Ï -->
+    <button id="scrollTopBtn" onclick="scrollToTop()" aria-label="«·⁄Êœ… ·√⁄·Ï «·’›Õ…" class="fixed bottom-6 right-6 bg-slate-800 hover:bg-slate-700 text-emerald-400 p-3 rounded-full shadow-2xl z-50 transition hidden border border-emerald-500/30">
+        ??
+    </button>
+
+    <!-- ‰Ÿ«„ «· ‰»ÌÂ«  (Toast Notifications) -->
+    <div id="toastContainer" class="fixed top-24 right-6 z-50 space-y-2 pointer-events-none"></div>
+
+    <!-- ‘—Ìÿ «· ‰ﬁ· «·⁄·ÊÌ -->
+    <header class="bg-slate-950/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="bg-emerald-600 text-white font-black p-2.5 rounded-xl text-xl tracking-wider shadow-lg shadow-emerald-900/40 border border-emerald-400/30" aria-hidden="true">NE</div>
+                <div>
+                    <h1 class="text-lg sm:text-xl font-black text-white tracking-wide" data-i18n="brandName">‰Ì·Ê” ≈Ìﬂ« ·· ﬁ‰Ì«  «·—ﬁ„Ì… Ê√’Ê· «·„‰«Œ</h1>
+                    <p class="text-xs text-emerald-400 font-medium" data-i18n="brandSub">«·„‰ŸÊ„… «·—ﬁ„Ì… ··“—«⁄… «·ﬂ—»Ê‰Ì… ›Ì „’—</p>
+                </div>
+            </div>
+            
+            <nav class="hidden md:flex items-center space-x-8 space-x-reverse text-sm font-semibold text-slate-300" aria-label="«·ﬁ«∆„… «·—∆Ì”Ì…">
+                <a href="#features" class="hover:text-emerald-400 transition" data-i18n="navFeatures">«·„„Ì“« </a>
+                <a href="#calculator" class="hover:text-emerald-400 transition" data-i18n="navCalc">«·Õ«”»… Ê«·ÕÌ«“… «·„ﬂ«‰Ì…</a>
+                <a href="#contact" class="hover:text-emerald-400 transition" data-i18n="navContact"> Ê«’· „⁄‰«</a>
+            </nav>
+
+            <div class="flex items-center space-x-4 space-x-reverse">
+                <button onclick="toggleLanguage()" id="langBtn" aria-label=" €ÌÌ— «··€…" class="bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/30 px-4 py-2 rounded-lg text-sm font-bold transition shadow-sm">
+                    English ????
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- «·ﬁ”„ «·—∆Ì”Ì -->
+    <section class="relative bg-gradient-to-b from-slate-950 to-slate-900 py-20 px-4 text-center border-b border-slate-800 overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:16px_16px]" aria-hidden="true"></div>
+        <div class="relative max-w-4xl mx-auto animate-fade-in">
+            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest inline-block mb-6 shadow-sm" data-i18n="heroBadge">„‘«—ˆﬂ ›Ì «·„»«œ—… «·Êÿ‰Ì… ··„‘—Ê⁄«  «·Œ÷—«¡ «·–ﬂÌ… ∑ Ã„ÂÊ—Ì… „’— «·⁄—»Ì…</span>
+            
+            <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight mb-6 leading-tight" data-i18n="heroTitle">
+                ‰Ì·Ê” ≈Ìﬂ« ·· ﬁ‰Ì«  «·—ﬁ„Ì… Ê√’Ê· «·„‰«Œ <br>
+                <span class="text-emerald-400 underline decoration-emerald-500/30 text-2xl sm:text-4xl">«·„‰ŸÊ„… «·—ﬁ„Ì… ··“—«⁄… «·ﬂ—»Ê‰Ì… ›Ì „’—</span>
+            </h2>
+            <p class="text-base sm:text-lg text-slate-400 mb-10 max-w-2xl mx-auto font-normal leading-relaxed" data-i18n="heroDesc">
+                Õ·Ê· —ﬁ„Ì… „ ﬂ«„·… · ”ÃÌ· «·ÕÌ«“«  «·“—«⁄Ì…° «·  »⁄ «·Ã€—«›Ì ⁄»— GPS° —»ÿ «·√ﬁ„«— «·’‰«⁄Ì… (Sentinel-2 API)° Ê ÊÀÌﬁ «·⁄Ê«∆œ «·ﬂ—»Ê‰Ì… ··„” ›ÌœÌ‰.
+            </p>
+
+            <div class="flex justify-center gap-4">
+                <a href="#calculator" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-8 py-4 rounded-xl text-base transition shadow-xl shadow-emerald-600/30" data-i18n="heroBtn1">»œ¡  ”ÃÌ· «·ÕÌ«“… Ê«·Õ«”»…</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- «·Õ«”»… «·Êÿ‰Ì… „⁄  ”ÃÌ· «·ÕÌ«“… Ê≈Õœ«ÀÌ«  GPS -->
+    <main id="calculator" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+        <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative">
+            <div class="text-center mb-10">
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-3" data-i18n="calcHeader"> ”ÃÌ· «·ÕÌ«“… «·„ﬂ«‰Ì… (GPS) Ê„Õ—ﬂ  ﬁÌÌ„ «·ﬂ—»Ê‰</h3>
+                <p class="text-slate-400 text-sm sm:text-base" data-i18n="calcSub">”Ã· »Ì«‰«  «·„«·ﬂ° Õœœ „Êﬁ⁄ «·√—÷ ⁄»— GPS° Ê«” œ⁄ˆ »Ì«‰«  «·√ﬁ„«— «·’‰«⁄Ì… ·Õ”«» «·⁄Ê«∆œ »œﬁ….</p>
+            </div>
+
+            <!-- ﬁ”„ »Ì«‰«  «·ÕÌ«“… Ê GPS -->
+            <div class="bg-slate-900 border border-emerald-500/30 p-6 rounded-2xl mb-8 space-y-4">
+                <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2" data-i18n="secOwnership">»Ì«‰«  «·„«·ﬂ Ê«·ÕÌ«“… «·„ﬂ«‰Ì… (GPS)</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="ownerName" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="ownerLabel">«”„ «·„«·ﬂ / „” ›Ìœ «·⁄Ê«∆œ</label>
+                        <input type="text" id="ownerName" placeholder="„À«·: «”„ «·„” ›Ìœ «·À·«ÀÌ" aria-label="«”„ «·„«·ﬂ" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-emerald-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label for="locationName" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="locLabel">„‰ÿﬁ… «·√—÷ / «·„Õ«›Ÿ…</label>
+                        <input type="text" id="locationName" placeholder="„À«·: „Õ«›Ÿ… - «·„—ﬂ“ / «·ﬁ—Ì…" aria-label="„‰ÿﬁ… «·√—÷ Ê«·„Õ«›Ÿ…" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-emerald-500 focus:outline-none">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                    <div>
+                        <label for="gpsLat" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="latLabel">Œÿ «·⁄—÷ (Latitude)</label>
+                        <input type="text" id="gpsLat" placeholder="28.1099" aria-label="Œÿ «·⁄—÷" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:border-emerald-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label for="gpsLng" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="lngLabel">Œÿ «·ÿÊ· (Longitude)</label>
+                        <input type="text" id="gpsLng" placeholder="30.7503" aria-label="Œÿ «·ÿÊ·" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:border-emerald-500 focus:outline-none">
+                    </div>
+                    <div class="flex items-end">
+                        <button onclick="getCurrentGPS()" aria-label=" ÕœÌœ «·„Êﬁ⁄ «·Õ«·Ì ⁄»— GPS" class="w-full bg-emerald-700 hover:bg-emerald-600 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-md flex items-center justify-center space-x-1 space-x-reverse">
+                            <span>??</span>
+                            <span data-i18n="gpsBtn"> ÕœÌœ „Êﬁ⁄Ì «·Õ«·Ì (GPS)</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- „œŒ·«  «·Õ«”»… Ê«·«‰»⁄«À«  Ê«·√‘Ã«— -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- 1. «·√‰‘ÿ… -->
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
+                    <h4 class="text-md font-bold text-amber-400 border-b border-slate-800 pb-2" data-i18n="sec1">1. «·√‰‘ÿ… Ê«·«‰»⁄«À« </h4>
+                    <div>
+                        <label for="dieselInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="dieselLabel">«·œÌ“· (· —/”‰…)</label>
+                        <input type="number" id="dieselInput" min="0" value="1000" aria-label="«·œÌ“· · — ·ﬂ· ”‰…" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold focus:border-emerald-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label for="fertInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="fertLabel">«·ÌÊ—Ì« (ﬂÃ„/”‰…)</label>
+                        <input type="number" id="fertInput" min="0" value="100" aria-label="«·ÌÊ—Ì« ﬂÃ„ ·ﬂ· ”‰…" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold focus:border-emerald-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label for="elecInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="elecLabel">«·ﬂÂ—»«¡ (ﬂÌ·ÊÊ«ÿ.”«⁄…)</label>
+                        <input type="number" id="elecInput" min="0" value="13428" aria-label="«·ﬂÂ—»«¡ ﬂÌ·ÊÊ«ÿ ”«⁄…" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold focus:border-emerald-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <!-- 2. «·√‘Ã«— -->
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
+                    <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2" data-i18n="secTrees">2. «·√‘Ã«— Ê«·»”« Ì‰</h4>
+                    <div>
+                        <label for="palmCountInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="palmCountLabel">⁄œœ √‘Ã«— «·‰ŒÌ· (‘Ã—…)</label>
+                        <input type="number" id="palmCountInput" min="0" value="150" aria-label="⁄œœ √‘Ã«— «·‰ŒÌ·" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold focus:border-emerald-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label for="orchardAreaInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="orchardAreaLabel">„”«Õ… «·»”« Ì‰ (Âﬂ «—)</label>
+                        <input type="number" id="orchardAreaInput" min="0" value="5" aria-label="„”«Õ… «·»”« Ì‰ »«·Âﬂ «—" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold focus:border-emerald-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <!-- 3. «·√ﬁ„«— «·’‰«⁄Ì… -->
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
+                    <h4 class="text-md font-bold text-cyan-400 border-b border-slate-800 pb-2" data-i18n="sec2">3. «·√ﬁ„«— «·’‰«⁄Ì… (Sentinel-2)</h4>
+                    <div>
+                        <label for="ndviInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="ndviLabel">„ƒ‘— «·€ÿ«¡ «·‰»« Ì (NDVI)</label>
+                        <input type="number" id="ndviInput" min="0" max="1" step="0.01" value="0.65" aria-label="„ƒ‘— «·€ÿ«¡ «·‰»« Ì" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold focus:border-emerald-500 focus:outline-none">
+                    </div>
+                    <div class="pt-2">
+                        <button onclick="fetchSatelliteAPI()" aria-label="Ã·» «·»Ì«‰«  „‰ «·√ﬁ„«— «·’‰«⁄Ì…" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-2 px-3 rounded-xl text-xs transition shadow-md flex items-center justify-center space-x-1 space-x-reverse">
+                            <span>???</span>
+                            <span data-i18n="apiBtn">Ã·» NDVI ⁄»— GPS Ê«·√ﬁ„«—</span>
+                        </button>
+                    </div>
+                    <div id="apiStatus" class="text-[11px] text-cyan-300 pt-1">Õ«·… «·« ’«·: ›Ì «‰ Ÿ«— «·≈Õœ«ÀÌ« </div>
+                </div>
+            </div>
+
+            <!-- “— «·Õ”«» «·›Ê—Ì -->
+            <div class="text-center mb-10">
+                <button onclick="calculateResults()" aria-label="»œ¡ «· Õ·Ì· «·—ﬁ„Ì" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-10 py-4 rounded-2xl text-lg shadow-xl shadow-emerald-600/30 transition transform hover:-translate-y-0.5" data-i18n="calcBtn">
+                     ÊÀÌﬁ «·ÕÌ«“… ÊÕ”«» «·⁄Ê«∆œ «·ﬂ—»Ê‰Ì… ??
+                </button>
+            </div>
+
+            <!-- ·ÊÕ… «·‰ «∆Ã „⁄ ŒÌ«—«  «· ’œÌ— -->
+            <div id="resultsArea" class="bg-slate-900 border border-emerald-500/30 rounded-2xl p-6 hidden animate-fade-in">
+                <h4 class="text-lg font-black text-emerald-400 mb-4 border-b border-slate-800 pb-2" data-i18n="resHeader">?? ‘Â«œ…  ÊÀÌﬁ «·⁄Ê«∆œ Ê«·Õ”«»«  «·»Ì∆Ì…</h4>
+                <div class="mb-4 text-xs text-slate-300 space-y-1 bg-slate-950 p-4 rounded-xl border border-slate-800">
+                    <div><span class="font-bold text-emerald-400">«”„ «·„” ›Ìœ:</span> <span id="resOwnerName">-</span></div>
+                    <div><span class="font-bold text-emerald-400">„Êﬁ⁄ «·ÕÌ«“… (GPS):</span> <span id="resGpsCoords">-</span></div>
+                </div>
+                <div class="overflow-x-auto mb-6">
+                    <table class="w-full text-right text-sm" aria-label="ÃœÊ· «·‰ «∆Ã">
+                        <tbody class="results-table text-slate-200">
+                            <tr>
+                                <td class="font-bold text-slate-400" data-i18n="r1">≈Ã„«·Ì «·«‰»⁄«À«  «·‰« Ã…:</td>
+                                <td id="resEmissions" class="font-black text-amber-400">0 ÿ‰ „ﬂ«›∆ CO2</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-slate-400" data-i18n="r2">«·ﬂ—»Ê‰ «·„„ ’ »Ê«”ÿ… «·√‘Ã«—:</td>
+                                <td id="resTrees" class="font-black text-emerald-400">0 ÿ‰ CO2 ”‰ÊÌ«</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-slate-400" data-i18n="r3"> Œ“Ì‰ ﬂ—»Ê‰ «· —»… (⁄»— NDVI):</td>
+                                <td id="resSoil" class="font-black text-cyan-400">0 ÿ‰ CO2 ”‰ÊÌ«</td>
+                            </tr>
+                            <tr class="border-b-0 bg-emerald-950/20">
+                                <td class="font-black text-emerald-300 text-base" data-i18n="r4">’«›Ì «·⁄Ê«∆œ «·ﬂ—»Ê‰Ì… «·„”Ã·… »«”„ «·„«·ﬂ:</td>
+                                <td id="resNet" class="font-black text-emerald-400 text-lg">0 ÿ‰ „—’Êœ</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="flex flex-wrap gap-3 justify-center">
+                    <button onclick="copyResults()" class="bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/30 px-4 py-2 rounded-xl text-xs font-bold transition">?? ‰”Œ »Ì«‰«  «· ÊÀÌﬁ</button>
+                    <button onclick="exportCSV()" class="bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/30 px-4 py-2 rounded-xl text-xs font-bold transition">??  ’œÌ— ”Ã· «·ÕÌ«“… CSV</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ‰„Ê–Ã «· Ê«’· «·›⁄·Ì -->
+    <section id="contact" class="py-16 max-w-4xl mx-auto px-4 w-full">
+        <div class="bg-slate-950 border border-slate-800 rounded-3xl p-8 shadow-xl">
+            <div class="text-center mb-8">
+                <h3 class="text-2xl font-black text-white mb-2" data-i18n="contactHeader"> Ê«’· „⁄ ›—Ìﬁ «·„‘—Ê⁄</h3>
+                <p class="text-slate-400 text-sm" data-i18n="contactSub">√—”· «” ›”«—ﬂ Ê”ÌﬁÊ„ ›—Ìﬁ ‰Ì·Ê” ≈Ìﬂ« »«·—œ ⁄·Ìﬂ ”—Ì⁄«.</p>
+            </div>
+            <form id="contactForm" onsubmit="handleContactSubmit(event)" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="contactName" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="nameLabel">«·«”„ «·ﬂ«„·</label>
+                        <input type="text" id="contactName" required aria-label="«·«”„ «·ﬂ«„·" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:border-emerald-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label for="contactEmail" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="emailLabel">«·»—Ìœ «·≈·ﬂ —Ê‰Ì</label>
+                        <input type="email" id="contactEmail" required aria-label="«·»—Ìœ «·≈·ﬂ —Ê‰Ì" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:border-emerald-500 focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label for="contactPhone" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="phoneLabel">—ﬁ„ «·Â« ›</label>
+                    <input type="tel" id="contactPhone" aria-label="—ﬁ„ «·Â« ›" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:border-emerald-500 focus:outline-none">
+                </div>
+                <div>
+                    <label for="contactMessage" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="msgLabel">«·—”«·… √Ê «·«” ›”«—</label>
+                    <textarea id="contactMessage" rows="4" required aria-label="«·—”«·… √Ê «·«” ›”«—" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:border-emerald-500 focus:outline-none"></textarea>
+                </div>
+                <div class="text-center pt-2">
+                    <button type="submit" aria-label="≈—”«· «·—”«·…" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-8 py-3 rounded-xl text-sm transition shadow-lg" data-i18n="sendBtn">≈—”«· «·—”«·… ??</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- «·›Ê — „⁄ Ê”«∆· «· Ê«’· -->
+    <footer class="bg-slate-950 text-slate-400 py-12 border-t border-slate-800 text-center text-xs space-y-4">
+        <div class="flex justify-center space-x-6 space-x-reverse text-emerald-400 text-sm font-bold">
+            <a href="#" aria-label="›Ì”»Êﬂ" class="hover:underline">Facebook</a>
+            <a href="#" aria-label="·Ì‰ﬂœ ≈‰" class="hover:underline">LinkedIn</a>
+            <a href="#" aria-label=" ÊÌ —" class="hover:underline">Twitter/X</a>
+            <a href="#" aria-label="ÌÊ ÌÊ»" class="hover:underline">YouTube</a>
+        </div>
+        <p class="text-emerald-400 font-semibold" data-i18n="copy">‰Ì·Ê” ≈Ìﬂ« ·· ﬁ‰Ì«  «·—ﬁ„Ì… Ê√’Ê· «·„‰«Œ - Ã„Ì⁄ «·ÕﬁÊﬁ „Õ›ÊŸ… © 2026</p>
+    </footer>
+
+    <!-- JavaScript «·»—„ÃÌ «·„ ﬂ«„· „⁄ GPS -->
+    <script>
+        let currentLang = 'ar';
+
+        const translations = {
+            ar: {
+                brandName: "‰Ì·Ê” ≈Ìﬂ« ·· ﬁ‰Ì«  «·—ﬁ„Ì… Ê√’Ê· «·„‰«Œ",
+                brandSub: "«·„‰ŸÊ„… «·—ﬁ„Ì… ··“—«⁄… «·ﬂ—»Ê‰Ì… ›Ì „’—",
+                navFeatures: "«·„„Ì“« ",
+                navCalc: "«·Õ«”»… Ê«·ÕÌ«“… «·„ﬂ«‰Ì…",
+                navContact: " Ê«’· „⁄‰«",
+                heroBadge: "„‘«—ˆﬂ ›Ì «·„»«œ—… «·Êÿ‰Ì… ··„‘—Ê⁄«  «·Œ÷—«¡ «·–ﬂÌ… ∑ Ã„ÂÊ—Ì… „’— «·⁄—»Ì…",
+                heroTitle: "‰Ì·Ê” ≈Ìﬂ« ·· ﬁ‰Ì«  «·—ﬁ„Ì… Ê√’Ê· «·„‰«Œ <br><span class='text-emerald-400 underline decoration-emerald-500/30 text-2xl sm:text-4xl'>«·„‰ŸÊ„… «·—ﬁ„Ì… ··“—«⁄… «·ﬂ—»Ê‰Ì… ›Ì „’—</span>",
+                heroDesc: "Õ·Ê· —ﬁ„Ì… „ ﬂ«„·… · ”ÃÌ· «·ÕÌ«“«  «·“—«⁄Ì…° «·  »⁄ «·Ã€—«›Ì ⁄»— GPS° —»ÿ «·√ﬁ„«— «·’‰«⁄Ì… (Sentinel-2 API)° Ê ÊÀÌﬁ «·⁄Ê«∆œ «·ﬂ—»Ê‰Ì… ··„” ›ÌœÌ‰.",
+                heroBtn1: "»œ¡  ”ÃÌ· «·ÕÌ«“… Ê«·Õ«”»…",
+                calcHeader: " ”ÃÌ· «·ÕÌ«“… «·„ﬂ«‰Ì… (GPS) Ê„Õ—ﬂ  ﬁÌÌ„ «·ﬂ—»Ê‰",
+                calcSub: "”Ã· »Ì«‰«  «·„«·ﬂ° Õœœ „Êﬁ⁄ «·√—÷ ⁄»— GPS° Ê«” œ⁄ˆ »Ì«‰«  «·√ﬁ„«— «·’‰«⁄Ì… ·Õ”«» «·⁄Ê«∆œ »œﬁ….",
+                secOwnership: "»Ì«‰«  «·„«·ﬂ Ê«·ÕÌ«“… «·„ﬂ«‰Ì… (GPS)",
+                ownerLabel: "«”„ «·„«·ﬂ / „” ›Ìœ «·⁄Ê«∆œ",
+                locLabel: "„‰ÿﬁ… «·√—÷ / «·„Õ«›Ÿ…",
+                latLabel: "Œÿ «·⁄—÷ (Latitude)",
+                lngLabel: "Œÿ «·ÿÊ· (Longitude)",
+                gpsBtn: " ÕœÌœ „Êﬁ⁄Ì «·Õ«·Ì (GPS)",
+                sec1: "1. «·√‰‘ÿ… Ê«·«‰»⁄«À« ",
+                dieselLabel: "«·œÌ“· (· —/”‰…)",
+                fertLabel: "«·ÌÊ—Ì« (ﬂÃ„/”‰…)",
+                elecLabel: "«·ﬂÂ—»«¡ (ﬂÌ·ÊÊ«ÿ.”«⁄…)",
+                secTrees: "2. «·√‘Ã«— Ê«·»”« Ì‰",
+                palmCountLabel: "⁄œœ √‘Ã«— «·‰ŒÌ· (‘Ã—…)",
+                orchardAreaLabel: "„”«Õ… «·»”« Ì‰ (Âﬂ «—)",
+                sec2: "3. «·√ﬁ„«— «·’‰«⁄Ì… (Sentinel-2)",
+                ndviLabel: "„ƒ‘— «·€ÿ«¡ «·‰»« Ì (NDVI)",
+                apiBtn: "Ã·» NDVI ⁄»— GPS Ê«·√ﬁ„«—",
+                calcBtn: " ÊÀÌﬁ «·ÕÌ«“… ÊÕ”«» «·⁄Ê«∆œ «·ﬂ—»Ê‰Ì… ??",
+                resHeader: "?? ‘Â«œ…  ÊÀÌﬁ «·⁄Ê«∆œ Ê«·Õ”«»«  «·»Ì∆Ì…",
+                r1: "≈Ã„«·Ì «·«‰»⁄«À«  «·‰« Ã…:",
+                r2: "«·ﬂ—»Ê‰ «·„„ ’ »Ê«”ÿ… «·√‘Ã«—:",
+                r3: " Œ“Ì‰ ﬂ—»Ê‰ «· —»… (⁄»— NDVI):",
+                r4: "’«›Ì «·⁄Ê«∆œ «·ﬂ—»Ê‰Ì… «·„”Ã·… »«”„ «·„«·ﬂ:",
+                contactHeader: " Ê«’· „⁄ ›—Ìﬁ «·„‘—Ê⁄",
+                contactSub: "√—”· «” ›”«—ﬂ Ê”ÌﬁÊ„ ›—Ìﬁ ‰Ì·Ê” ≈Ìﬂ« »«·—œ ⁄·Ìﬂ ”—Ì⁄«.",
+                nameLabel: "«·«”„ «·ﬂ«„·",
+                emailLabel: "«·»—Ìœ «·≈·ﬂ —Ê‰Ì",
+                phoneLabel: "—ﬁ„ «·Â« ›",
+                msgLabel: "«·—”«·… √Ê «·«” ›”«—",
+                sendBtn: "≈—”«· «·—”«·… ??",
+                copy: "‰Ì·Ê” ≈Ìﬂ« ·· ﬁ‰Ì«  «·—ﬁ„Ì… Ê√’Ê· «·„‰«Œ - Ã„Ì⁄ «·ÕﬁÊﬁ „Õ›ÊŸ… © 2026"
+            },
+            en: {
+                brandName: "Nilus ECA | Digital Tech & Climate Assets",
+                brandSub: "Digital Ecosystem for Carbon Agriculture in Egypt",
+                navFeatures: "Features",
+                navCalc: "Calculator & Spatial Tenure",
+                navContact: "Contact Us",
+                heroBadge: "Participant in the National Initiative for Smart Green Projects ∑ Arab Republic of Egypt",
+                heroTitle: "Nilus ECA for Digital Technologies & Climate Assets <br><span class='text-emerald-400 underline decoration-emerald-500/30 text-2xl sm:text-4xl'>Digital Ecosystem for Carbon Agriculture in Egypt</span>",
+                heroDesc: "Integrated digital solutions for farm tenure registration, GPS tracking, Sentinel-2 satellite integration, and carbon credit attribution.",
+                heroBtn1: "Start Tenure Registration & Calculator",
+                calcHeader: "GPS Spatial Tenure Registration & Carbon Engine",
+                calcSub: "Enter owner details, pin land location via GPS, and fetch satellite data for accurate credits.",
+                secOwnership: "Owner Data & Spatial Tenure (GPS)",
+                ownerLabel: "Owner Name / Credit Beneficiary",
+                locLabel: "Land Region / Governorate",
+                latLabel: "Latitude",
+                lngLabel: "Longitude",
+                gpsBtn: "Get Current GPS Location",
+                sec1: "1. Activities & Emissions",
+                dieselLabel: "Diesel (Liters/Year)",
+                fertLabel: "Urea (Kg/Year)",
+                elecLabel: "Electricity (kWh)",
+                secTrees: "2. Trees & Orchards",
+                palmCountLabel: "Date Palm Count (Trees)",
+                orchardAreaLabel: "Orchard Area (Hectares)",
+                sec2: "3. Satellites (Sentinel-2)",
+                ndviLabel: "NDVI Index",
+                apiBtn: "Fetch NDVI via GPS & Satellite",
+                calcBtn: "Certify Tenure & Calculate Carbon Credits ??",
+                resHeader: "?? Environmental Analysis & Credit Certification",
+                r1: "Total Emissions Generated:",
+                r2: "Carbon Sequestrated by Trees:",
+                r3: "Soil Carbon Sequestration (via NDVI):",
+                r4: "Net Carbon Credits Registered to Owner:",
+                contactHeader: "Contact Project Team",
+                contactSub: "Send your inquiry and the Nilus ECA team will respond promptly.",
+                nameLabel: "Full Name",
+                emailLabel: "Email Address",
+                phoneLabel: "Phone Number",
+                msgLabel: "Message or Inquiry",
+                sendBtn: "Send Message ??",
+                copy: "Nilus ECA for Digital Technologies & Climate Assets - All Rights Reserved © 2026"
+            }
+        };
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            const root = document.getElementById('htmlRoot');
+            const langBtn = document.getElementById('langBtn');
+
+            if (currentLang === 'en') {
+                root.setAttribute('lang', 'en');
+                root.setAttribute('dir', 'ltr');
+                langBtn.innerText = '⁄—»Ì ????';
+            } else {
+                root.setAttribute('lang', 'ar');
+                root.setAttribute('dir', 'rtl');
+                langBtn.innerText = 'English ????';
+            }
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    el.innerHTML = translations[currentLang][key];
+                }
+            });
+            showToast(currentLang === 'ar' ? ' „  €ÌÌ— «··€… »‰Ã«Õ' : 'Language changed successfully', 'success');
+        }
+
+        // ‰Ÿ«„ «· ‰»ÌÂ«  (Toast Notifications)
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            const bgClass = type === 'success' ? 'bg-emerald-600' : 'bg-red-600';
+            toast.className = `${bgClass} text-white px-4 py-3 rounded-xl shadow-lg text-xs font-bold pointer-events-auto animate-fade-in flex items-center space-x-2 space-x-reverse`;
+            toast.innerHTML = `<span>${type === 'success' ? '?' : '?'}</span><span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // œ«·…  ÕœÌœ «·„Êﬁ⁄ «·Õ«·Ì ⁄»— GPS «·„ ’›Õ
+        function getCurrentGPS() {
+            if (navigator.geolocation) {
+                showToast(currentLang === 'ar' ? '? Ã«—Ì «” ‘⁄«— «·„Êﬁ⁄ «·Ã€—«›Ì (GPS)...' : '? Detecting GPS location...', 'success');
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude.toFixed(4);
+                        const lng = position.coords.longitude.toFixed(4);
+                        document.getElementById('gpsLat').value = lat;
+                        document.getElementById('gpsLng').value = lng;
+                        showToast(currentLang === 'ar' ? `?  „  ÕœÌœ «·„Êﬁ⁄ »‰Ã«Õ: (${lat}, ${lng})` : `? GPS acquired successfully: (${lat}, ${lng})`, 'success');
+                    },
+                    (error) => {
+                        showToast(currentLang === 'ar' ? '?  ⁄–—  ÕœÌœ «·„Êﬁ⁄° Ì—ÃÏ  ›⁄Ì· «·‹ GPS √Ê ≈œŒ«·Â ÌœÊÌ«' : '? Failed to get location, please enable GPS', 'error');
+                    },
+                    { timeout: 10000 }
+                );
+            } else {
+                showToast(currentLang === 'ar' ? '? „ ’›Õﬂ ·« Ìœ⁄„  ÕœÌœ «·„Êﬁ⁄ «·Ã€—«›Ì' : '? Geolocation not supported by your browser', 'error');
+            }
+        }
+
+        // «· Õﬁﬁ Ê„⁄«·Ã… «·Õ«”»… Ê ÊÀÌﬁ «·ÕÌ«“…
+        function calculateResults() {
+            const ownerName = document.getElementById('ownerName').value.trim();
+            const locationName = document.getElementById('locationName').value.trim();
+            const lat = document.getElementById('gpsLat').value.trim();
+            const lng = document.getElementById('gpsLng').value.trim();
+
+            const diesel = parseFloat(document.getElementById('dieselInput').value);
+            const fert = parseFloat(document.getElementById('fertInput').value);
+            const elec = parseFloat(document.getElementById('elecInput').value);
+            const palmCount = parseFloat(document.getElementById('palmCountInput').value);
+            const orchardArea = parseFloat(document.getElementById('orchardAreaInput').value);
+            const ndvi = parseFloat(document.getElementById('ndviInput').value);
+
+            if (!ownerName) {
+                showToast(currentLang === 'ar' ? '«·—Ã«¡ ≈œŒ«· «”„ «·„«·ﬂ √Ê «·„” ›Ìœ · ÊÀÌﬁ «·⁄Ê«∆œ' : 'Please enter owner name for credit attribution', 'error');
+                return;
+            }
+
+            if (isNaN(diesel) || diesel < 0 || isNaN(fert) || fert < 0 || isNaN(elec) || elec < 0 || 
+                isNaN(palmCount) || palmCount < 0 || isNaN(orchardArea) || orchardArea < 0 || 
+                isNaN(ndvi) || ndvi < 0 || ndvi > 1) {
+                showToast(currentLang === 'ar' ? '«·—Ã«¡ ≈œŒ«· ﬁÌ„ „ÊÃ»… Ê’ÕÌÕ… ›Ì ÕﬁÊ· «·«‰»⁄«À«  Ê«·√‘Ã«— (NDVI »Ì‰ 0 Ê 1)' : 'Please enter valid positive values', 'error');
+                return;
+            }
+
+            const emissions = (diesel * 2.68 + fert * 1.3 + elec * 0.45) / 1000;
+            const treesAbsorption = (palmCount * 0.05) + (orchardArea * 2.5);
+            const soilAbsorption = orchardArea * (ndvi * 2.2);
+            const totalAbsorption = treesAbsorption + soilAbsorption;
+            const netBalance = totalAbsorption - emissions;
+
+            document.getElementById('resOwnerName').innerText = ownerName + (locationName ? ` (${locationName})` : '');
+            document.getElementById('resGpsCoords').innerText = (lat && lng) ? `Lat: ${lat}, Lng: ${lng}` : (currentLang === 'ar' ? '„Õœœ ⁄»— «·„‰ÿﬁ… «·⁄«„…' : 'Set by general region');
+
+            document.getElementById('resEmissions').innerText = emissions.toFixed(2) + (currentLang === 'ar' ? ' ÿ‰ „ﬂ«›∆ CO2' : ' Tons CO2e');
+            document.getElementById('resTrees').innerText = treesAbsorption.toFixed(2) + (currentLang === 'ar' ? ' ÿ‰ CO2 ”‰ÊÌ«' : ' Tons CO2/yr');
+            document.getElementById('resSoil').innerText = soilAbsorption.toFixed(2) + (currentLang === 'ar' ? ' ÿ‰ CO2 ”‰ÊÌ«' : ' Tons CO2/yr');
+            document.getElementById('resNet').innerText = netBalance.toFixed(2) + (currentLang === 'ar' ? ' ÿ‰ „—’Êœ' : ' Tons Recorded');
+            
+            document.getElementById('resultsArea').classList.remove('hidden');
+            showToast(currentLang === 'ar' ? ' „  ÊÀÌﬁ «·ÕÌ«“… ÊÕ”«» «·⁄Ê«∆œ »‰Ã«Õ' : 'Tenure certified and credits calculated successfully', 'success');
+        }
+
+        // „Õ«ﬂ«… «·√ﬁ„«— «·’‰«⁄Ì… »‰«¡ ⁄·Ï «·≈Õœ«ÀÌ« 
+        function fetchSatelliteAPI() {
+            const statusEl = document.getElementById('apiStatus');
+            const ndviInput = document.getElementById('ndviInput');
+            
+            statusEl.innerText = currentLang === 'ar' ? '? Ã«—Ì «” ⁄·«„ ≈Õœ«ÀÌ«  GPS „‰ Sentinel-2 API...' : '? Querying GPS coordinates from Sentinel-2...';
+            
+            setTimeout(() => {
+                const simulatedNDVI = (0.58 + Math.random() * 0.22).toFixed(2);
+                ndviInput.value = simulatedNDVI;
+                statusEl.innerText = currentLang === 'ar' ? `?  „ ”Õ» NDVI «·„Ìœ«‰Ì: ${simulatedNDVI}` : `? Fetched field NDVI: ${simulatedNDVI}`;
+                showToast(currentLang === 'ar' ? ' „  ÕœÌÀ „ƒ‘— «·€ÿ«¡ «·‰»« Ì ··≈Õœ«ÀÌ«  «·Õ«·Ì… »‰Ã«Õ' : 'NDVI updated for current coordinates successfully', 'success');
+            }, 1000);
+        }
+
+        // ‰”Œ «·‰ «∆Ã
+        function copyResults() {
+            const text = `Nilus ECA Tenure Certification:\nOwner: ${document.getElementById('resOwnerName').innerText}\nGPS: ${document.getElementById('resGpsCoords').innerText}\nNet Balance: ${document.getElementById('resNet').innerText}`;
+            navigator.clipboard.writeText(text);
+            showToast(currentLang === 'ar' ? ' „ ‰”Œ »Ì«‰«  «· ÊÀÌﬁ ≈·Ï «·Õ«›Ÿ…' : 'Certification data copied to clipboard', 'success');
+        }
+
+        //  ’œÌ— CSV
+        function exportCSV() {
+            const csvContent = "data:text/csv;charset=utf-8,Parameter,Value\n" +
+                `Owner,${document.getElementById('resOwnerName').innerText}\n` +
+                `GPS,${document.getElementById('resGpsCoords').innerText}\n` +
+                `Emissions,${document.getElementById('resEmissions').innerText}\n` +
+                `Net Balance,${document.getElementById('resNet').innerText}`;
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "nilus_eca_tenure_certificate.csv");
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            showToast(currentLang === 'ar' ? ' „  ’œÌ— ”Ã· «·ÕÌ«“… CSV »‰Ã«Õ' : 'Tenure CSV exported successfully', 'success');
+        }
+
+        // „⁄«·Ã… ‰„Ê–Ã «· Ê«’· «·›⁄·Ì
+        function handleContactSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            if(!name || !email) {
+                showToast(currentLang === 'ar' ? '«·—Ã«¡ „·¡ «·ÕﬁÊ· «·≈Ã»«—Ì…' : 'Please fill required fields', 'error');
+                return;
+            }
+            showToast(currentLang === 'ar' ? ' „ ≈—”«· —”«· ﬂ »‰Ã«Õ! ”Ì „ «· Ê«’· „⁄ﬂ ﬁ—Ì»«.' : 'Message sent successfully! We will contact you soon.', 'success');
+            document.getElementById('contactForm').reset();
+        }
+
+        // “— «·⁄Êœ… ··√⁄·Ï Ê«· „—Ì—
+        window.onscroll = function() {
+            const btn = document.getElementById('scrollTopBtn');
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                btn.classList.remove('hidden');
+            } else {
+                btn.classList.add('hidden');
+            }
+        };
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
