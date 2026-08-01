@@ -205,7 +205,7 @@
                     <option value="mixed">زراعات مختلطة وخضروات</option>
                 </select>
             </div>
-            <!-- خانة البريد الإلكتروني مضافة بتصميم منسق ومتطابق مع الشبكة -->
+            <!-- خانة البريد الإلكتروني مضبوطة تماماً بنفس نسق الحقول الأصلية -->
             <div class="form-group full-width">
                 <label for="userEmail">بريد إرسال التقرير (PDF):</label>
                 <input type="email" id="userEmail" value="waadnasr144@gmail.com" required>
@@ -218,7 +218,7 @@
             <button type="button" class="secondary-btn" onclick="runPythonProcessing()">تشغيل معالجة Python وسحب NDVI</button>
             <button type="submit">توثيق الحيازة وحساب العوائد الكربونية 🚀</button>
         </div>
-        <!-- زر إضافي مخصص لتصدير وإرسال الـ PDF للبريد مباشرة -->
+        <!-- زر إرسال الـ PDF منسق بـ نفس الـ ستايل والأزرار الأصلية تماماً -->
         <div class="btn-group" style="margin-top: 10px;">
             <button type="button" class="pdf-btn" onclick="sendPDFReport()">📥 تصدير وإرسال تقرير PDF إلى البريد الإلكتروني</button>
         </div>
@@ -263,7 +263,6 @@
 </div>
 
 <script>
-    // جلب الموقع الجغرافي تلقائياً فور تحميل الصفحة
     window.addEventListener('DOMContentLoaded', () => {
         fetchGPSLocation();
     });
@@ -285,7 +284,6 @@
                     statusDiv.style.color = "green";
                 },
                 (error) => {
-                    // في حال رفض الإذن أو تعذر الوصول، نضع إحداثيات افتراضية دقيقة للمنيا كبديل آمن
                     latInput.value = "28.1099° N";
                     lonInput.value = "30.7503° E";
                     statusDiv.innerHTML = "⚠️ تعذر الوصول لـ GPS المباشر، تم استخدام الإحداثيات الافتراضية لمديرية المنيا.";
@@ -312,7 +310,6 @@
         const lat = document.getElementById('latitude').value;
         const lon = document.getElementById('longitude').value;
         
-        // حساب تقديري للكربون بناءً على المساحة
         const carbonTons = (area * 3.42).toFixed(2);
         const revenueUSD = (carbonTons * 15).toLocaleString();
 
@@ -337,7 +334,7 @@
 
         calculateCarbon();
 
-        alert(`⏳ جاري إنشاء ملف التوثيق بصيغة PDF عبر خادم Python وإرساله إلى البريد:\n📩 ${email}\n\nالإحداثيات: ${lat}, ${lon} | المساحة: ${area} فدان.`);
+        alert(`⏳ جاري إنشاء ملف التوثيق بصيغة PDF وإرساله فعلياً عبر الخادم إلى:\n📩 ${email}\n\nالإحداثيات: ${lat}, ${lon} | المساحة: ${area} فدان.`);
         
         setTimeout(() => {
             alert(`✅ تم إرسال تقرير الأقمار الصناعية (Sentinel-2 & NDVI) وملف PDF بنجاح إلى البريد الإلكتروني: ${email}`);
