@@ -7,14 +7,6 @@
     <!-- SEO Meta Tags -->
     <meta name="description" content="المنظومة الرقمية لإدارة الأراضي الزراعية، ربط الأقمار الصناعية، حساسات إنترنت الأشياء (IoT)، وحساب البصمة والعوائد الكربونية.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- تضمين مكتبة EmailJS لإرسال البريد الإلكتروني فعلياً -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">
-        (function() {
-            // تهيئة مفتاح الأمان البريدي
-            emailjs.init("user_live_nilus_secure_key");
-        })();
-    </script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Cairo', 'Inter', sans-serif; scroll-behavior: smooth; }
@@ -82,7 +74,7 @@
                 <span class="text-emerald-400 underline decoration-emerald-500/30 text-2xl sm:text-4xl">منظومة الزراعة الكربونية الذكية</span>
             </h2>
             <p class="text-base sm:text-lg text-slate-400 mb-10 max-w-2xl mx-auto font-normal leading-relaxed">
-                حلول رقمية مدعومة بحساسات إنترنت الأشياء (IoT)، تحليلات برمجية متقدمة (Python)، ربط الأقمار الصناعية (Sentinel & Planet)، وتوثيق العوائد الكربونية وإرسال التقارير مباشرة.
+                حلول رقمية مدعومة بحساسات إنترنت الأشياء (IoT)، تحليلات برمجية متقدمة (Python)، ربط الأقمار الصناعية (Sentinel & Planet)، وتوثيق العوائد الكربونية وإرسال التقارير مباشرة عبر الواتساب.
             </p>
 
             <div class="flex justify-center gap-4">
@@ -114,40 +106,35 @@
         </div>
     </section>
 
-    <!-- الحاسبة الوطنية مع تسجيل الحيازة وإحداثيات GPS وإرسال البريد -->
+    <!-- الحاسبة الوطنية مع تسجيل الحيازة وإحداثيات GPS وإرسال الواتساب -->
     <main id="calculator" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
         <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative">
             <div class="text-center mb-10">
                 <h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-3">تسجيل الحيازة المكانية (GPS) ومحرك تقييم الكربون الذكي</h3>
-                <p class="text-slate-400 text-sm sm:text-base">سجل البيانات، حدد الموقع، واستدعِ قراءات الحساسات والأقمار الصناعية لحساب العوائد وإرسال التقرير لبريدك.</p>
+                <p class="text-slate-400 text-sm sm:text-base">سجل البيانات، حدد الموقع، واستدعِ قراءات الحساسات والأقمار الصناعية لحساب العوائد وإرسال النتائج كاملة عبر الواتساب.</p>
             </div>
 
-            <!-- قسم بيانات الحيازة و GPS والبريد -->
+            <!-- قسم بيانات الحيازة و GPS -->
             <div class="bg-slate-900 border border-emerald-500/30 p-6 rounded-2xl mb-8 space-y-4">
-                <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2">بيانات المالك، الحيازة المكانية (GPS) وإرسال البريد</h4>
+                <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2">بيانات العميل والحيازة المكانية (GPS)</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label for="ownerName" class="block text-xs font-bold text-slate-300 mb-1">اسم المالك / مستفيد العوائد</label>
-                        <input type="text" id="ownerName" value="محمود محمد نصر" placeholder="اسم المستفيد أو الجهة" aria-label="اسم المالك" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-emerald-500 focus:outline-none">
+                        <label for="ownerName" class="block text-xs font-bold text-slate-300 mb-1">اسم العميل / المستفيد</label>
+                        <input type="text" id="ownerName" placeholder="أدخل اسم العميل أو الجهة هنا" aria-label="اسم العميل" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-emerald-500 focus:outline-none">
                     </div>
                     <div>
                         <label for="locationName" class="block text-xs font-bold text-slate-300 mb-1">منطقة الأرض / المحافظة</label>
-                        <input type="text" id="locationName" value="المنيا - دمارس" placeholder="المنيا" aria-label="منطقة الأرض والمحافظة" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-emerald-500 focus:outline-none">
+                        <input type="text" id="locationName" placeholder="أدخل اسم المنطقة أو المحافظة" aria-label="منطقة الأرض والمحافظة" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-emerald-500 focus:outline-none">
                     </div>
-                </div>
-                <!-- حقل البريد الإلكتروني المخصص لإرسال التقرير الفعلي -->
-                <div>
-                    <label for="userEmail" class="block text-xs font-bold text-emerald-300 mb-1">البريد الإلكتروني لاستلام التقرير والشهادة (PDF):</label>
-                    <input type="email" id="userEmail" value="waadnasr144@gmail.com" placeholder="name@example.com" aria-label="البريد الإلكتروني للتقارير" class="w-full bg-slate-950 border border-emerald-500/50 rounded-xl px-3 py-2.5 text-emerald-400 font-bold text-sm focus:border-emerald-400 focus:outline-none">
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
                     <div>
                         <label for="gpsLat" class="block text-xs font-bold text-slate-300 mb-1">خط العرض (Latitude)</label>
-                        <input type="text" id="gpsLat" placeholder="28.1099" aria-label="خط العرض" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:border-emerald-500 focus:outline-none">
+                        <input type="text" id="gpsLat" placeholder="0.0000" aria-label="خط العرض" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:border-emerald-500 focus:outline-none">
                     </div>
                     <div>
                         <label for="gpsLng" class="block text-xs font-bold text-slate-300 mb-1">خط الطول (Longitude)</label>
-                        <input type="text" id="gpsLng" placeholder="30.7503" aria-label="خط الطول" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:border-emerald-500 focus:outline-none">
+                        <input type="text" id="gpsLng" placeholder="0.0000" aria-label="خط الطول" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:border-emerald-500 focus:outline-none">
                     </div>
                     <div class="flex items-end">
                         <button onclick="getCurrentGPS()" aria-label="تحديد الموقع الحالي عبر GPS" class="w-full bg-emerald-700 hover:bg-emerald-600 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-md flex items-center justify-center space-x-1 space-x-reverse">
@@ -211,13 +198,14 @@
                 </div>
             </div>
 
-            <!-- أزرار الحساب الفوري وإرسال التقرير للبريد -->
+            <!-- أزرار الحساب الفوري وإرسال البيانات للواتساب -->
             <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-10">
                 <button onclick="calculateResults()" aria-label="بدء التحليل الرقمي" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-black px-8 py-4 rounded-2xl text-base shadow-xl shadow-emerald-600/30 transition transform hover:-translate-y-0.5">
                     توثيق الحيازة وحساب العوائد الكربونية 🚀
                 </button>
-                <button onclick="sendEmailReport()" aria-label="إرسال تقرير PDF إلى البريد" class="w-full sm:w-auto bg-cyan-600 hover:bg-cyan-500 text-white font-black px-8 py-4 rounded-2xl text-base shadow-xl shadow-cyan-600/30 transition transform hover:-translate-y-0.5 border border-cyan-300/30">
-                    📥 تصدير وإرسال تقرير PDF إلى البريد الإلكتروني 📧
+                <button onclick="sendWhatsAppReport()" aria-label="إرسال النتائج والإحداثيات عبر الواتساب" class="w-full sm:w-auto bg-emerald-700 hover:bg-emerald-600 text-white font-black px-8 py-4 rounded-2xl text-base shadow-xl shadow-emerald-700/30 transition transform hover:-translate-y-0.5 border border-emerald-400/30 flex items-center justify-center space-x-2 space-x-reverse">
+                    <span>💬</span>
+                    <span>إرسال النتائج والإحداثيات كاملة عبر الواتساب 📱</span>
                 </button>
             </div>
 
@@ -225,9 +213,8 @@
             <div id="resultsArea" class="bg-slate-900 border border-emerald-500/30 rounded-2xl p-6 hidden animate-fade-in">
                 <h4 class="text-lg font-black text-emerald-400 mb-4 border-b border-slate-800 pb-2">📊 شهادة توثيق العوائد والحسابات البيئية (محمية الفكرية)</h4>
                 <div class="mb-4 text-xs text-slate-300 space-y-1 bg-slate-950 p-4 rounded-xl border border-slate-800">
-                    <div><span class="font-bold text-emerald-400">اسم المستفيد:</span> <span id="resOwnerName">-</span></div>
+                    <div><span class="font-bold text-emerald-400">اسم العميل / المستفيد:</span> <span id="resOwnerName">-</span></div>
                     <div><span class="font-bold text-emerald-400">موقع الحيازة (GPS):</span> <span id="resGpsCoords">-</span></div>
-                    <div><span class="font-bold text-emerald-400">البريد المستلم للتقرير:</span> <span id="resEmailTarget" class="text-emerald-300 font-bold">-</span></div>
                     <div><span class="font-bold text-emerald-400">طبقة التكامل التقني:</span> <span class="text-cyan-400">حساسات IoT + خوارزميات Python الطيفية</span></div>
                 </div>
                 <div class="overflow-x-auto mb-6">
@@ -304,7 +291,7 @@
         <p class="text-emerald-400 font-semibold">نيلوس للتقنيات الرقمية وأصول المناخ - جميع الحقوق محفوظة © 2026</p>
     </footer>
 
-    <!-- JavaScript البرمجي المتكامل ومحرك الإرسال -->
+    <!-- JavaScript البرمجي المتكامل -->
     <script>
         let currentLang = 'ar';
 
@@ -360,24 +347,18 @@
         }
 
         function calculateResults() {
-            const ownerName = document.getElementById('ownerName').value.trim();
-            const locationName = document.getElementById('locationName').value.trim();
-            const email = document.getElementById('userEmail').value.trim();
-            const lat = document.getElementById('gpsLat').value.trim();
-            const lng = document.getElementById('gpsLng').value.trim();
+            const ownerName = document.getElementById('ownerName').value.trim() || 'عميل غير محدد';
+            const locationName = document.getElementById('locationName').value.trim() || 'منطقة عامة';
+            const lat = document.getElementById('gpsLat').value.trim() || '0.0000';
+            const lng = document.getElementById('gpsLng').value.trim() || '0.0000';
 
-            const diesel = parseFloat(document.getElementById('dieselInput').value);
-            const fert = parseFloat(document.getElementById('fertInput').value);
-            const elec = parseFloat(document.getElementById('elecInput').value);
-            const palmCount = parseFloat(document.getElementById('palmCountInput').value);
-            const orchardArea = parseFloat(document.getElementById('orchardAreaInput').value);
-            const ndvi = parseFloat(document.getElementById('ndviInput').value);
-            const soilMoisture = parseFloat(document.getElementById('soilMoisture').value);
-
-            if (!ownerName || !email) {
-                showToast(currentLang === 'ar' ? 'الرجاء إدخال اسم المالك والبريد الإلكتروني' : 'Please enter owner name and email', 'error');
-                return null;
-            }
+            const diesel = parseFloat(document.getElementById('dieselInput').value) || 0;
+            const fert = parseFloat(document.getElementById('fertInput').value) || 0;
+            const elec = parseFloat(document.getElementById('elecInput').value) || 0;
+            const palmCount = parseFloat(document.getElementById('palmCountInput').value) || 0;
+            const orchardArea = parseFloat(document.getElementById('orchardAreaInput').value) || 0;
+            const ndvi = parseFloat(document.getElementById('ndviInput').value) || 0;
+            const soilMoisture = parseFloat(document.getElementById('soilMoisture').value) || 0;
 
             const emissions = (diesel * 2.68 + fert * 1.3 + elec * 0.45) / 1000;
             const treesAbsorption = (palmCount * 0.05) + (orchardArea * 2.5);
@@ -385,9 +366,8 @@
             const totalAbsorption = treesAbsorption + soilAbsorption;
             const netBalance = totalAbsorption - emissions;
 
-            document.getElementById('resOwnerName').innerText = ownerName + (locationName ? ` (${locationName})` : '');
-            document.getElementById('resEmailTarget').innerText = email;
-            document.getElementById('resGpsCoords').innerText = (lat && lng) ? `Lat: ${lat}, Lng: ${lng}` : (currentLang === 'ar' ? 'محدد عبر المنطقة العامة' : 'Set by general region');
+            document.getElementById('resOwnerName').innerText = ownerName + ` (${locationName})`;
+            document.getElementById('resGpsCoords').innerText = `Lat: ${lat}, Lng: ${lng}`;
 
             document.getElementById('resEmissions').innerText = emissions.toFixed(2) + (currentLang === 'ar' ? ' طن مكافئ CO2' : ' Tons CO2e');
             document.getElementById('resTrees').innerText = treesAbsorption.toFixed(2) + (currentLang === 'ar' ? ' طن CO2 سنوياً' : ' Tons CO2/yr');
@@ -400,7 +380,6 @@
             return {
                 ownerName,
                 locationName,
-                email,
                 lat,
                 lng,
                 emissions: emissions.toFixed(2),
@@ -410,33 +389,27 @@
             };
         }
 
-        function sendEmailReport() {
+        function sendWhatsAppReport() {
             const data = calculateResults();
             if (!data) return;
 
-            showToast(currentLang === 'ar' ? `⏳ جاري إرسال تقرير PDF الفعلي إلى بريدك: ${data.email}` : `⏳ Sending PDF report to: ${data.email}`, 'success');
+            // تجهيز نص الرسالة متكاملة مع الإحداثيات والنتائج لإرسالها عبر الواتساب
+            const message = `🌱 *تقرير المنظومة الرقمية للزراعة الكربونية (نيلوس)*\n\n` +
+                `👤 *العميل / الجهة:* ${data.ownerName}\n` +
+                `📍 *المنطقة:* ${data.locationName}\n` +
+                `🛰️ *الإحداثيات (GPS):* خط العرض ${data.lat} ، خط الطول ${data.lng}\n\n` +
+                `📊 *نتائج التحليل البيئي وكربون التربة:*:\n` +
+                `- إجمالي الانبعاثات: ${data.emissions} طن مكافئ CO2\n` +
+                `- امتصاص الأشجار: ${data.treesAbsorption} طن CO2/سنة\n` +
+                `- تخزين كربون التربة (NDVI + IoT): ${data.soilAbsorption} طن CO2/سنة\n` +
+                `- *صافي العوائد الكربونية:* ${data.netBalance} طن مرصود\n\n` +
+                `🛡️ *(مدعوم بحساسات IoT وخوارزميات Python والمحمية الفكرية)*`;
 
-            // إرسال البيانات فعلياً عبر خدمة EmailJS لضمان وصول التقرير للبريد
-            const templateParams = {
-                to_email: data.email,
-                owner_name: data.ownerName,
-                location: data.locationName,
-                gps_coords: `Lat: ${data.lat}, Lng: ${data.lng}`,
-                emissions: data.emissions,
-                trees_absorption: data.treesAbsorption,
-                soil_absorption: data.soilAbsorption,
-                net_balance: data.netBalance
-            };
-
-            emailjs.send('service_nilus_default', 'template_carbon_pdf', templateParams)
-                .then(function(response) {
-                    showToast(currentLang === 'ar' ? `✅ تم إرسال التقرير وشهادة PDF بنجاح إلى البريد: ${data.email}` : `✅ PDF report successfully sent to: ${data.email}`, 'success');
-                }, function(error) {
-                    // تفعيل نظام الإرسال الاحتياطي فوراً في حال تطلب الخادم إذن الاتصال
-                    setTimeout(() => {
-                        showToast(currentLang === 'ar' ? `✅ تم توثيق وتأكيد إرسال تقرير الـ PDF والبيانات بنجاح إلى: ${data.email}` : `✅ Report verified and dispatched to: ${data.email}`, 'success');
-                    }, 1000);
-                });
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+            
+            window.open(whatsappUrl, '_blank');
+            showToast(currentLang === 'ar' ? '✅ تم تحويل النتائج والإحداثيات كاملة إلى الواتساب بنجاح' : '✅ Report and GPS data transferred to WhatsApp successfully', 'success');
         }
 
         function fetchSatelliteAPI() {
@@ -457,15 +430,14 @@
         }
 
         function copyResults() {
-            const text = `Nilus Carbon Platform Certification:\nBeneficiary: ${document.getElementById('resOwnerName').innerText}\nEmail: ${document.getElementById('userEmail').value}\nGPS: ${document.getElementById('resGpsCoords').innerText}\nNet Balance: ${document.getElementById('resNet').innerText}`;
+            const text = `Nilus Carbon Platform Certification:\nClient: ${document.getElementById('resOwnerName').innerText}\nGPS: ${document.getElementById('resGpsCoords').innerText}\nNet Balance: ${document.getElementById('resNet').innerText}`;
             navigator.clipboard.writeText(text);
             showToast(currentLang === 'ar' ? 'تم نسخ بيانات التوثيق إلى الحافظة' : 'Certification data copied to clipboard', 'success');
         }
 
         function exportCSV() {
             const csvContent = "data:text/csv;charset=utf-8,Parameter,Value\n" +
-                `Beneficiary,${document.getElementById('resOwnerName').innerText}\n` +
-                `Email,${document.getElementById('userEmail').value}\n` +
+                `Client,${document.getElementById('resOwnerName').innerText}\n` +
                 `GPS,${document.getElementById('resGpsCoords').innerText}\n` +
                 `Net Balance,${document.getElementById('resNet').innerText}`;
             const encodedUri = encodeURI(csvContent);
