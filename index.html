@@ -3,20 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nilus ECA | خريطة الغطاء النباتي الفعلي وقمر Sentinel</title>
-    <meta name="description" content="نيلوس للتقنيات الرقمية وأصول المناخ - خريطة الغطاء النباتي الفعلي NDVI والتقارير البريدية الرسمية">
+    <title>Nilus ECA | إدارة أصول المناخ والزراعة التعاقدية</title>
+    <meta name="description" content="نيلوس للتقنيات الرقمية وأصول المناخ - رصد الأقمار الصناعية، الزراعة التعاقدية، وحساب أرصدة الكربون">
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- مكتبة Leaflet للخرائط التفاعلية -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <!-- مكتبة html2canvas لالتقاط الصور التوثيقية -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Cairo', 'Inter', sans-serif; scroll-behavior: smooth; }
         .results-table td { padding: 10px; border-bottom: 1px solid #334155; }
-        #map { height: 420px; width: 100%; z-index: 10; }
-        /* طبقة تدرج الغطاء النباتي الفعلي NDVI overlay */
+        #map { height: 400px; width: 100%; z-index: 10; }
         .ndvi-overlay {
             position: absolute;
             inset: 0;
@@ -33,61 +30,92 @@
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col selection:bg-cyan-500 selection:text-white">
 
-    <!-- شريط الأمان والتوثيق -->
-    <div role="region" aria-label="شريط الأمان والنظام" class="bg-slate-950 border-b border-cyan-500/20 py-1.5 px-4 text-center text-xs text-cyan-400 font-semibold tracking-wider flex items-center justify-center space-x-2 space-x-reverse">
-        <span>🛰️ نيلوس للتقنيات الرقمية وأصول المناخ · خريطة الغطاء النباتي الفعلي NDVI</span>
+    <!-- شريط الأمان والنظام -->
+    <div class="bg-slate-950 border-b border-cyan-500/20 py-1.5 px-4 text-center text-xs text-cyan-400 font-semibold tracking-wider flex items-center justify-center space-x-2 space-x-reverse">
+        <span>🛰️ نيلوس للتقنيات الرقمية وأصول المناخ · إدارة العقود والزراعة التعاقدية ودخل الكربون</span>
     </div>
 
-    <!-- زر العودة للأعلى -->
-    <button id="scrollTopBtn" onclick="scrollToTop()" aria-label="العودة لأعلى الصفحة" class="fixed bottom-6 right-6 bg-slate-800 hover:bg-slate-700 text-cyan-400 p-3 rounded-full shadow-2xl z-50 transition hidden border border-cyan-500/30">
+    <button id="scrollTopBtn" onclick="scrollToTop()" class="fixed bottom-6 right-6 bg-slate-800 hover:bg-slate-700 text-cyan-400 p-3 rounded-full shadow-2xl z-50 transition hidden border border-cyan-500/30">
         ⬆️
     </button>
 
-    <!-- نظام التنبيهات -->
     <div id="toastContainer" class="fixed top-24 right-6 z-50 space-y-2 pointer-events-none"></div>
 
-    <!-- شريط التنقل العلوي -->
+    <!-- شريط التنقل -->
     <header class="bg-slate-950/85 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-3 space-x-reverse">
                 <div class="flex items-center justify-center bg-cyan-600 text-white font-black rounded-xl overflow-hidden shadow-lg shadow-cyan-900/40 border border-cyan-400/30 w-12 h-12">
-                    <span class="text-2xl" aria-hidden="true">🛰️</span>
+                    <span class="text-2xl">🛰️</span>
                 </div>
                 <div>
                     <h1 class="text-lg sm:text-xl font-black text-white tracking-wide">نيلوس للتقنيات الرقمية وأصول المناخ</h1>
-                    <p class="text-xs text-cyan-400 font-medium">خريطة الغطاء النباتي الفعلي وتحليل قمر Sentinel</p>
+                    <p class="text-xs text-cyan-400 font-medium">الزراعة التعاقدية ومتابعة الحقول من الفضاء</p>
                 </div>
             </div>
             <div class="flex items-center space-x-4 space-x-reverse">
-                <button onclick="toggleLanguage()" id="langBtn" aria-label="تغيير اللغة" class="bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-cyan-500/30 px-4 py-2 rounded-lg text-sm font-bold transition shadow-sm">
+                <button onclick="toggleLanguage()" id="langBtn" class="bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-cyan-500/30 px-4 py-2 rounded-lg text-sm font-bold transition shadow-sm">
                     English 🇺🇸
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- القسم الرئيسي -->
-    <section class="relative bg-gradient-to-b from-slate-950 to-slate-900 py-12 px-4 text-center border-b border-slate-800 overflow-hidden">
-        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#06b6d4_1px,transparent_1px)] [background-size:16px_16px]" aria-hidden="true"></div>
+    <!-- قسم الهيرو -->
+    <section class="relative bg-gradient-to-b from-slate-950 to-slate-900 py-10 px-4 text-center border-b border-slate-800 overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#06b6d4_1px,transparent_1px)] [background-size:16px_16px]"></div>
         <div class="relative max-w-4xl mx-auto animate-fade-in">
-            <span class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest inline-block mb-4 shadow-sm">ملكية فكرية محمية - نيلوس للتقنيات الرقمية وأصول المناخ</span>
+            <span class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest inline-block mb-4">زراعة تعاقدية تُدار كما ينبغي · مصر والوطن العربي</span>
             <h2 class="text-3xl sm:text-4xl font-black text-white tracking-tight mb-4 leading-tight">
-                الخرائط الفضائية ونسبة الغطاء النباتي الفعلي <br>
-                <span class="text-cyan-400 text-2xl sm:text-3xl">تحليل NDVI المباشر وإرسال التقارير البريدية</span>
+                من مكان واحد لإدارة الاتفاق ومتابعة الحقول <br>
+                <span class="text-cyan-400 text-xl sm:text-2xl">من المصافحة حتى الدفع ودخل الكربون</span>
             </h2>
         </div>
     </section>
 
-    <!-- لوحة التحكم والخريطة التفاعلية -->
-    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+    <!-- لوحة التحكم وحالة الحقول المستوحاة من زرعي -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full space-y-10">
+        
+        <!-- قسم بطاقات الحقول السريعة وتنبيهات الإجهاد -->
+        <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl">
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-6 border-b border-slate-800 pb-4">
+                <div>
+                    <h3 class="text-lg font-black text-white">🌾 متابعة الحقول وحالة الإجهاد لهذا الأسبوع</h3>
+                    <p class="text-xs text-slate-400">قوة المحصول وصور الأقمار لكل قطعة أرض مسجلة.</p>
+                </div>
+                <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1 rounded-xl text-xs font-bold mt-2 sm:mt-0">٦ حقول نشطة · ٢٦٫٧ هكتار</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- بستان 1 -->
+                <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2 hover:border-cyan-500/40 transition">
+                    <div class="flex justify-between items-center"><span class="font-bold text-sm text-white">نخيل الشمال</span><span class="bg-red-500/20 text-red-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">إجهاد مائي</span></div>
+                    <div class="text-2xl font-black text-red-400">0.20 <span class="text-xs text-slate-400 font-normal">قوة المحصول</span></div>
+                    <p class="text-xs text-slate-400">التوصية: افحص خط التنقيط في الجزء الشمالي.</p>
+                </div>
+                <!-- بستان 2 -->
+                <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2 hover:border-cyan-500/40 transition">
+                    <div class="flex justify-between items-center"><span class="font-bold text-sm text-white">الخط الشرقي</span><span class="bg-amber-500/20 text-amber-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">مراقبة دورية</span></div>
+                    <div class="text-2xl font-black text-amber-400">0.48 <span class="text-xs text-slate-400 font-normal">قوة المحصول</span></div>
+                    <p class="text-xs text-slate-400">التوصية: زيارة ميدانية غداً للتحقق من النمو.</p>
+                </div>
+                <!-- بستان 3 -->
+                <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2 hover:border-cyan-500/40 transition">
+                    <div class="flex justify-between items-center"><span class="font-bold text-sm text-white">بساتين الزيتون</span><span class="bg-red-500/20 text-red-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">إجهاد</span></div>
+                    <div class="text-2xl font-black text-red-400">0.25 <span class="text-xs text-slate-400 font-normal">قوة المحصول</span></div>
+                    <p class="text-xs text-slate-400">التوصية: تعديل جدول الري لتجنب جفاف الأوراق.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- الخريطة والتحليل الفضائي المباشر -->
         <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative">
             
-            <!-- قسم الخريطة التفاعلية وطبقة NDVI الفعلي مع شريط البيانات العلوي المماثل للصورة المرجعية -->
             <div class="bg-slate-900 border border-cyan-500/40 p-4 rounded-2xl mb-8 space-y-4 shadow-lg">
                 <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
                     <div>
                         <h4 class="text-md font-bold text-cyan-400">🛰️ خريطة قمر Sentinel وتحليل الغطاء النباتي الفعلي (NDVI)</h4>
-                        <p class="text-xs text-slate-400">تفعيل الطبقة يظهر التدرج اللونى الفعلي لكثافة النباتات والتربة الحية.</p>
+                        <p class="text-xs text-slate-400">تفعيل الطبقة يظهر التدرج اللوني الفعلي لكثافة النباتات والتربة الحية.</p>
                     </div>
                     <div class="flex flex-wrap gap-2">
                         <button onclick="toggleNDVILayer()" id="ndviToggleBtn" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-4 py-2 rounded-xl text-xs transition shadow flex items-center space-x-1 space-x-reverse">
@@ -101,26 +129,15 @@
                     </div>
                 </div>
 
-                <!-- حاوية الخريطة مع شريط البيانات العلوي المخصص مطابقاً للصورة المرجعية -->
                 <div id="mapContainer" class="relative rounded-2xl overflow-hidden border border-slate-700">
-                    <!-- شريط البيانات الفضائية العلوي تماماً مثل الصورة المطلوبة -->
                     <div class="bg-slate-950/90 text-cyan-300 text-[11px] font-mono px-3 py-1.5 border-b border-slate-700 flex justify-between items-center z-30 relative">
                         <span id="mapTimestamp">2026-08-01 00:00 - 2026-08-01 23:59, Sentinel-2 L2A, NDVI</span>
                         <span class="text-emerald-400 font-bold">Nilus ECA 🛰️</span>
                     </div>
                     <div id="map"></div>
                     <div id="ndviOverlayLayer" class="ndvi-overlay"></div>
-                    
-                    <!-- مفتاح الألوان التوضيحي لنسبة الغطاء النباتي -->
-                    <div class="absolute bottom-4 left-4 bg-slate-950/90 backdrop-blur-md p-3 rounded-xl border border-slate-700 z-30 text-[11px] space-y-1 shadow-xl">
-                        <div class="font-bold text-cyan-400 mb-1">مفتاح نسبة الغطاء النباتي:</div>
-                        <div class="flex items-center space-x-2 space-x-reverse"><span class="w-3 h-3 bg-green-500 rounded-full inline-block"></span><span>كثافة عالية (NDVI > 0.6)</span></div>
-                        <div class="flex items-center space-x-2 space-x-reverse"><span class="w-3 h-3 bg-yellow-500 rounded-full inline-block"></span><span>كثافة متوسطة (0.3 - 0.6)</span></div>
-                        <div class="flex items-center space-x-2 space-x-reverse"><span class="w-3 h-3 bg-red-500 rounded-full inline-block"></span><span>تربة جافة / منخفضة (< 0.3)</span></div>
-                    </div>
                 </div>
 
-                <!-- معاينة الصورة التوثيقية الملتقطة -->
                 <div id="snapshotPreviewArea" class="hidden pt-4 border-t border-slate-800 space-y-2">
                     <div class="text-xs font-bold text-cyan-300 flex justify-between items-center">
                         <span>📷 معاينة الصورة التوثيقية الملتقطة للخريطة النباتية:</span>
@@ -130,7 +147,7 @@
                 </div>
             </div>
 
-            <!-- بيانات الحيازة و GPS (خانات مصفرة وفارغة تماماً بدون أرقام افتراضية) -->
+            <!-- بيانات الحيازة و GPS (خانات فارغة تماماً) -->
             <div class="bg-slate-900 border border-emerald-500/30 p-6 rounded-2xl mb-8 space-y-4">
                 <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2">بيانات الحيازة الإحداثيات المكانية (GPS)</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -161,7 +178,7 @@
                 </div>
             </div>
 
-            <!-- مؤشرات قمر Sentinel وحساسات IoT (خانات مصفرة تماماً بدون أرقام افتراضية) -->
+            <!-- مؤشرات الانبعاثات والأشجار وحساسات IoT -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
                     <h4 class="text-md font-bold text-amber-400 border-b border-slate-800 pb-2">1. أنشطة الحيازة والانبعاثات</h4>
@@ -203,10 +220,10 @@
                 </div>
             </div>
 
-            <!-- أزرار الحساب والإرسال البريدي المباشر (تم إزالة الإيميل من نص الزر تماماً) -->
+            <!-- أزرار العمليات والإرسال البريدي -->
             <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-10">
                 <button onclick="calculateResults()" class="w-full sm:w-auto bg-cyan-600 hover:bg-cyan-500 text-white font-black px-8 py-4 rounded-2xl text-base shadow-xl shadow-cyan-600/30 transition">
-                    تحليل أصول المناخ وحساب الغطاء النباتي 🚀
+                    تحليل أصول المناخ وحساب دخل الكربون 🚀
                 </button>
                 <button onclick="sendCompanyEmailReport()" class="w-full sm:w-auto bg-blue-700 hover:bg-blue-600 text-white font-black px-8 py-4 rounded-2xl text-base shadow-xl shadow-blue-700/30 transition border border-blue-400/30 flex items-center justify-center space-x-2 space-x-reverse">
                     <span>📧</span>
@@ -214,9 +231,9 @@
                 </button>
             </div>
 
-            <!-- نتائج التحليل -->
+            <!-- النتائج وشهادة الكربون -->
             <div id="resultsArea" class="bg-slate-900 border border-cyan-500/30 rounded-2xl p-6 hidden animate-fade-in">
-                <h4 class="text-lg font-black text-cyan-400 mb-4 border-b border-slate-800 pb-2">📊 تقرير وشهادة الغطاء النباتي وقمر Sentinel</h4>
+                <h4 class="text-lg font-black text-cyan-400 mb-4 border-b border-slate-800 pb-2">📊 تقرير وشهادة أصول المناخ ودخل الكربون</h4>
                 <div class="mb-4 text-xs text-slate-300 space-y-1 bg-slate-950 p-4 rounded-xl border border-slate-800">
                     <div><span class="font-bold text-cyan-400">اسم المستفيد:</span> <span id="resOwnerName">-</span></div>
                     <div><span class="font-bold text-cyan-400">الإحداثيات:</span> <span id="resGpsCoords">-</span></div>
@@ -234,7 +251,7 @@
                                 <td id="resTrees" class="font-black text-emerald-400">0 طن CO2 سنوياً</td>
                             </tr>
                             <tr class="border-b-0 bg-cyan-950/20">
-                                <td class="font-black text-cyan-300 text-base">صافي العوائد الكربونية المسجلة:</td>
+                                <td class="font-black text-cyan-300 text-base">صافي العوائد ودخل الكربون المتوقع ($18–$40 للطن):</td>
                                 <td id="resNet" class="font-black text-cyan-400 text-lg">0 طن مرصود</td>
                             </tr>
                         </tbody>
@@ -244,12 +261,10 @@
         </div>
     </main>
 
-    <!-- الفوتر -->
     <footer class="bg-slate-950 text-slate-400 py-10 border-t border-slate-800 text-center text-xs">
         <p class="text-cyan-400 font-semibold">نيلوس للتقنيات الرقمية وأصول المناخ - جميع الحقوق محفوظة © 2026</p>
     </footer>
 
-    <!-- JavaScript البرمجي -->
     <script>
         let currentLang = 'ar';
         let map, marker;
@@ -301,7 +316,6 @@
             initMap();
         };
 
-        // تفعيل أو إلغاء تفعيل طبقة الغطاء النباتي الفعلي NDVI فوق الخريطة
         function toggleNDVILayer() {
             isNdviActive = !isNdviActive;
             const container = document.getElementById('mapContainer');
@@ -418,12 +432,12 @@
 
             document.getElementById('resEmissions').innerText = emissions.toFixed(2) + ' طن مكافئ CO2';
             document.getElementById('resTrees').innerText = treesAbsorption.toFixed(2) + ' طن CO2 سنوياً';
-            document.getElementById('resNet').innerText = netBalance.toFixed(2) + ' طن مرصود';
+            document.getElementById('resNet').innerText = netBalance.toFixed(2) + ' طن مرصود (دخل متوقع)';
             
             document.getElementById('resultsArea').classList.remove('hidden');
-            showToast('تم تحليل الغطاء النباتي وأصول المناخ بنجاح', 'success');
+            showToast('تم تحليل الغطاء النباتي ودخل الكربون بنجاح', 'success');
 
-            return { ownerName, locationName, lat, lng, ndvi, emissions: emissions.toFixed(2), netBalance: netBalance.toFixed(2) };
+            return { ownerName, locationName, lat, lng, ndvi, netBalance: netBalance.toFixed(2) };
         }
 
         function sendCompanyEmailReport() {
@@ -431,14 +445,14 @@
             if (!data) return;
 
             const companyEmail = "waadnasr144@gmail.com";
-            const subject = encodeURIComponent(`تقرير خريطة الغطاء النباتي NDVI - نيلوس (${data.ownerName})`);
+            const subject = encodeURIComponent(`تقرير أصول المناخ ودخل الكربون - نيلوس (${data.ownerName})`);
             const body = encodeURIComponent(
-                `نيلوس للتقنيات الرقمية وأصول المناخ - تقرير الغطاء النباتي الفعلي NDVI\n\n` +
+                `نيلوس للتقنيات الرقمية وأصول المناخ - تقرير المتابعة الفضائية والتعاقدية\n\n` +
                 `المستفيد / الجهة: ${data.ownerName}\n` +
                 `المنطقة: ${data.locationName}\n` +
                 `الإحداثيات: خط العرض ${data.lat} ، خط الطول ${data.lng}\n` +
                 `نسبة الغطاء النباتي الفعلي (NDVI): ${data.ndvi}\n` +
-                `صافي العوائد الكربونية: ${data.netBalance} طن مرصود\n\n` +
+                `صافي العوائد وأرصدة الكربون: ${data.netBalance} طن مرصود\n\n` +
                 `تم إعداد التقرير بنجاح للإرسال التلقائي إلى البريد الرسمي للشركة.`
             );
 
