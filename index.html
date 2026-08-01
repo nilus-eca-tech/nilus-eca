@@ -205,6 +205,7 @@
                     <option value="mixed">زراعات مختلطة وخضروات</option>
                 </select>
             </div>
+            <!-- خانة البريد الإلكتروني مضافة بتصميم منسق ومتطابق مع الشبكة -->
             <div class="form-group full-width">
                 <label for="userEmail">بريد إرسال التقرير (PDF):</label>
                 <input type="email" id="userEmail" value="waadnasr144@gmail.com" required>
@@ -217,7 +218,8 @@
             <button type="button" class="secondary-btn" onclick="runPythonProcessing()">تشغيل معالجة Python وسحب NDVI</button>
             <button type="submit">توثيق الحيازة وحساب العوائد الكربونية 🚀</button>
         </div>
-        <div class="btn-group" style="margin-top: 15px;">
+        <!-- زر إضافي مخصص لتصدير وإرسال الـ PDF للبريد مباشرة -->
+        <div class="btn-group" style="margin-top: 10px;">
             <button type="button" class="pdf-btn" onclick="sendPDFReport()">📥 تصدير وإرسال تقرير PDF إلى البريد الإلكتروني</button>
         </div>
     </form>
@@ -283,7 +285,7 @@
                     statusDiv.style.color = "green";
                 },
                 (error) => {
-                    // في حال تعذر الوصول، نضع إحداثيات افتراضية دقيقة للمنيا كبديل آمن
+                    // في حال رفض الإذن أو تعذر الوصول، نضع إحداثيات افتراضية دقيقة للمنيا كبديل آمن
                     latInput.value = "28.1099° N";
                     lonInput.value = "30.7503° E";
                     statusDiv.innerHTML = "⚠️ تعذر الوصول لـ GPS المباشر، تم استخدام الإحداثيات الافتراضية لمديرية المنيا.";
