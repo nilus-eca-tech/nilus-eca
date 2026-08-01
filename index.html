@@ -367,9 +367,19 @@
 
             map = L.map('map').setView([initialLat, initialLng], 13);
 
+            // الطبقة الأساسية (صور Esri الفضائية)
             const sentinelSatellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 maxZoom: 19,
                 attribution: 'Tiles &copy; Esri &mdash; Sentinel Integration'
+            });
+
+            // طبقة قمر Sentinel-2 الحقيقية عبر WMS (المربوطة حديثاً)
+            const sentinelWMS = L.tileLayer.wms('https://shservices.copernicus.eu/ogc/wms/bd868b43-4b68-45b1-bb66-417c800c7329', {
+                layers: 'TRUE-COLOR-S2L2A',
+                format: 'image/png',
+                transparent: true,
+                maxZoom: 20,
+                attribution: 'Sentinel-2 | Copernicus Browser'
             });
 
             const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -379,8 +389,10 @@
 
             sentinelSatellite.addTo(map);
 
+            // إضافة الطبقات لقائمة التحكم بالخريطة
             const baseMaps = {
-                "🛰️ Sentinel Satellite": sentinelSatellite,
+                "🛰️ Esri Satellite": sentinelSatellite,
+                "🛰️ Sentinel-2 WMS (الحقيقي)": sentinelWMS,
                 "🗺️ Standard Map": osmLayer
             };
             L.control.layers(baseMaps).addTo(map);
@@ -409,7 +421,6 @@
         };
 
         function updateDynamicFieldMetrics(lat, lng) {
-            // حساب مؤشرات ديناميكية مبنية على الإحداثيات المدخلة لتعكس واقعاً حقيقياً
             const syntheticNdvi = (0.35 + (Math.abs(Math.sin(lat * lng)) * 0.55)).toFixed(2);
             const syntheticMoisture = (35 + (Math.abs(Math.cos(lat)) * 30)).toFixed(1);
             const syntheticCarbon = (parseFloat(syntheticNdvi) * 18.5).toFixed(1);
@@ -486,7 +497,6 @@
                 langBtn.innerText = 'English 🇺🇸';
             }
 
-            // تحديث النصوص ديناميكياً
             const t = translations[currentLang];
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
