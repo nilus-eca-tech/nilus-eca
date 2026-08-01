@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nilus ECA | خريطة الغطاء النباتي الفعلي وقمر Sentinel</title>
-    <meta name="description" content="نيلوس للتقنيات الرقمية وأصول المناخ - خريطة الغطاء النباتي الفعلي NDVI والتقارير البريدية الرسمية لبريد waadnasr144@gmail.com">
+    <meta name="description" content="نيلوس للتقنيات الرقمية وأصول المناخ - خريطة الغطاء النباتي الفعلي NDVI والتقارير البريدية الرسمية">
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- مكتبة Leaflet للخرائط التفاعلية -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -15,12 +15,11 @@
     <style>
         body { font-family: 'Cairo', 'Inter', sans-serif; scroll-behavior: smooth; }
         .results-table td { padding: 10px; border-bottom: 1px solid #334155; }
-        #map { height: 420px; width: 100%; border-radius: 1rem; z-index: 10; }
+        #map { height: 420px; width: 100%; z-index: 10; }
         /* طبقة تدرج الغطاء النباتي الفعلي NDVI overlay */
         .ndvi-overlay {
             position: absolute;
             inset: 0;
-            border-radius: 1rem;
             pointer-events: none;
             z-index: 20;
             opacity: 0;
@@ -36,7 +35,7 @@
 
     <!-- شريط الأمان والتوثيق -->
     <div role="region" aria-label="شريط الأمان والنظام" class="bg-slate-950 border-b border-cyan-500/20 py-1.5 px-4 text-center text-xs text-cyan-400 font-semibold tracking-wider flex items-center justify-center space-x-2 space-x-reverse">
-        <span>🛰️ نيلوس للتقنيات الرقمية وأصول المناخ · خريطة الغطاء النباتي الفعلي NDVI · بريد الشركة: waadnasr144@gmail.com</span>
+        <span>🛰️ نيلوس للتقنيات الرقمية وأصول المناخ · خريطة الغطاء النباتي الفعلي NDVI</span>
     </div>
 
     <!-- زر العودة للأعلى -->
@@ -68,7 +67,7 @@
     </header>
 
     <!-- القسم الرئيسي -->
-    <section class="relative bg-gradient-to-b from-slate-950 to-slate-900 py-16 px-4 text-center border-b border-slate-800 overflow-hidden">
+    <section class="relative bg-gradient-to-b from-slate-950 to-slate-900 py-12 px-4 text-center border-b border-slate-800 overflow-hidden">
         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#06b6d4_1px,transparent_1px)] [background-size:16px_16px]" aria-hidden="true"></div>
         <div class="relative max-w-4xl mx-auto animate-fade-in">
             <span class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest inline-block mb-4 shadow-sm">ملكية فكرية محمية - نيلوس للتقنيات الرقمية وأصول المناخ</span>
@@ -76,9 +75,6 @@
                 الخرائط الفضائية ونسبة الغطاء النباتي الفعلي <br>
                 <span class="text-cyan-400 text-2xl sm:text-3xl">تحليل NDVI المباشر وإرسال التقارير البريدية</span>
             </h2>
-            <p class="text-sm sm:text-base text-slate-400 max-w-2xl mx-auto font-normal leading-relaxed">
-                اعرض خريطة الغطاء النباتي الفعلي، التقط الصورة التوثيقية بدقة متناهية، وأرسل التقرير الموثق إلى (waadnasr144@gmail.com).
-            </p>
         </div>
     </section>
 
@@ -86,7 +82,7 @@
     <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
         <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative">
             
-            <!-- قسم الخريطة التفاعلية وطبقة NDVI الفعلي -->
+            <!-- قسم الخريطة التفاعلية وطبقة NDVI الفعلي مع شريط البيانات العلوي المماثل للصورة المرجعية -->
             <div class="bg-slate-900 border border-cyan-500/40 p-4 rounded-2xl mb-8 space-y-4 shadow-lg">
                 <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
                     <div>
@@ -105,10 +101,16 @@
                     </div>
                 </div>
 
-                <!-- حاوية الخريطة مع طبقة NDVI المرئية -->
+                <!-- حاوية الخريطة مع شريط البيانات العلوي المخصص مطابقاً للصورة المرجعية -->
                 <div id="mapContainer" class="relative rounded-2xl overflow-hidden border border-slate-700">
+                    <!-- شريط البيانات الفضائية العلوي تماماً مثل الصورة المطلوبة -->
+                    <div class="bg-slate-950/90 text-cyan-300 text-[11px] font-mono px-3 py-1.5 border-b border-slate-700 flex justify-between items-center z-30 relative">
+                        <span id="mapTimestamp">2026-08-01 00:00 - 2026-08-01 23:59, Sentinel-2 L2A, NDVI</span>
+                        <span class="text-emerald-400 font-bold">Nilus ECA 🛰️</span>
+                    </div>
                     <div id="map"></div>
                     <div id="ndviOverlayLayer" class="ndvi-overlay"></div>
+                    
                     <!-- مفتاح الألوان التوضيحي لنسبة الغطاء النباتي -->
                     <div class="absolute bottom-4 left-4 bg-slate-950/90 backdrop-blur-md p-3 rounded-xl border border-slate-700 z-30 text-[11px] space-y-1 shadow-xl">
                         <div class="font-bold text-cyan-400 mb-1">مفتاح نسبة الغطاء النباتي:</div>
@@ -128,27 +130,27 @@
                 </div>
             </div>
 
-            <!-- بيانات الحيازة و GPS (بدون أسماء افتراضية للحفاظ على الخصوصية) -->
+            <!-- بيانات الحيازة و GPS (خانات مصفرة وفارغة تماماً بدون أرقام افتراضية) -->
             <div class="bg-slate-900 border border-emerald-500/30 p-6 rounded-2xl mb-8 space-y-4">
                 <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2">بيانات الحيازة الإحداثيات المكانية (GPS)</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="ownerName" class="block text-xs font-bold text-slate-300 mb-1">اسم العميل / الجهة الزراعية</label>
-                        <input type="text" id="ownerName" value="" placeholder="أدخل اسم العميل" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-cyan-500 focus:outline-none">
+                        <input type="text" id="ownerName" value="" placeholder="أدخل اسم العميل أو الجهة" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-cyan-500 focus:outline-none">
                     </div>
                     <div>
                         <label for="locationName" class="block text-xs font-bold text-slate-300 mb-1">منطقة الأرض / المحافظة</label>
-                        <input type="text" id="locationName" value="المنيا" placeholder="المحافظة" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-cyan-500 focus:outline-none">
+                        <input type="text" id="locationName" value="" placeholder="أدخل اسم المنطقة أو المحافظة" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-cyan-500 focus:outline-none">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
                     <div>
                         <label for="gpsLat" class="block text-xs font-bold text-slate-300 mb-1">خط العرض (Latitude)</label>
-                        <input type="text" id="gpsLat" value="28.1099" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:border-cyan-500 focus:outline-none">
+                        <input type="text" id="gpsLat" value="" placeholder="0.0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:border-cyan-500 focus:outline-none">
                     </div>
                     <div>
                         <label for="gpsLng" class="block text-xs font-bold text-slate-300 mb-1">خط الطول (Longitude)</label>
-                        <input type="text" id="gpsLng" value="30.7503" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:border-cyan-500 focus:outline-none">
+                        <input type="text" id="gpsLng" value="" placeholder="0.0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:border-cyan-500 focus:outline-none">
                     </div>
                     <div class="flex items-end">
                         <button onclick="getCurrentGPS()" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-md flex items-center justify-center space-x-1 space-x-reverse">
@@ -159,17 +161,17 @@
                 </div>
             </div>
 
-            <!-- مؤشرات قمر Sentinel وحساسات IoT -->
+            <!-- مؤشرات قمر Sentinel وحساسات IoT (خانات مصفرة تماماً بدون أرقام افتراضية) -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
                     <h4 class="text-md font-bold text-amber-400 border-b border-slate-800 pb-2">1. أنشطة الحيازة والانبعاثات</h4>
                     <div>
                         <label for="dieselInput" class="block text-xs font-bold text-slate-300 mb-1">الديزل (لتر/سنة)</label>
-                        <input type="number" id="dieselInput" value="1000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
+                        <input type="number" id="dieselInput" value="" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                     <div>
                         <label for="fertInput" class="block text-xs font-bold text-slate-300 mb-1">اليوريا (كجم/سنة)</label>
-                        <input type="number" id="fertInput" value="100" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
+                        <input type="number" id="fertInput" value="" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                 </div>
 
@@ -177,11 +179,11 @@
                     <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2">2. الأشجار وحساسات IoT</h4>
                     <div>
                         <label for="palmCountInput" class="block text-xs font-bold text-slate-300 mb-1">عدد الأشجار (شجرة)</label>
-                        <input type="number" id="palmCountInput" value="150" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
+                        <input type="number" id="palmCountInput" value="" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                     <div>
                         <label for="soilMoisture" class="block text-xs font-bold text-emerald-300 mb-1">رطوبة التربة (حساس IoT %)</label>
-                        <input type="number" id="soilMoisture" value="42.5" readonly class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-emerald-400 text-sm font-bold cursor-not-allowed">
+                        <input type="number" id="soilMoisture" value="" placeholder="0.0" readonly class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-emerald-400 text-sm font-bold cursor-not-allowed">
                     </div>
                 </div>
 
@@ -189,7 +191,7 @@
                     <h4 class="text-md font-bold text-cyan-400 border-b border-slate-800 pb-2">3. مؤشرات قمر Sentinel والـ NDVI</h4>
                     <div>
                         <label for="ndviInput" class="block text-xs font-bold text-slate-300 mb-1">مؤشر الغطاء النباتي الفعلي (NDVI)</label>
-                        <input type="number" id="ndviInput" min="0" max="1" step="0.01" value="0.68" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
+                        <input type="number" id="ndviInput" min="0" max="1" step="0.01" value="" placeholder="0.00" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                     <div class="pt-2">
                         <button onclick="fetchSentinelData()" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-2 px-3 rounded-xl text-xs transition shadow-md flex items-center justify-center space-x-1 space-x-reverse">
@@ -201,14 +203,14 @@
                 </div>
             </div>
 
-            <!-- أزرار الحساب والإرسال البريدي المباشر -->
+            <!-- أزرار الحساب والإرسال البريدي المباشر (تم إزالة الإيميل من نص الزر تماماً) -->
             <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-10">
                 <button onclick="calculateResults()" class="w-full sm:w-auto bg-cyan-600 hover:bg-cyan-500 text-white font-black px-8 py-4 rounded-2xl text-base shadow-xl shadow-cyan-600/30 transition">
                     تحليل أصول المناخ وحساب الغطاء النباتي 🚀
                 </button>
                 <button onclick="sendCompanyEmailReport()" class="w-full sm:w-auto bg-blue-700 hover:bg-blue-600 text-white font-black px-8 py-4 rounded-2xl text-base shadow-xl shadow-blue-700/30 transition border border-blue-400/30 flex items-center justify-center space-x-2 space-x-reverse">
                     <span>📧</span>
-                    <span>إرسال التقرير لبريد الشركة (waadnasr144@gmail.com) 🏢</span>
+                    <span>إرسال التقرير لبريد الشركة 🏢</span>
                 </button>
             </div>
 
@@ -437,11 +439,11 @@
                 `الإحداثيات: خط العرض ${data.lat} ، خط الطول ${data.lng}\n` +
                 `نسبة الغطاء النباتي الفعلي (NDVI): ${data.ndvi}\n` +
                 `صافي العوائد الكربونية: ${data.netBalance} طن مرصود\n\n` +
-                `تم إعداد التقرير بنجاح للإرسال التلقائي إلى البريد الرسمي للشركة: waadnasr144@gmail.com`
+                `تم إعداد التقرير بنجاح للإرسال التلقائي إلى البريد الرسمي للشركة.`
             );
 
             window.location.href = `mailto:${companyEmail}?subject=${subject}&body=${body}`;
-            showToast('✅ تم إعداد التقرير وإرساله بنجاح إلى بريد waadnasr144@gmail.com', 'success');
+            showToast('✅ تم إرسال التقرير بنجاح إلى البريد الرسمي للشركة', 'success');
         }
 
         function fetchSentinelData() {
