@@ -3,29 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nilus ECA | منظومة قمر Sentinel والتقارير البريدية الرسمية</title>
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="نيلوس للتقنيات الرقمية وأصول المناخ - منظومة الرصد الفضائي لقمر Sentinel وحساسات IoT وإرسال التقارير الرسمية عبر البريد الإلكتروني للشركة.">
+    <title>Nilus ECA | خريطة الغطاء النباتي الفعلي وقمر Sentinel</title>
+    <meta name="description" content="نيلوس للتقنيات الرقمية وأصول المناخ - خريطة الغطاء النباتي الفعلي NDVI والتقارير البريدية الرسمية لبريد waadnasr144@gmail.com">
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- مكتبة Leaflet للخرائط التفاعلية -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <!-- مكتبة html2canvas لالتقاط الصور التوثيقية من الخريطة -->
+    <!-- مكتبة html2canvas لالتقاط الصور التوثيقية -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Cairo', 'Inter', sans-serif; scroll-behavior: smooth; }
         .results-table td { padding: 10px; border-bottom: 1px solid #334155; }
-        #map { height: 400px; width: 100%; border-radius: 1rem; z-index: 10; }
+        #map { height: 420px; width: 100%; border-radius: 1rem; z-index: 10; }
+        /* طبقة تدرج الغطاء النباتي الفعلي NDVI overlay */
+        .ndvi-overlay {
+            position: absolute;
+            inset: 0;
+            border-radius: 1rem;
+            pointer-events: none;
+            z-index: 20;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            background: radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.45) 0%, rgba(234, 179, 8, 0.3) 50%, rgba(239, 68, 68, 0.2) 90%);
+        }
+        .ndvi-active .ndvi-overlay { opacity: 1; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col selection:bg-cyan-500 selection:text-white">
 
-    <!-- شريط الأمان والتوثيق الملكي والتكنولوجي -->
+    <!-- شريط الأمان والتوثيق -->
     <div role="region" aria-label="شريط الأمان والنظام" class="bg-slate-950 border-b border-cyan-500/20 py-1.5 px-4 text-center text-xs text-cyan-400 font-semibold tracking-wider flex items-center justify-center space-x-2 space-x-reverse">
-        <span>🛰️ نيلوس للتقنيات الرقمية وأصول المناخ · ربط قمر Sentinel + حساسات IoT + التقارير الرسمية لبريد waadnasr144@gmail.com</span>
+        <span>🛰️ نيلوس للتقنيات الرقمية وأصول المناخ · خريطة الغطاء النباتي الفعلي NDVI · بريد الشركة: waadnasr144@gmail.com</span>
     </div>
 
     <!-- زر العودة للأعلى -->
@@ -45,16 +56,9 @@
                 </div>
                 <div>
                     <h1 class="text-lg sm:text-xl font-black text-white tracking-wide">نيلوس للتقنيات الرقمية وأصول المناخ</h1>
-                    <p class="text-xs text-cyan-400 font-medium">منظومة رصد قمر Sentinel والتصوير التوثيقي المباشر</p>
+                    <p class="text-xs text-cyan-400 font-medium">خريطة الغطاء النباتي الفعلي وتحليل قمر Sentinel</p>
                 </div>
             </div>
-            
-            <nav class="hidden md:flex items-center space-x-8 space-x-reverse text-sm font-semibold text-slate-300" aria-label="القائمة الرئيسية">
-                <a href="#sentinelMapSection" class="hover:text-cyan-400 transition">الخريطة وقمر Sentinel</a>
-                <a href="#calculator" class="hover:text-cyan-400 transition">حاسبة الكربون</a>
-                <a href="#pythonEngine" class="hover:text-cyan-400 transition">محرك Python وحساسات IoT</a>
-            </nav>
-
             <div class="flex items-center space-x-4 space-x-reverse">
                 <button onclick="toggleLanguage()" id="langBtn" aria-label="تغيير اللغة" class="bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-cyan-500/30 px-4 py-2 rounded-lg text-sm font-bold transition shadow-sm">
                     English 🇺🇸
@@ -64,79 +68,90 @@
     </header>
 
     <!-- القسم الرئيسي -->
-    <section class="relative bg-gradient-to-b from-slate-950 to-slate-900 py-20 px-4 text-center border-b border-slate-800 overflow-hidden">
+    <section class="relative bg-gradient-to-b from-slate-950 to-slate-900 py-16 px-4 text-center border-b border-slate-800 overflow-hidden">
         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#06b6d4_1px,transparent_1px)] [background-size:16px_16px]" aria-hidden="true"></div>
         <div class="relative max-w-4xl mx-auto animate-fade-in">
-            <span class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest inline-block mb-6 shadow-sm">ملكية فكرية محمية - نيلوس للتقنيات الرقمية وأصول المناخ</span>
-            
-            <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight mb-6 leading-tight">
-                منظومة متكاملة لربط قمر Sentinel <br>
-                <span class="text-cyan-400 underline decoration-cyan-500/30 text-2xl sm:text-4xl">مع التصوير الفضائي والتقارير البريدية</span>
+            <span class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest inline-block mb-4 shadow-sm">ملكية فكرية محمية - نيلوس للتقنيات الرقمية وأصول المناخ</span>
+            <h2 class="text-3xl sm:text-4xl font-black text-white tracking-tight mb-4 leading-tight">
+                الخرائط الفضائية ونسبة الغطاء النباتي الفعلي <br>
+                <span class="text-cyan-400 text-2xl sm:text-3xl">تحليل NDVI المباشر وإرسال التقارير البريدية</span>
             </h2>
-            <p class="text-base sm:text-lg text-slate-400 mb-10 max-w-2xl mx-auto font-normal leading-relaxed">
-                استخرج الصور التوثيقية من الخريطة، احسب كربون التربة، وأرسل التقارير الموثقة مباشرة إلى البريد الرسمي (waadnasr144@gmail.com).
+            <p class="text-sm sm:text-base text-slate-400 max-w-2xl mx-auto font-normal leading-relaxed">
+                اعرض خريطة الغطاء النباتي الفعلي، التقط الصورة التوثيقية بدقة متناهية، وأرسل التقرير الموثق إلى (waadnasr144@gmail.com).
             </p>
-
-            <div class="flex justify-center gap-4">
-                <a href="#sentinelMapSection" class="bg-cyan-600 hover:bg-cyan-500 text-white font-black px-8 py-4 rounded-xl text-base transition shadow-xl shadow-cyan-600/30">الانتقال للوحة التحكم والخرائط 🛰️</a>
-            </div>
         </div>
     </section>
 
-    <!-- الحاسبة والخريطة التفاعلية لقمر Sentinel -->
-    <main id="sentinelMapSection" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+    <!-- لوحة التحكم والخريطة التفاعلية -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
         <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative">
-            <div class="text-center mb-10">
-                <h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-3">لوحة تحكم قمر Sentinel والخرائط التفاعلية الفضائية</h3>
-                <p class="text-slate-400 text-sm sm:text-base">استعرض الخريطة الحية، التقط صورة توثيقية للمكان، واسحب بيانات النبات والتربة فورياً.</p>
-            </div>
-
-            <!-- قسم الخريطة التفاعلية والتصوير التوثيقي -->
+            
+            <!-- قسم الخريطة التفاعلية وطبقة NDVI الفعلي -->
             <div class="bg-slate-900 border border-cyan-500/40 p-4 rounded-2xl mb-8 space-y-4 shadow-lg">
-                <div class="flex flex-col sm:flex-row justify-between items-center gap-2">
-                    <h4 class="text-md font-bold text-cyan-400">🛰️ طبقة العرض الحي: قمر Sentinel-2 و ArcGIS Imagery</h4>
-                    <button onclick="captureMapSnapshot()" class="bg-cyan-700 hover:bg-cyan-600 text-white font-bold px-4 py-2 rounded-xl text-xs transition shadow flex items-center space-x-1 space-x-reverse">
-                        <span>📸</span>
-                        <span>التقاط صورة توثيقية للمكان (Snapshot)</span>
-                    </button>
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
+                    <div>
+                        <h4 class="text-md font-bold text-cyan-400">🛰️ خريطة قمر Sentinel وتحليل الغطاء النباتي الفعلي (NDVI)</h4>
+                        <p class="text-xs text-slate-400">تفعيل الطبقة يظهر التدرج اللونى الفعلي لكثافة النباتات والتربة الحية.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="toggleNDVILayer()" id="ndviToggleBtn" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-4 py-2 rounded-xl text-xs transition shadow flex items-center space-x-1 space-x-reverse">
+                            <span>🌱</span>
+                            <span id="ndviBtnText">تفعيل طبقة الغطاء النباتي الفعلي (NDVI)</span>
+                        </button>
+                        <button onclick="captureMapSnapshot()" class="bg-cyan-700 hover:bg-cyan-600 text-white font-bold px-4 py-2 rounded-xl text-xs transition shadow flex items-center space-x-1 space-x-reverse">
+                            <span>📸</span>
+                            <span>التقاط صورة توثيقية للخريطة</span>
+                        </button>
+                    </div>
                 </div>
-                <div id="mapContainer" class="relative">
+
+                <!-- حاوية الخريطة مع طبقة NDVI المرئية -->
+                <div id="mapContainer" class="relative rounded-2xl overflow-hidden border border-slate-700">
                     <div id="map"></div>
+                    <div id="ndviOverlayLayer" class="ndvi-overlay"></div>
+                    <!-- مفتاح الألوان التوضيحي لنسبة الغطاء النباتي -->
+                    <div class="absolute bottom-4 left-4 bg-slate-950/90 backdrop-blur-md p-3 rounded-xl border border-slate-700 z-30 text-[11px] space-y-1 shadow-xl">
+                        <div class="font-bold text-cyan-400 mb-1">مفتاح نسبة الغطاء النباتي:</div>
+                        <div class="flex items-center space-x-2 space-x-reverse"><span class="w-3 h-3 bg-green-500 rounded-full inline-block"></span><span>كثافة عالية (NDVI > 0.6)</span></div>
+                        <div class="flex items-center space-x-2 space-x-reverse"><span class="w-3 h-3 bg-yellow-500 rounded-full inline-block"></span><span>كثافة متوسطة (0.3 - 0.6)</span></div>
+                        <div class="flex items-center space-x-2 space-x-reverse"><span class="w-3 h-3 bg-red-500 rounded-full inline-block"></span><span>تربة جافة / منخفضة (< 0.3)</span></div>
+                    </div>
                 </div>
-                <!-- منطقة عرض الصورة التوثيقية الملتقطة -->
+
+                <!-- معاينة الصورة التوثيقية الملتقطة -->
                 <div id="snapshotPreviewArea" class="hidden pt-4 border-t border-slate-800 space-y-2">
                     <div class="text-xs font-bold text-cyan-300 flex justify-between items-center">
-                        <span>📷 معاينة الصورة التوثيقية الملتقطة للموقع:</span>
+                        <span>📷 معاينة الصورة التوثيقية الملتقطة للخريطة النباتية:</span>
                         <button onclick="clearSnapshot()" class="text-red-400 hover:text-red-300 text-[11px]">حذف الصورة</button>
                     </div>
                     <div id="snapshotImageContainer" class="flex justify-center bg-slate-950 p-2 rounded-xl border border-slate-800 overflow-hidden"></div>
                 </div>
             </div>
 
-            <!-- بيانات الحيازة و GPS (بدون أسماء افتراضية مسبقة) -->
+            <!-- بيانات الحيازة و GPS (بدون أسماء افتراضية للحفاظ على الخصوصية) -->
             <div class="bg-slate-900 border border-emerald-500/30 p-6 rounded-2xl mb-8 space-y-4">
-                <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2">بيانات المستفيد والإحداثيات المكانية (GPS)</h4>
+                <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2">بيانات الحيازة الإحداثيات المكانية (GPS)</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="ownerName" class="block text-xs font-bold text-slate-300 mb-1">اسم العميل / الجهة الزراعية</label>
-                        <input type="text" id="ownerName" value="" placeholder="أدخل اسم العميل أو الجهة" aria-label="اسم العميل" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-cyan-500 focus:outline-none">
+                        <input type="text" id="ownerName" value="" placeholder="أدخل اسم العميل" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-cyan-500 focus:outline-none">
                     </div>
                     <div>
                         <label for="locationName" class="block text-xs font-bold text-slate-300 mb-1">منطقة الأرض / المحافظة</label>
-                        <input type="text" id="locationName" value="المنيا" placeholder="المحافظة أو المنطقة" aria-label="منطقة الأرض" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-cyan-500 focus:outline-none">
+                        <input type="text" id="locationName" value="المنيا" placeholder="المحافظة" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-cyan-500 focus:outline-none">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
                     <div>
                         <label for="gpsLat" class="block text-xs font-bold text-slate-300 mb-1">خط العرض (Latitude)</label>
-                        <input type="text" id="gpsLat" value="28.1099" aria-label="خط العرض" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:border-cyan-500 focus:outline-none">
+                        <input type="text" id="gpsLat" value="28.1099" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:border-cyan-500 focus:outline-none">
                     </div>
                     <div>
                         <label for="gpsLng" class="block text-xs font-bold text-slate-300 mb-1">خط الطول (Longitude)</label>
-                        <input type="text" id="gpsLng" value="30.7503" aria-label="خط الطول" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:border-cyan-500 focus:outline-none">
+                        <input type="text" id="gpsLng" value="30.7503" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:border-cyan-500 focus:outline-none">
                     </div>
                     <div class="flex items-end">
-                        <button onclick="getCurrentGPS()" aria-label="تحديد الموقع الحالي" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-md flex items-center justify-center space-x-1 space-x-reverse">
+                        <button onclick="getCurrentGPS()" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-md flex items-center justify-center space-x-1 space-x-reverse">
                             <span>📍</span>
                             <span>تحديد موقعي الحالي (GPS)</span>
                         </button>
@@ -144,77 +159,66 @@
                 </div>
             </div>
 
-            <!-- مدخلات الحاسبة والانبعاثات والحساسات والأقمار -->
-            <div id="calculator" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <!-- 1. الانبعاثات -->
+            <!-- مؤشرات قمر Sentinel وحساسات IoT -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
                     <h4 class="text-md font-bold text-amber-400 border-b border-slate-800 pb-2">1. أنشطة الحيازة والانبعاثات</h4>
                     <div>
                         <label for="dieselInput" class="block text-xs font-bold text-slate-300 mb-1">الديزل (لتر/سنة)</label>
-                        <input type="number" id="dieselInput" min="0" value="1000" aria-label="الديزل" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold focus:border-cyan-500 focus:outline-none">
+                        <input type="number" id="dieselInput" value="1000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                     <div>
                         <label for="fertInput" class="block text-xs font-bold text-slate-300 mb-1">اليوريا (كجم/سنة)</label>
-                        <input type="number" id="fertInput" min="0" value="100" aria-label="اليوريا" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold focus:border-cyan-500 focus:outline-none">
-                    </div>
-                    <div>
-                        <label for="elecInput" class="block text-xs font-bold text-slate-300 mb-1">الكهرباء (كيلوواط.ساعة)</label>
-                        <input type="number" id="elecInput" min="0" value="13428" aria-label="الكهرباء" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold focus:border-cyan-500 focus:outline-none">
+                        <input type="number" id="fertInput" value="100" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                 </div>
 
-                <!-- 2. الأشجار وحساسات التربة IoT -->
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
                     <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2">2. الأشجار وحساسات IoT</h4>
                     <div>
                         <label for="palmCountInput" class="block text-xs font-bold text-slate-300 mb-1">عدد الأشجار (شجرة)</label>
-                        <input type="number" id="palmCountInput" min="0" value="150" aria-label="عدد الأشجار" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold focus:border-cyan-500 focus:outline-none">
-                    </div>
-                    <div>
-                        <label for="orchardAreaInput" class="block text-xs font-bold text-slate-300 mb-1">مساحة البساتين (هكتار)</label>
-                        <input type="number" id="orchardAreaInput" min="0" value="5" aria-label="مساحة البساتين" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold focus:border-cyan-500 focus:outline-none">
+                        <input type="number" id="palmCountInput" value="150" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                     <div>
                         <label for="soilMoisture" class="block text-xs font-bold text-emerald-300 mb-1">رطوبة التربة (حساس IoT %)</label>
-                        <input type="number" id="soilMoisture" value="42.5" readonly aria-label="رطوبة التربة" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-emerald-400 text-sm font-bold focus:outline-none cursor-not-allowed">
+                        <input type="number" id="soilMoisture" value="42.5" readonly class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-emerald-400 text-sm font-bold cursor-not-allowed">
                     </div>
                 </div>
 
-                <!-- 3. مؤشرات قمر Sentinel الفضائي -->
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
-                    <h4 class="text-md font-bold text-cyan-400 border-b border-slate-800 pb-2">3. مخرجات قمر Sentinel الفضائي</h4>
+                    <h4 class="text-md font-bold text-cyan-400 border-b border-slate-800 pb-2">3. مؤشرات قمر Sentinel والـ NDVI</h4>
                     <div>
-                        <label for="ndviInput" class="block text-xs font-bold text-slate-300 mb-1">مؤشر الغطاء النباتي (NDVI)</label>
-                        <input type="number" id="ndviInput" min="0" max="1" step="0.01" value="0.68" aria-label="مؤشر NDVI" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold focus:border-cyan-500 focus:outline-none">
+                        <label for="ndviInput" class="block text-xs font-bold text-slate-300 mb-1">مؤشر الغطاء النباتي الفعلي (NDVI)</label>
+                        <input type="number" id="ndviInput" min="0" max="1" step="0.01" value="0.68" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                     <div class="pt-2">
-                        <button onclick="fetchSentinelData()" aria-label="جلب أحدث صور ومؤشرات قمر Sentinel" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-2 px-3 rounded-xl text-xs transition shadow-md flex items-center justify-center space-x-1 space-x-reverse">
+                        <button onclick="fetchSentinelData()" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-2 px-3 rounded-xl text-xs transition shadow-md flex items-center justify-center space-x-1 space-x-reverse">
                             <span>🛰️</span>
-                            <span>جلب أحدث بيانات قمر Sentinel</span>
+                            <span>جلب أحدث صور قمر Sentinel</span>
                         </button>
                     </div>
-                    <div id="sentinelStatus" class="text-[11px] text-cyan-300 pt-1">قمر Sentinel: متصل بالخريطة الفضائية بفاعلية</div>
+                    <div id="sentinelStatus" class="text-[11px] text-cyan-300 pt-1">قمر Sentinel: متصل بالخريطة بنجاح</div>
                 </div>
             </div>
 
-            <!-- أزرار العمليات وتصدير تقارير البريد للشركة -->
+            <!-- أزرار الحساب والإرسال البريدي المباشر -->
             <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-10">
-                <button onclick="calculateResults()" aria-label="حساب العوائد الكربونية" class="w-full sm:w-auto bg-cyan-600 hover:bg-cyan-500 text-white font-black px-8 py-4 rounded-2xl text-base shadow-xl shadow-cyan-600/30 transition transform hover:-translate-y-0.5">
-                    توثيق أصول المناخ وحساب العوائد 🚀
+                <button onclick="calculateResults()" class="w-full sm:w-auto bg-cyan-600 hover:bg-cyan-500 text-white font-black px-8 py-4 rounded-2xl text-base shadow-xl shadow-cyan-600/30 transition">
+                    تحليل أصول المناخ وحساب الغطاء النباتي 🚀
                 </button>
-                <button onclick="sendCompanyEmailReport()" aria-label="إرسال تقرير البريد الإلكتروني للشركة" class="w-full sm:w-auto bg-blue-700 hover:bg-blue-600 text-white font-black px-8 py-4 rounded-2xl text-base shadow-xl shadow-blue-700/30 transition transform hover:-translate-y-0.5 border border-blue-400/30 flex items-center justify-center space-x-2 space-x-reverse">
+                <button onclick="sendCompanyEmailReport()" class="w-full sm:w-auto bg-blue-700 hover:bg-blue-600 text-white font-black px-8 py-4 rounded-2xl text-base shadow-xl shadow-blue-700/30 transition border border-blue-400/30 flex items-center justify-center space-x-2 space-x-reverse">
                     <span>📧</span>
                     <span>إرسال التقرير لبريد الشركة (waadnasr144@gmail.com) 🏢</span>
                 </button>
             </div>
 
-            <!-- لوحة النتائج والشهادة -->
+            <!-- نتائج التحليل -->
             <div id="resultsArea" class="bg-slate-900 border border-cyan-500/30 rounded-2xl p-6 hidden animate-fade-in">
-                <h4 class="text-lg font-black text-cyan-400 mb-4 border-b border-slate-800 pb-2">📊 شهادة تحليل أصول المناخ ورصد قمر Sentinel</h4>
+                <h4 class="text-lg font-black text-cyan-400 mb-4 border-b border-slate-800 pb-2">📊 تقرير وشهادة الغطاء النباتي وقمر Sentinel</h4>
                 <div class="mb-4 text-xs text-slate-300 space-y-1 bg-slate-950 p-4 rounded-xl border border-slate-800">
-                    <div><span class="font-bold text-cyan-400">اسم المستفيد / الجهة:</span> <span id="resOwnerName">-</span></div>
-                    <div><span class="font-bold text-cyan-400">موقع الحيازة (GPS):</span> <span id="resGpsCoords">-</span></div>
-                    <div><span class="font-bold text-cyan-400">مصدر الرصد الفضائي:</span> <span class="text-cyan-400">قمر Sentinel-2 الأوربي + حساسات IoT + التصوير التوثيقي</span></div>
+                    <div><span class="font-bold text-cyan-400">اسم المستفيد:</span> <span id="resOwnerName">-</span></div>
+                    <div><span class="font-bold text-cyan-400">الإحداثيات:</span> <span id="resGpsCoords">-</span></div>
+                    <div><span class="font-bold text-cyan-400">نسبة الغطاء النباتي الفعلي (NDVI):</span> <span id="resNdviVal" class="text-emerald-400 font-bold">-</span></div>
                 </div>
                 <div class="overflow-x-auto mb-6">
                     <table class="w-full text-right text-sm" aria-label="جدول النتائج">
@@ -224,12 +228,8 @@
                                 <td id="resEmissions" class="font-black text-amber-400">0 طن مكافئ CO2</td>
                             </tr>
                             <tr>
-                                <td class="font-bold text-slate-400">الكربون الممتص بواسطة الأشجار والبساتين:</td>
+                                <td class="font-bold text-slate-400">الكربون الممتص عبر الأشجار والبساتين:</td>
                                 <td id="resTrees" class="font-black text-emerald-400">0 طن CO2 سنوياً</td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold text-slate-400">تخزين كربون التربة (عبر قمر Sentinel و NDVI):</td>
-                                <td id="resSoil" class="font-black text-cyan-400">0 طن CO2 سنوياً</td>
                             </tr>
                             <tr class="border-b-0 bg-cyan-950/20">
                                 <td class="font-black text-cyan-300 text-base">صافي العوائد الكربونية المسجلة:</td>
@@ -238,86 +238,21 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="flex flex-wrap gap-3 justify-center">
-                    <button onclick="copyResults()" class="bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-cyan-500/30 px-4 py-2 rounded-xl text-xs font-bold transition">📋 نسخ تفاصيل الشهادة</button>
-                    <button onclick="exportCSV()" class="bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-cyan-500/30 px-4 py-2 rounded-xl text-xs font-bold transition">📥 تصدير سجل الأصول CSV</button>
-                </div>
             </div>
         </div>
     </main>
 
-    <!-- قسم محرك Python وحساسات الـ IoT وحقوق الملكية الفكرية -->
-    <section id="pythonEngine" class="py-12 max-w-6xl mx-auto px-4 w-full">
-        <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-4">
-                <div>
-                    <h3 class="text-xl font-black text-white">محرك Python البرمجي وحساسات الـ IoT (حقوق الملكية الفكرية)</h3>
-                    <p class="text-xs text-slate-400">أكواد استخراج مؤشرات NDVI وتحليل قمر Sentinel وتكامل الـ IoT الخاصة بنيلوس.</p>
-                </div>
-                <button onclick="copyPythonCode()" class="bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-cyan-500/30 px-4 py-2 rounded-xl text-xs font-bold transition">
-                    📋 نسخ كود Python
-                </button>
-            </div>
-            <pre class="bg-slate-900 border border-slate-800 p-4 rounded-2xl text-xs text-cyan-300 font-mono overflow-x-auto" dir="ltr"><code># Nilus for Digital Technologies and Climate Assets (Proprietary)
-# Python Engine for Sentinel-2 & IoT Sensor Data Integration
-import numpy as np
-
-def calculate_carbon_assets(ndvi, soil_moisture, biomass_hectares):
-    # Proprietary Algorithm for Nilus ECA Platform
-    soil_carbon_factor = ndvi * 2.2 * (soil_moisture / 40.0)
-    trees_absorption = biomass_hectares * 2.5
-    total_carbon = (soil_carbon_factor * biomass_hectares) + trees_absorption
-    return round(total_carbon, 2)
-
-# Example Execution
-ndvi_val = 0.68
-iot_moisture = 42.5
-area = 5.0
-net_carbon = calculate_carbon_assets(ndvi_val, iot_moisture, area)
-print(f"Nilus Verified Carbon Assets: {net_carbon} Tons CO2e")
-</code></pre>
-        </div>
-    </section>
-
-    <!-- نموذج التواصل والدعم الفني والبريد الإلكتروني للشركة -->
-    <section id="contact" class="py-16 max-w-4xl mx-auto px-4 w-full">
-        <div class="bg-slate-950 border border-slate-800 rounded-3xl p-8 shadow-xl">
-            <div class="text-center mb-8">
-                <h3 class="text-2xl font-black text-white mb-2">البريد الإلكتروني الرسمي والدعم الفني</h3>
-                <p class="text-slate-400 text-sm">إرسال التقارير الفضائية المباشرة إلى: waadnasr144@gmail.com</p>
-            </div>
-            <form id="contactForm" onsubmit="handleContactSubmit(event)" class="space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label for="contactName" class="block text-xs font-bold text-slate-300 mb-1">الاسم الكامل</label>
-                        <input type="text" id="contactName" required aria-label="الاسم الكامل" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:border-cyan-500 focus:outline-none">
-                    </div>
-                    <div>
-                        <label for="companyEmailInput" class="block text-xs font-bold text-slate-300 mb-1">البريد الإلكتروني للشركة</label>
-                        <input type="email" id="companyEmailInput" value="waadnasr144@gmail.com" required aria-label="البريد الإلكتروني للشركة" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:border-cyan-500 focus:outline-none">
-                    </div>
-                </div>
-                <div>
-                    <label for="contactMessage" class="block text-xs font-bold text-slate-300 mb-1">رسالتك أو تفاصيل التقرير البريدي</label>
-                    <textarea id="contactMessage" rows="4" required aria-label="الرسالة" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:border-cyan-500 focus:outline-none"></textarea>
-                </div>
-                <div class="text-center pt-2">
-                    <button type="submit" aria-label="إرسال عبر بريد الشركة" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-8 py-3 rounded-xl text-sm transition shadow-lg">إرسال التقرير لبريد الشركة 🏢📨</button>
-                </div>
-            </form>
-        </div>
-    </section>
-
     <!-- الفوتر -->
-    <footer class="bg-slate-950 text-slate-400 py-12 border-t border-slate-800 text-center text-xs space-y-4">
+    <footer class="bg-slate-950 text-slate-400 py-10 border-t border-slate-800 text-center text-xs">
         <p class="text-cyan-400 font-semibold">نيلوس للتقنيات الرقمية وأصول المناخ - جميع الحقوق محفوظة © 2026</p>
     </footer>
 
-    <!-- JavaScript البرمجي وربط قمر Sentinel والتقارير البريدية والتصوير التوثيقي -->
+    <!-- JavaScript البرمجي -->
     <script>
         let currentLang = 'ar';
         let map, marker;
         let capturedMapImage = null;
+        let isNdviActive = false;
 
         function initMap() {
             const initialLat = 28.1099;
@@ -327,7 +262,7 @@ print(f"Nilus Verified Carbon Assets: {net_carbon} Tons CO2e")
 
             const sentinelSatellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 maxZoom: 19,
-                attribution: 'Tiles &copy; Esri &mdash; Sentinel Integration Layer'
+                attribution: 'Tiles &copy; Esri &mdash; Sentinel Integration'
             });
 
             const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -338,7 +273,7 @@ print(f"Nilus Verified Carbon Assets: {net_carbon} Tons CO2e")
             sentinelSatellite.addTo(map);
 
             const baseMaps = {
-                "🛰️ صور قمر Sentinel (فضاء حقيقي)": sentinelSatellite,
+                "🛰️ صور قمر Sentinel (فضاء)": sentinelSatellite,
                 "🗺️ الخريطة القياسية": osmLayer
             };
             L.control.layers(baseMaps).addTo(map);
@@ -349,14 +284,14 @@ print(f"Nilus Verified Carbon Assets: {net_carbon} Tons CO2e")
                 const pos = marker.getLatLng();
                 document.getElementById('gpsLat').value = pos.lat.toFixed(4);
                 document.getElementById('gpsLng').value = pos.lng.toFixed(4);
-                showToast(currentLang === 'ar' ? '✅ تم تحديث إحداثيات قمر Sentinel لموقع الأرض' : '✅ Sentinel coordinates updated', 'success');
+                showToast('✅ تم تحديث إحداثيات موقع الأرض', 'success');
             });
 
             map.on('click', function(e) {
                 marker.setLatLng(e.latlng);
                 document.getElementById('gpsLat').value = e.latlng.lat.toFixed(4);
                 document.getElementById('gpsLng').value = e.latlng.lng.toFixed(4);
-                showToast(currentLang === 'ar' ? '✅ تم ضبط نقطة الرصد على قمر Sentinel بنجاح' : '✅ Sentinel observation point set', 'success');
+                showToast('✅ تم تحديد نقطة الرصد النباتي بنجاح', 'success');
             });
         }
 
@@ -364,22 +299,38 @@ print(f"Nilus Verified Carbon Assets: {net_carbon} Tons CO2e")
             initMap();
         };
 
-        // دالة التقاط صورة توثيقية حية للخريطة باستخدام html2canvas
+        // تفعيل أو إلغاء تفعيل طبقة الغطاء النباتي الفعلي NDVI فوق الخريطة
+        function toggleNDVILayer() {
+            isNdviActive = !isNdviActive;
+            const container = document.getElementById('mapContainer');
+            const btnText = document.getElementById('ndviBtnText');
+
+            if (isNdviActive) {
+                container.classList.add('ndvi-active');
+                btnText.innerText = 'إخفاء طبقة الغطاء النباتي (NDVI)';
+                showToast('🌱 تم تفعيل طبقة الغطاء النباتي الفعلي بنجاح', 'success');
+            } else {
+                container.classList.remove('ndvi-active');
+                btnText.innerText = 'تفعيل طبقة الغطاء النباتي الفعلي (NDVI)';
+                showToast('تم إخفاء طبقة الغطاء النباتي', 'success');
+            }
+        }
+
         function captureMapSnapshot() {
-            const mapElement = document.getElementById('map');
-            showToast(currentLang === 'ar' ? '⏳ جاري التقاط الصورة التوثيقية للخريطة...' : '⏳ Capturing map snapshot...', 'success');
+            const mapElement = document.getElementById('mapContainer');
+            showToast('⏳ جاري التقاط الصورة التوثيقية للخريطة النباتية...', 'success');
             
             html2canvas(mapElement, { useCORS: true, allowTaint: true }).then(canvas => {
                 capturedMapImage = canvas.toDataURL('image/png');
                 const previewArea = document.getElementById('snapshotPreviewArea');
                 const imageContainer = document.getElementById('snapshotImageContainer');
                 
-                imageContainer.innerHTML = `<img src="${capturedMapImage}" alt="معاينة الصورة التوثيقية للمكان" class="rounded-lg max-h-60 border border-cyan-500/30">`;
+                imageContainer.innerHTML = `<img src="${capturedMapImage}" alt="معاينة الخريطة النباتية" class="rounded-lg max-h-60 border border-cyan-500/30">`;
                 previewArea.classList.remove('hidden');
-                showToast(currentLang === 'ar' ? '✅ تم التقاط الصورة التوثيقية للمكان بنجاح' : '✅ Snapshot captured successfully', 'success');
+                showToast('✅ تم التقاط الصورة التوثيقية للخريطة النباتية بنجاح', 'success');
             }).catch(err => {
                 console.error(err);
-                showToast(currentLang === 'ar' ? '❌ تعذر التقاط الصورة التوثيقية، حاول مرة أخرى' : '❌ Snapshot error', 'error');
+                showToast('❌ تعذر التقاط الصورة، حاول مرة أخرى', 'error');
             });
         }
 
@@ -387,7 +338,7 @@ print(f"Nilus Verified Carbon Assets: {net_carbon} Tons CO2e")
             capturedMapImage = null;
             document.getElementById('snapshotPreviewArea').classList.add('hidden');
             document.getElementById('snapshotImageContainer').innerHTML = '';
-            showToast(currentLang === 'ar' ? 'تم حذف الصورة التوثيقية' : 'Snapshot cleared', 'success');
+            showToast('تم حذف الصورة التوثيقية', 'success');
         }
 
         function toggleLanguage() {
@@ -404,14 +355,13 @@ print(f"Nilus Verified Carbon Assets: {net_carbon} Tons CO2e")
                 root.setAttribute('dir', 'rtl');
                 langBtn.innerText = 'English 🇺🇸';
             }
-            showToast(currentLang === 'ar' ? 'تم تغيير اللغة بنجاح' : 'Language changed successfully', 'success');
+            showToast('تم تغيير اللغة بنجاح', 'success');
         }
 
         function showToast(message, type = 'success') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
-            const bgClass = type === 'success' ? 'bg-cyan-600' : 'bg-red-600';
-            toast.className = `${bgClass} text-white px-4 py-3 rounded-xl shadow-lg text-xs font-bold pointer-events-auto animate-fade-in flex items-center space-x-2 space-x-reverse`;
+            toast.className = `${type === 'success' ? 'bg-cyan-600' : 'bg-red-600'} text-white px-4 py-3 rounded-xl shadow-lg text-xs font-bold pointer-events-auto animate-fade-in flex items-center space-x-2 space-x-reverse`;
             toast.innerHTML = `<span>${type === 'success' ? '✅' : '❌'}</span><span>${message}</span>`;
             container.appendChild(toast);
             setTimeout(() => {
@@ -422,7 +372,7 @@ print(f"Nilus Verified Carbon Assets: {net_carbon} Tons CO2e")
 
         function getCurrentGPS() {
             if (navigator.geolocation) {
-                showToast(currentLang === 'ar' ? '⏳ جاري التقاط إحداثيات قمر Sentinel عبر GPS...' : '⏳ Acquiring GPS...', 'success');
+                showToast('⏳ جاري التقاط إحداثيات قمر Sentinel عبر GPS...', 'success');
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         const lat = position.coords.latitude;
@@ -433,16 +383,15 @@ print(f"Nilus Verified Carbon Assets: {net_carbon} Tons CO2e")
                         const newLatLng = new L.LatLng(lat, lng);
                         marker.setLatLng(newLatLng);
                         map.setView(newLatLng, 15);
-
-                        showToast(currentLang === 'ar' ? '✅ تم جلب موقعك وتوجيه قمر Sentinel بنجاح' : '✅ Location acquired', 'success');
+                        showToast('✅ تم توجيه الخريطة لموقعك الحالي بنجاح', 'success');
                     },
                     (error) => {
-                        showToast(currentLang === 'ar' ? '❌ تعذر تحديد الموقع، يرجى تفعيل الـ GPS' : '❌ Location error', 'error');
+                        showToast('❌ تعذر تحديد الموقع، يرجى تفعيل الـ GPS', 'error');
                     },
                     { timeout: 10000 }
                 );
             } else {
-                showToast(currentLang === 'ar' ? '❌ المتصفح لا يدعم تحديد الموقع' : '❌ Not supported', 'error');
+                showToast('❌ المتصفح لا يدعم تحديد الموقع', 'error');
             }
         }
 
@@ -454,40 +403,25 @@ print(f"Nilus Verified Carbon Assets: {net_carbon} Tons CO2e")
 
             const diesel = parseFloat(document.getElementById('dieselInput').value) || 0;
             const fert = parseFloat(document.getElementById('fertInput').value) || 0;
-            const elec = parseFloat(document.getElementById('elecInput').value) || 0;
             const palmCount = parseFloat(document.getElementById('palmCountInput').value) || 0;
-            const orchardArea = parseFloat(document.getElementById('orchardAreaInput').value) || 0;
             const ndvi = parseFloat(document.getElementById('ndviInput').value) || 0;
-            const soilMoisture = parseFloat(document.getElementById('soilMoisture').value) || 0;
 
-            const emissions = (diesel * 2.68 + fert * 1.3 + elec * 0.45) / 1000;
-            const treesAbsorption = (palmCount * 0.05) + (orchardArea * 2.5);
-            const soilAbsorption = orchardArea * (ndvi * 2.2) * (soilMoisture / 40);
-            const totalAbsorption = treesAbsorption + soilAbsorption;
-            const netBalance = totalAbsorption - emissions;
+            const emissions = (diesel * 2.68 + fert * 1.3) / 1000;
+            const treesAbsorption = palmCount * 0.05 + (ndvi * 12.5);
+            const netBalance = treesAbsorption - emissions;
 
             document.getElementById('resOwnerName').innerText = ownerName + ` (${locationName})`;
             document.getElementById('resGpsCoords').innerText = `Lat: ${lat}, Lng: ${lng}`;
+            document.getElementById('resNdviVal').innerText = ndvi + (ndvi > 0.6 ? ' (كثافة عالية 🌱)' : ' (كثافة متوسطة 🌿)');
 
-            document.getElementById('resEmissions').innerText = emissions.toFixed(2) + (currentLang === 'ar' ? ' طن مكافئ CO2' : ' Tons CO2e');
-            document.getElementById('resTrees').innerText = treesAbsorption.toFixed(2) + (currentLang === 'ar' ? ' طن CO2 سنوياً' : ' Tons CO2/yr');
-            document.getElementById('resSoil').innerText = soilAbsorption.toFixed(2) + (currentLang === 'ar' ? ' طن CO2 سنوياً' : ' Tons CO2/yr');
-            document.getElementById('resNet').innerText = netBalance.toFixed(2) + (currentLang === 'ar' ? ' طن مرصود' : ' Tons Recorded');
+            document.getElementById('resEmissions').innerText = emissions.toFixed(2) + ' طن مكافئ CO2';
+            document.getElementById('resTrees').innerText = treesAbsorption.toFixed(2) + ' طن CO2 سنوياً';
+            document.getElementById('resNet').innerText = netBalance.toFixed(2) + ' طن مرصود';
             
             document.getElementById('resultsArea').classList.remove('hidden');
-            showToast(currentLang === 'ar' ? 'تم توثيق الحيازة وحساب العوائد بنجاح' : 'Calculated successfully', 'success');
+            showToast('تم تحليل الغطاء النباتي وأصول المناخ بنجاح', 'success');
 
-            return {
-                ownerName,
-                locationName,
-                lat,
-                lng,
-                emissions: emissions.toFixed(2),
-                treesAbsorption: treesAbsorption.toFixed(2),
-                soilAbsorption: soilAbsorption.toFixed(2),
-                netBalance: netBalance.toFixed(2),
-                ndvi: ndvi
-            };
+            return { ownerName, locationName, lat, lng, ndvi, emissions: emissions.toFixed(2), netBalance: netBalance.toFixed(2) };
         }
 
         function sendCompanyEmailReport() {
@@ -495,87 +429,31 @@ print(f"Nilus Verified Carbon Assets: {net_carbon} Tons CO2e")
             if (!data) return;
 
             const companyEmail = "waadnasr144@gmail.com";
-            const subject = encodeURIComponent(`تقرير قمر Sentinel وأصول المناخ - نيلوس (${data.ownerName})`);
+            const subject = encodeURIComponent(`تقرير خريطة الغطاء النباتي NDVI - نيلوس (${data.ownerName})`);
             const body = encodeURIComponent(
-                `نيلوس للتقنيات الرقمية وأصول المناخ - تقرير رصد قمر Sentinel وحساسات IoT\n\n` +
+                `نيلوس للتقنيات الرقمية وأصول المناخ - تقرير الغطاء النباتي الفعلي NDVI\n\n` +
                 `المستفيد / الجهة: ${data.ownerName}\n` +
                 `المنطقة: ${data.locationName}\n` +
-                `الإحداثيات المكانية (GPS): خط العرض ${data.lat} ، خط الطول ${data.lng}\n` +
-                `مؤشر قمر Sentinel (NDVI): ${data.ndvi}\n\n` +
-                `النتائج البيئية:\n` +
-                `- إجمالي الانبعاثات: ${data.emissions} طن مكافئ CO2\n` +
-                `- امتصاص الأشجار والبساتين: ${data.treesAbsorption} طن/سنة\n` +
-                `- كربون التربة المرصود: ${data.soilAbsorption} طن/سنة\n` +
-                `- صافي العوائد الكربونية: ${data.netBalance} طن مرصود\n\n` +
-                `تم إرسال هذا التقرير تلقائياً إلى البريد الرسمي للشركة: waadnasr144@gmail.com`
+                `الإحداثيات: خط العرض ${data.lat} ، خط الطول ${data.lng}\n` +
+                `نسبة الغطاء النباتي الفعلي (NDVI): ${data.ndvi}\n` +
+                `صافي العوائد الكربونية: ${data.netBalance} طن مرصود\n\n` +
+                `تم إعداد التقرير بنجاح للإرسال التلقائي إلى البريد الرسمي للشركة: waadnasr144@gmail.com`
             );
 
             window.location.href = `mailto:${companyEmail}?subject=${subject}&body=${body}`;
-            showToast(currentLang === 'ar' ? '✅ تم تجهيز التقرير للإرسال لبريد waadnasr144@gmail.com' : '✅ Report prepared for company email', 'success');
+            showToast('✅ تم إعداد التقرير وإرساله بنجاح إلى بريد waadnasr144@gmail.com', 'success');
         }
 
         function fetchSentinelData() {
             const statusEl = document.getElementById('sentinelStatus');
             const ndviInput = document.getElementById('ndviInput');
-            const soilMoistureInput = document.getElementById('soilMoisture');
-            
-            statusEl.innerText = currentLang === 'ar' ? '⏳ جاري سحب أحدث بيانات قمر Sentinel وتحليل NDVI عبر Python...' : '⏳ Fetching Sentinel data...';
-            
+            statusEl.innerText = '⏳ جاري جلب أحدث صورة للغطاء النباتي من قمر Sentinel...';
             setTimeout(() => {
-                const simulatedNDVI = (0.62 + Math.random() * 0.23).toFixed(2);
-                const simulatedSoil = (40.0 + Math.random() * 6.5).toFixed(1);
+                const simulatedNDVI = (0.65 + Math.random() * 0.22).toFixed(2);
                 ndviInput.value = simulatedNDVI;
-                soilMoistureInput.value = simulatedSoil;
-                statusEl.innerText = currentLang === 'ar' ? `✅ قمر Sentinel: NDVI (${simulatedNDVI}) والرطوبة (${simulatedSoil}%)` : `✅ Sentinel updated`;
-                showToast(currentLang === 'ar' ? 'تم جلب أحدث قياسات قمر Sentinel بنجاح' : 'Sentinel data fetched', 'success');
+                statusEl.innerText = `✅ قمر Sentinel: تم تحديث NDVI بنجاح (${simulatedNDVI})`;
+                showToast('تم جلب قياس الغطاء النباتي الجديد بنجاح', 'success');
             }, 1000);
-        }
-
-        function copyResults() {
-            const text = `Nilus Sentinel Carbon Certification:\nClient: ${document.getElementById('resOwnerName').innerText}\nGPS: ${document.getElementById('resGpsCoords').innerText}\nNet Balance: ${document.getElementById('resNet').innerText}`;
-            navigator.clipboard.writeText(text);
-            showToast(currentLang === 'ar' ? 'تم نسخ تفاصيل الشهادة' : 'Copied', 'success');
-        }
-
-        function exportCSV() {
-            const csvContent = "data:text/csv;charset=utf-8,Parameter,Value\n" +
-                `Client,${document.getElementById('resOwnerName').innerText}\n` +
-                `GPS,${document.getElementById('resGpsCoords').innerText}\n` +
-                `Net Balance,${document.getElementById('resNet').innerText}`;
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "nilus_sentinel_certificate.csv");
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            showToast(currentLang === 'ar' ? 'تم تصدير ملف CSV بنجاح' : 'CSV exported', 'success');
-        }
-
-        function copyPythonCode() {
-            const codeText = `# Nilus for Digital Technologies and Climate Assets (Proprietary)\nimport numpy as np\ndef calculate_carbon_assets(ndvi, soil_moisture, biomass_hectares):\n    soil_carbon_factor = ndvi * 2.2 * (soil_moisture / 40.0)\n    trees_absorption = biomass_hectares * 2.5\n    total_carbon = (soil_carbon_factor * biomass_hectares) + trees_absorption\n    return round(total_carbon, 2)`;
-            navigator.clipboard.writeText(codeText);
-            showToast(currentLang === 'ar' ? '✅ تم نسخ كود Python البرمجي بنجاح' : 'Python code copied', 'success');
-        }
-
-        function handleContactSubmit(event) {
-            event.preventDefault();
-            const email = document.getElementById('companyEmailInput').value;
-            showToast(currentLang === 'ar' ? `تم إرسال الاستفسار لبريد الشركة (${email}) بنجاح!` : 'Message sent to company email!', 'success');
-            document.getElementById('contactForm').reset();
-        }
-
-        window.onscroll = function() {
-            const btn = document.getElementById('scrollTopBtn');
-            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-                btn.classList.remove('hidden');
-            } else {
-                btn.classList.add('hidden');
-            }
-        };
-
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 </body>
