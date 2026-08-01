@@ -89,17 +89,17 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2 hover:border-cyan-500/40 transition">
                     <div class="flex justify-between items-center"><span class="font-bold text-sm text-white" data-i18n="card1Name">موقع الحقل الفعلي</span><span id="card1Status" class="bg-cyan-500/20 text-cyan-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">متصل بـ GPS</span></div>
-                    <div class="text-2xl font-black text-cyan-400"><span id="card1Value">--</span> <span class="text-xs text-slate-400 font-normal">قوة NDVI</span></div>
+                    <div class="text-2xl font-black text-cyan-400"><span id="card1Value">0.45</span> <span class="text-xs text-slate-400 font-normal">قوة NDVI</span></div>
                     <p id="card1Rec" class="text-xs text-slate-400">حدد إحداثيات موقعك أو اضغط تحديد موقعي الحالي.</p>
                 </div>
                 <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2 hover:border-cyan-500/40 transition">
                     <div class="flex justify-between items-center"><span class="font-bold text-sm text-white" data-i18n="card2Name">حالة الرطوبة والري</span><span id="card2Status" class="bg-emerald-500/20 text-emerald-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">مستقر</span></div>
-                    <div class="text-2xl font-black text-emerald-400"><span id="card2Value">--</span> <span class="text-xs text-slate-400 font-normal">حساس IoT</span></div>
+                    <div class="text-2xl font-black text-emerald-400"><span id="card2Value">42.5%</span> <span class="text-xs text-slate-400 font-normal">حساس IoT</span></div>
                     <p id="card2Rec" class="text-xs text-slate-400">قراءة الاستشعار الميداني متوافقة مع الحقل.</p>
                 </div>
                 <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2 hover:border-cyan-500/40 transition">
                     <div class="flex justify-between items-center"><span class="font-bold text-sm text-white" data-i18n="card3Name">جاهزية الكربون</span><span id="card3Status" class="bg-amber-500/20 text-amber-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">قيد التقييم</span></div>
-                    <div class="text-2xl font-black text-amber-400"><span id="card3Value">--</span> <span class="text-xs text-slate-400 font-normal">طن متوقع</span></div>
+                    <div class="text-2xl font-black text-amber-400"><span id="card3Value">8.3</span> <span class="text-xs text-slate-400 font-normal">طن متوقع</span></div>
                     <p id="card3Rec" class="text-xs text-slate-400">يعتمد على الأشجار والكتلة الحيوية المرصودة.</p>
                 </div>
             </div>
@@ -160,11 +160,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
                     <div>
                         <label for="gpsLat" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="labelLat">خط العرض (Latitude)</label>
-                        <input type="text" id="gpsLat" value="" placeholder="0.0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:border-cyan-500 focus:outline-none">
+                        <input type="text" id="gpsLat" value="28.1099" placeholder="0.0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:border-cyan-500 focus:outline-none">
                     </div>
                     <div>
                         <label for="gpsLng" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="labelLng">خط الطول (Longitude)</label>
-                        <input type="text" id="gpsLng" value="" placeholder="0.0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:border-cyan-500 focus:outline-none">
+                        <input type="text" id="gpsLng" value="30.7503" placeholder="0.0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:border-cyan-500 focus:outline-none">
                     </div>
                     <div class="flex items-end">
                         <button onclick="getCurrentGPS()" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-md flex items-center justify-center space-x-1 space-x-reverse">
@@ -181,11 +181,11 @@
                     <h4 class="text-md font-bold text-amber-400 border-b border-slate-800 pb-2" data-i18n="sec1Title">1. أنشطة الحيازة والانبعاثات</h4>
                     <div>
                         <label for="dieselInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="labelDiesel">الديزل (لتر/سنة)</label>
-                        <input type="number" id="dieselInput" value="" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
+                        <input type="number" id="dieselInput" value="1200" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                     <div>
                         <label for="fertInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="labelFert">اليوريا (كجم/سنة)</label>
-                        <input type="number" id="fertInput" value="" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
+                        <input type="number" id="fertInput" value="500" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                 </div>
 
@@ -193,11 +193,11 @@
                     <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2" data-i18n="sec2Title">2. الأشجار وحساسات IoT</h4>
                     <div>
                         <label for="palmCountInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="labelTrees">عدد الأشجار (شجرة)</label>
-                        <input type="number" id="palmCountInput" value="" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
+                        <input type="number" id="palmCountInput" value="250" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                     <div>
                         <label for="soilMoisture" class="block text-xs font-bold text-emerald-300 mb-1" data-i18n="labelMoisture">رطوبة التربة (حساس IoT %)</label>
-                        <input type="number" id="soilMoisture" value="" placeholder="0.0" readonly class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-emerald-400 text-sm font-bold cursor-not-allowed">
+                        <input type="number" id="soilMoisture" value="42.5" placeholder="0.0" readonly class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-emerald-400 text-sm font-bold cursor-not-allowed">
                     </div>
                 </div>
 
@@ -205,7 +205,7 @@
                     <h4 class="text-md font-bold text-cyan-400 border-b border-slate-800 pb-2" data-i18n="sec3Title">3. مؤشرات قمر Sentinel والـ NDVI</h4>
                     <div>
                         <label for="ndviInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="labelNdvi">مؤشر الغطاء النباتي الفعلي (NDVI)</label>
-                        <input type="number" id="ndviInput" min="0" max="1" step="0.01" value="" placeholder="0.00" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
+                        <input type="number" id="ndviInput" min="0" max="1" step="0.01" value="0.45" placeholder="0.00" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                     <div class="pt-2">
                         <button onclick="fetchSentinelData()" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-2 px-3 rounded-xl text-xs transition shadow-md flex items-center justify-center space-x-1 space-x-reverse">
@@ -447,7 +447,7 @@
             } else {
                 container.classList.remove('ndvi-active');
                 btnText.innerText = currentLang === 'ar' ? 'تفعيل طبقة الغطاء النباتي الفعلي (NDVI)' : 'Enable NDVI Vegetation Layer';
-                showToast(currentLang === 'ar' ? 'تم إخفاء طبقة الغطاء النباتي' : 'NDVI layer hidden', 'success');
+                showToast(currentLang === 'ar' ? 'تم إخفاء طبقة الغطاء النباتي' : 'NDVI layer hidden', 'info');
             }
         }
 
