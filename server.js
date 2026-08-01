@@ -1,133 +1,176 @@
+// خادم خلفي وسيط: يستقبل حدود الحقل (Polygon) من واجهة Nilus ECA،
+// يستدعي Copernicus Sentinel Hub Statistical API فعلياً للحصول على NDVI،
+// ثم يخزّن الاستجابة الخام في AWS S3 للتدقيق (auditability).
+//
+// لماذا خادم وسيط ولا نتصل من المتصفح مباشرة؟
+// لأن Client Secret و AWS Secret Key يجب ألا يظهرا أبداً في كود يعمل على
+// جهاز المستخدم (يمكن لأي شخص قراءتهما من Network tab / View Source).
+
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+const qs = require('qs');
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
 
-// إعداد CORS للأمان وتحديد النطاق المسموح
-const corsOptions = {
-    origin: process.env.FRONTEND_ORIGIN || '*',
-    optionsSuccessStatus: 200
-};
-app.use(cors(corsOptions));
-app.use(express.json());
+const {
+  SENTINEL_CLIENT_ID,
+  SENTINEL_CLIENT_SECRET,
+  AWS_REGION,
+  AWS_S3_BUCKET,
+  PORT = 3001,
+  FRONTEND_ORIGIN,
+} = process.env;
 
-// إعداد اتصال AWS S3
-const s3Client = new S3Client({
-    region: process.env.AWS_REGION || 'eu-central-1',
-    credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    }
-});
-
-// دالة جلب رمز الدخول من Copernicus OAuth
-async function getSentinelAccessToken() {
-    try {
-        const tokenUrl = 'https://identity.dataspace.copernicus.eu/auth/realms/CDSE/protocol/openid-connect/token';
-        const params = new URLSearchParams();
-        params.append('client_id', process.env.SENTINEL_CLIENT_ID);
-        params.append('client_secret', process.env.SENTINEL_CLIENT_SECRET);
-        params.append('grant_type', 'client_credentials');
-
-        const response = await axios.post(tokenUrl, params, {
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        });
-        return response.data.access_token;
-    } catch (error) {
-        console.error('خطأ في مصادقة Sentinel:', error.response?.data || error.message);
-        throw new Error('فشل الاتصال بمنصة Copernicus للأقمار الصناعية.');
-    }
+if (!SENTINEL_CLIENT_ID || !SENTINEL_CLIENT_SECRET) {
+  console.warn('[تحذير] SENTINEL_CLIENT_ID / SENTINEL_CLIENT_SECRET غير مضبوطين في .env');
 }
 
-// مسار فحص الحقل وتحليل NDVI وحفظ السجل في AWS S3
-app.post('/api/analyze-field', async (req, res) => {
-    try {
-        const { fieldName, coordinates, farmerId } = req.body;
-        
-        if (!coordinates || !fieldName) {
-            return res.status(400).json({ error: 'بيانات الحقل أو الإحداثيات غير مكتملة.' });
-        }
+app.use(cors({ origin: FRONTEND_ORIGIN || '*' })); // في الإنتاج: حدد FRONTEND_ORIGIN بدل '*'
+app.use(express.json({ limit: '2mb' }));
 
-        // 1. الحصول على التوكن
-        const accessToken = await getSentinelAccessToken();
+// ---------------------------------------------------------------------------
+// المصادقة مع Copernicus Data Space Ecosystem (OAuth2 client_credentials)
+// المرجع: https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Overview/Authentication.html
+// ---------------------------------------------------------------------------
+const TOKEN_URL = 'https://identity.dataspace.copernicus.eu/auth/realms/CDSE/protocol/openid-connect/token';
+const STATISTICS_URL = 'https://sh.dataspace.copernicus.eu/statistics/v1';
 
-        // 2. محاكاة/جلب البيانات الجيومكانية (يمكن ربطها بمنظومة Python الخاصة بك هنا)
-        const analysisData = {
-            fieldName,
-            farmerId: farmerId || 'Public_User',
-            timestamp: new Date().toISOString(),
-            coordinates,
-            pythonEngineVersion: 'v2.4-soil-carbon',
-            iotSensorsIntegrated: true,
-            ndviMean: 0.68, // مؤشر الغطاء النباتي
-            soilOrganicCarbonEstimate: '2.48 tons/acre',
-            estimatedCarbonCredits: 1.2
-        };
+let cachedToken = null;
+let tokenExpiresAt = 0;
 
-        // 3. تخزين النتيجة الخام في AWS S3 للتدقيق المؤسسي (Audit-Ready)
-        const fileName = `audits/${Date.now()}_${sanitizedName(fieldName)}.json`;
-        const uploadParams = {
-            Bucket: process.env.AWS_S3_BUCKET,
-            Key: fileName,
-            Body: JSON.stringify(analysisData, null, 2),
-            ContentType: 'application/json'
-        };
-
-        await s3Client.send(new PutObjectCommand(uploadParams));
-
-        res.json({
-            status: 'success',
-            message: 'تم تحليل أصول الحقل وحفظ السجل بأمان في السحابة.',
-            data: analysisData,
-            auditStorageKey: fileName
-        });
-
-    } catch (error) {
-        console.error('خطأ في المعالجة:', error);
-        res.status(500).json({ error: 'حدث خطأ داخلي أثناء المعالجة السحابية.' });
-    }
-});
-
-// مسار الخدمة المدفوعة المخصصة للفلاح (توصيات دقيقة + تقرير أصول الكربون)
-app.post('/api/paid-farmer-report', async (req, res) => {
-    try {
-        const { farmerName, nationalId, fieldAreaAcres, paymentReference } = req.body;
-
-        // التحقق المبسط من الدفع (يمكن ربطه ببوابة دفع محلية لاحقاً)
-        if (!paymentReference) {
-            return res.status(402).json({ error: 'ياتُّ الدفع مطلوبة لإصدار هذا التقرير المتقدم.' });
-        }
-
-        const paidReport = {
-            serviceType: 'Nilus Premium Smart Farming & Carbon Report',
-            farmerName,
-            nationalId,
-            fieldAreaAcres,
-            fertilizerRecommendation: 'إضافة 45 كجم نترات نشادر للفدان نظراً لانخفاض النيتروجين المكتشف عبر أطياف Sentinel-2',
-            irrigationAdvice: 'الري مقترح خلال 48 ساعة القادمة لتجنب الإجهاد المائي',
-            projectIPNotice: 'محمي بموجب حقوق الملكية الفكرية لمنظومة نيلوس للتقنيات الرقمية وأصول المناخ',
-            issuedAt: new Date().toISOString()
-        };
-
-        res.json({
-            status: 'success',
-            message: 'تم إصدار التقرير المدفوع بنجاح.',
-            report: paidReport
-        });
-
-    } catch (error) {
-        res.status(500).json({ error: 'فشل إصدار التقرير المدفوع.' });
-    }
-});
-
-function sanitizedName(name) {
-    return name.replace(/[^a-zA-Z0-9]/g, '_');
+async function getAccessToken() {
+  if (cachedToken && Date.now() < tokenExpiresAt - 60_000) {
+    return cachedToken; // أعد استخدام التوكن الحالي (لا تطلب توكن جديد في كل نداء — هذا محدود المعدل)
+  }
+  const body = qs.stringify({
+    grant_type: 'client_credentials',
+    client_id: SENTINEL_CLIENT_ID,
+    client_secret: SENTINEL_CLIENT_SECRET,
+  });
+  const resp = await axios.post(TOKEN_URL, body, {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  });
+  cachedToken = resp.data.access_token;
+  tokenExpiresAt = Date.now() + resp.data.expires_in * 1000;
+  return cachedToken;
 }
 
-app.listen(PORT, () => {
-    console.log(`خادم نيلوس يعمل بكفاءة على المنفذ: ${PORT}`);
+// ---------------------------------------------------------------------------
+// Evalscript لحساب NDVI مع استبعاد بكسلات الماء والبيانات غير الصالحة
+// (نفس المثال الرسمي من توثيق Copernicus Statistical API)
+// ---------------------------------------------------------------------------
+const NDVI_EVALSCRIPT = `
+//VERSION=3
+function setup() {
+  return {
+    input: [{ bands: ["B04", "B08", "SCL", "dataMask"] }],
+    output: [
+      { id: "data", bands: 1 },
+      { id: "dataMask", bands: 1 }
+    ]
+  };
+}
+function evaluatePixel(samples) {
+  let ndvi = (samples.B08 - samples.B04) / (samples.B08 + samples.B04);
+  let validNDVIMask = (samples.B08 + samples.B04) === 0 ? 0 : 1;
+  let noWaterMask = samples.SCL === 6 ? 0 : 1; // SCL=6 يعني بكسل ماء
+  return {
+    data: [ndvi],
+    dataMask: [samples.dataMask * validNDVIMask * noWaterMask]
+  };
+}
+`;
+
+const s3 = AWS_S3_BUCKET ? new S3Client({ region: AWS_REGION }) : null;
+
+// ---------------------------------------------------------------------------
+// POST /api/ndvi
+// body: { polygon: [{lat, lng}, ...], from?: ISOString, to?: ISOString }
+// (نفس شكل drawingPoints في واجهة Leaflet — لا حاجة لتحويل يدوي في الواجهة)
+// ---------------------------------------------------------------------------
+app.post('/api/ndvi', async (req, res) => {
+  try {
+    const { polygon, from, to } = req.body;
+
+    if (!Array.isArray(polygon) || polygon.length < 3) {
+      return res.status(400).json({ error: 'يجب إرسال حدود حقل (polygon) بثلاث نقاط GPS على الأقل' });
+    }
+
+    // Leaflet يعطي {lat, lng} — GeoJSON يتطلب [lng, lat]، والحلقة يجب أن تُغلق
+    const coords = polygon.map((p) => [Number(p.lng), Number(p.lat)]);
+    coords.push(coords[0]);
+
+    const token = await getAccessToken();
+
+    const timeRange = {
+      from: from || new Date(Date.now() - 20 * 24 * 3600 * 1000).toISOString(), // آخر 20 يوماً افتراضياً
+      to: to || new Date().toISOString(),
+    };
+
+    const statsRequest = {
+      input: {
+        bounds: {
+          geometry: { type: 'Polygon', coordinates: [coords] },
+          properties: { crs: 'http://www.opengis.net/def/crs/OGC/1.3/CRS84' }, // WGS84 lon/lat (يطابق إحداثيات Leaflet مباشرة)
+        },
+        data: [{ type: 'sentinel-2-l2a', dataFilter: { mosaickingOrder: 'leastCC' } }], // أقل نسبة غيوم
+      },
+      aggregation: {
+        timeRange,
+        aggregationInterval: { of: 'P10D' }, // نفس فترة P10D المذكورة في الواجهة الأصلية
+        evalscript: NDVI_EVALSCRIPT,
+        resx: 10,
+        resy: 10,
+      },
+    };
+
+    const shResp = await axios.post(STATISTICS_URL, statsRequest, {
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    });
+
+    const raw = shResp.data;
+
+    // أرشفة الاستجابة الخام كاملة في S3 — هذا ما يجعل البيانات قابلة للتدقيق فعلياً
+    let s3Key = null;
+    if (s3) {
+      s3Key = `ndvi-statistics/${new Date().toISOString().slice(0, 10)}/${Date.now()}.json`;
+      await s3.send(new PutObjectCommand({
+        Bucket: AWS_S3_BUCKET,
+        Key: s3Key,
+        Body: JSON.stringify(raw, null, 2),
+        ContentType: 'application/json',
+      }));
+    }
+
+    // خذ أحدث فترة زمنية تحتوي بيانات فعلية (وليست مغطاة بالكامل بالغيوم)
+    const intervals = raw.data || [];
+    const latestValid = [...intervals].reverse().find((i) => {
+      const b0 = i.outputs?.data?.bands?.B0;
+      return b0?.stats && b0.stats.sampleCount > b0.stats.noDataCount;
+    });
+
+    if (!latestValid) {
+      return res.json({ ndvi: null, message: 'لا توجد مشاهد خالية من الغيوم في الفترة المطلوبة', s3Key });
+    }
+
+    const meanNdvi = latestValid.outputs.data.bands.B0.stats.mean;
+    res.json({
+      ndvi: Number(meanNdvi.toFixed(3)),
+      interval: latestValid.interval,
+      s3Key,
+    });
+  } catch (err) {
+    console.error('NDVI fetch error:', err.response?.data || err.message);
+    res.status(500).json({
+      error: 'فشل الاتصال بـ Sentinel Hub أو AWS S3',
+      detail: err.response?.data || err.message,
+    });
+  }
 });
+
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
+
+app.listen(PORT, () => console.log(`Nilus ECA backend يعمل على المنفذ :${PORT}`));
