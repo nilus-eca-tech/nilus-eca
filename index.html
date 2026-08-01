@@ -13,7 +13,7 @@
     <style>
         body { font-family: 'Cairo', 'Inter', sans-serif; scroll-behavior: smooth; }
         .results-table td { padding: 10px; border-bottom: 1px solid #334155; }
-        #map { height: 420px; width: 100%; z-index: 10; }
+        #map { height: 420px; width: 100%; z-index: 10; cursor: crosshair; }
         .ndvi-overlay {
             position: absolute;
             inset: 0;
@@ -89,8 +89,8 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2 hover:border-cyan-500/40 transition">
                     <div class="flex justify-between items-center"><span class="font-bold text-sm text-white" data-i18n="card1Name">المساحة المقدرة بالحقل</span><span id="card1Status" class="bg-cyan-500/20 text-cyan-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">محدد بالماوس</span></div>
-                    <div class="text-2xl font-black text-cyan-400"><span id="cardAreaValue">0.00</span> <span class="text-xs text-slate-400 font-normal" data-i18n="unitFeddan">فدان</span></div>
-                    <p id="card1Rec" class="text-xs text-slate-400"><span id="cardAreaSqm">0</span> م² (اضغط على الخريطة لتحديد الحدود)</p>
+                    <div class="text-2xl font-black text-cyan-400"><span id="cardAreaValue">1.00</span> <span class="text-xs text-slate-400 font-normal" data-i18n="unitFeddan">فدان</span></div>
+                    <p id="card1Rec" class="text-xs text-slate-400"><span id="cardAreaSqm">4200</span> م² (انقر بالماوس لتحديد أركان الحقل)</p>
                 </div>
                 <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2 hover:border-cyan-500/40 transition">
                     <div class="flex justify-between items-center"><span class="font-bold text-sm text-white" data-i18n="card2Name">حالة الرطوبة والري</span><span id="card2Status" class="bg-emerald-500/20 text-emerald-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">مستقر</span></div>
@@ -112,16 +112,16 @@
                 <div class="flex flex-col lg:flex-row justify-between items-center gap-3">
                     <div>
                         <h4 class="text-md font-bold text-cyan-400" data-i18n="mapHeaderTitle">🛰️ خريطة قمر Sentinel وتحديد المساحة بالماوس</h4>
-                        <p class="text-xs text-slate-400" data-i18n="mapHeaderDesc">اضغط على الخريطة برسم نقاط حدود الحقل، ثم اضغط حساب المساحة لحساب الأفدنة تلقائياً.</p>
+                        <p class="text-xs text-slate-400" data-i18n="mapHeaderDesc">انقر عدة نقاط متتالية على الخريطة لتشكيل حدود الحقل، وسيتم حساب المساحة بالأفدنة تلقائياً.</p>
                     </div>
                     <div class="flex flex-wrap gap-2">
-                        <button onclick="startDrawingField()" id="drawBtn" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-3 py-2 rounded-xl text-xs transition shadow flex items-center space-x-1 space-x-reverse">
-                            <span>✏️</span>
-                            <span data-i18n="drawBtnText">تحديد حدود الحقل بالنقاط</span>
+                        <button onclick="undoLastPoint()" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold px-3 py-2 rounded-xl text-xs transition shadow flex items-center space-x-1 space-x-reverse">
+                            <span>↩️</span>
+                            <span data-i18n="undoBtnText">تراجع عن نقطة</span>
                         </button>
                         <button onclick="clearPolygon()" class="bg-red-700 hover:bg-red-600 text-white font-bold px-3 py-2 rounded-xl text-xs transition shadow flex items-center space-x-1 space-x-reverse">
                             <span>🗑️</span>
-                            <span data-i18n="clearDrawBtn">مسح الحدود</span>
+                            <span data-i18n="clearDrawBtn">مسح الكل</span>
                         </button>
                         <button onclick="toggleNDVILayer()" id="ndviToggleBtn" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-xs transition shadow flex items-center space-x-1 space-x-reverse">
                             <span>🌱</span>
@@ -137,7 +137,7 @@
                 <div id="mapContainer" class="relative rounded-2xl overflow-hidden border border-slate-700">
                     <div class="bg-slate-950/90 text-cyan-300 text-[11px] font-mono px-3 py-1.5 border-b border-slate-700 flex justify-between items-center z-30 relative">
                         <span id="mapTimestamp">2026-08-01 - Sentinel-2 L2A, NDVI & Area Measurement</span>
-                        <span id="drawStatusIndicator" class="text-emerald-400 font-bold">وضع العرض العادي</span>
+                        <span id="drawStatusIndicator" class="text-emerald-400 font-bold">وضع التحديد نشط: انقر بالماوس على الخريطة</span>
                     </div>
                     <div id="map"></div>
                     <div id="ndviOverlayLayer" class="ndvi-overlay"></div>
@@ -276,12 +276,11 @@
 
     <script>
         let currentLang = 'ar';
-        let map, marker;
+        let map;
         let capturedMapImage = null;
         let isNdviActive = false;
 
-        // متغيرات رسم الحقل وحساب المساحة
-        let isDrawingMode = false;
+        // متغيرات رسم الحدود وحساب المساحة التفاعلية
         let drawingPoints = [];
         let tempMarkers = [];
         let currentPolygonLayer = null;
@@ -301,9 +300,9 @@
                 card2Name: "حالة الرطوبة والري",
                 card3Name: "جاهزية الكربون",
                 mapHeaderTitle: "🛰️ خريطة قمر Sentinel وتحديد المساحة بالماوس",
-                mapHeaderDesc: "اضغط على الخريطة برسم نقاط حدود الحقل، ثم اضغط حساب المساحة لحساب الأفدنة تلقائياً.",
-                drawBtnText: "تحديد حدود الحقل بالنقاط",
-                clearDrawBtn: "مسح الحدود",
+                mapHeaderDesc: "انقر عدة نقاط متتالية على الخريطة لتشكيل حدود الحقل، وسيتم حساب المساحة بالأفدنة تلقائياً.",
+                undoBtnText: "تراجع عن نقطة",
+                clearDrawBtn: "مسح الكل",
                 ndviBtn: "NDVI",
                 snapBtn: "لقطة",
                 snapPreviewTitle: "📷 معاينة الصورة التوثيقية الملتقطة للخريطة النباتية:",
@@ -350,9 +349,9 @@
                 card2Name: "Moisture & Irrigation",
                 card3Name: "Carbon Readiness",
                 mapHeaderTitle: "🛰️ Sentinel Satellite & Mouse Area Mapping",
-                mapHeaderDesc: "Click points on the map to outline field boundaries and calculate feddans automatically.",
-                drawBtnText: "Draw Field Boundaries",
-                clearDrawBtn: "Clear Boundaries",
+                mapHeaderDesc: "Click consecutive points on the map to outline field boundaries and calculate feddans automatically.",
+                undoBtnText: "Undo Point",
+                clearDrawBtn: "Clear All",
                 ndviBtn: "NDVI",
                 snapBtn: "Snapshot",
                 snapPreviewTitle: "📷 Captured Map Snapshot Preview:",
@@ -391,7 +390,7 @@
             const initialLat = 28.1099;
             const initialLng = 30.7503;
 
-            map = L.map('map').setView([initialLat, initialLng], 13);
+            map = L.map('map').setView([initialLat, initialLng], 14);
 
             const baseSatellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 maxZoom: 19,
@@ -417,26 +416,9 @@
             };
             L.control.layers(baseMaps).addTo(map);
 
-            marker = L.marker([initialLat, initialLng], { draggable: true }).addTo(map);
-
-            marker.on('dragend', function() {
-                const pos = marker.getLatLng();
-                document.getElementById('gpsLat').value = pos.lat.toFixed(4);
-                document.getElementById('gpsLng').value = pos.lng.toFixed(4);
-                updateDynamicFieldMetrics(pos.lat, pos.lng);
-                showToast(currentLang === 'ar' ? '✅ تم تحديث إحداثيات موقع الأرض' : '✅ GPS coordinates updated', 'success');
-            });
-
+            // تفعيل النقر المباشر على الخريطة لتشكيل مضلع حدود الحقل ورسمه نقطة بنقطة
             map.on('click', function(e) {
-                if (isDrawingMode) {
-                    addDrawingPoint(e.latlng);
-                } else {
-                    marker.setLatLng(e.latlng);
-                    document.getElementById('gpsLat').value = e.latlng.lat.toFixed(4);
-                    document.getElementById('gpsLng').value = e.latlng.lng.toFixed(4);
-                    updateDynamicFieldMetrics(e.latlng.lat, e.latlng.lng);
-                    showToast(currentLang === 'ar' ? '✅ تم تحديد نقطة الرصد النباتي بنجاح' : '✅ Monitoring point set successfully', 'success');
-                }
+                addDrawingPoint(e.latlng);
             });
         }
 
@@ -444,34 +426,81 @@
             initMap();
         };
 
-        // دالتا تفعيل وتعديل رسم المضلع وحساب المساحة بالأفدنة
-        function startDrawingField() {
-            isDrawingMode = true;
-            clearPolygon();
-            document.getElementById('drawStatusIndicator').innerText = currentLang === 'ar' ? '✏️ وضع الرسم مفعل: اضغط بالماوس لإضافة حدود الحقل' : '✏️ Drawing mode: Click to add field boundaries';
-            showToast(currentLang === 'ar' ? '✏️ ابدأ بالنقر على الخريطة لتحديد أركان الحقل (3 نقاط على الأقل)' : '✏️ Click map to outline field boundaries', 'info');
-        }
-
         function addDrawingPoint(latlng) {
             drawingPoints.push(latlng);
-            const tm = L.circleMarker(latlng, { radius: 6, color: '#06b6d4', fillColor: '#06b6d4', fillOpacity: 1 }).addTo(map);
+            
+            // إضافة علامة صغيرة على النقطة المنقورة
+            const tm = L.circleMarker(latlng, { 
+                radius: 6, 
+                color: '#06b6d4', 
+                fillColor: '#22c55e', 
+                fillOpacity: 1, 
+                weight: 2 
+            }).addTo(map);
             tempMarkers.push(tm);
 
+            // إذا تم تحديد 3 نقاط أو أكثر، ارسم المضلع واحسب المساحة
             if (drawingPoints.length >= 3) {
                 if (currentPolygonLayer) {
                     map.removeLayer(currentPolygonLayer);
                 }
-                currentPolygonLayer = L.polygon(drawingPoints, { color: '#06b6d4', fillColor: '#22c55e', fillOpacity: 0.35, weight: 3 }).addTo(map);
+                currentPolygonLayer = L.polygon(drawingPoints, { 
+                    color: '#06b6d4', 
+                    fillColor: '#22c55e', 
+                    fillOpacity: 0.4, 
+                    weight: 3 
+                }).addTo(map);
+                
                 calculatePolygonArea();
+            } else {
+                // تحديث مؤشر الإحداثيات المركزية المبدئية
+                document.getElementById('gpsLat').value = latlng.lat.toFixed(4);
+                document.getElementById('gpsLng').value = latlng.lng.toFixed(4);
+                updateDynamicFieldMetrics(latlng.lat, latlng.lng);
             }
-            showToast(currentLang === 'ar' ? `📍 تم إضافة نقطة (${drawingPoints.length})` : `📍 Point added (${drawingPoints.length})`, 'success');
+
+            showToast(currentLang === 'ar' ? `📍 تم تسجيل النقطة (${drawingPoints.length})` : `📍 Point recorded (${drawingPoints.length})`, 'success');
+        }
+
+        function undoLastPoint() {
+            if (drawingPoints.length === 0) {
+                showToast(currentLang === 'ar' ? '⚠️ لا توجد نقاط للتراجع عنها' : '⚠️ No points to undo', 'info');
+                return;
+            }
+
+            drawingPoints.pop();
+            const lastMarker = tempMarkers.pop();
+            if (lastMarker) {
+                map.removeLayer(lastMarker);
+            }
+
+            if (currentPolygonLayer) {
+                map.removeLayer(currentPolygonLayer);
+                currentPolygonLayer = null;
+            }
+
+            if (drawingPoints.length >= 3) {
+                currentPolygonLayer = L.polygon(drawingPoints, { 
+                    color: '#06b6d4', 
+                    fillColor: '#22c55e', 
+                    fillOpacity: 0.4, 
+                    weight: 3 
+                }).addTo(map);
+                calculatePolygonArea();
+            } else {
+                document.getElementById('cardAreaValue').innerText = '1.00';
+                document.getElementById('cardAreaSqm').innerText = '4200';
+                document.getElementById('calculatedFeddan').value = '1.00';
+            }
+
+            showToast(currentLang === 'ar' ? '↩️ تم التراجع عن آخر نقطة' : '↩️ Last point undone', 'info');
         }
 
         function calculatePolygonArea() {
             if (drawingPoints.length < 3) return;
-            
+
             // حساب المساحة التقريبية للمضلع بالجداول الجيوديسية (المتر المربع)
-            let areaSqMeters = L.GeometryUtil ? L.GeometryUtil.geodesicArea(drawingPoints) : calculateApproxArea(drawingPoints);
+            let areaSqMeters = calculateGeodesicPolygonArea(drawingPoints);
             
             // تحويل المتر المربع إلى فدان (الفدان المصري = 4200.83 متر مربع)
             const feddans = areaSqMeters / 4200.83;
@@ -480,7 +509,7 @@
             document.getElementById('cardAreaSqm').innerText = Math.round(areaSqMeters).toLocaleString();
             document.getElementById('calculatedFeddan').value = feddans.toFixed(2);
 
-            // تحديث مركز الخريطة وحساب الكربون تلقائياً
+            // حساب مركز المضلع وتحديث الإحداثيات وقراءات الاستشعار
             let avgLat = drawingPoints.reduce((sum, p) => sum + p.lat, 0) / drawingPoints.length;
             let avgLng = drawingPoints.reduce((sum, p) => sum + p.lng, 0) / drawingPoints.length;
             document.getElementById('gpsLat').value = avgLat.toFixed(4);
@@ -488,8 +517,7 @@
             updateDynamicFieldMetrics(avgLat, avgLng);
         }
 
-        function calculateApproxArea(latlngs) {
-            // طريقة بديلة وحسابية مبسطة في حال عدم توفر مكتبة هندسية مساعدة
+        function calculateGeodesicPolygonArea(latlngs) {
             let points = latlngs;
             let area = 0;
             let r = 6378137; // نصف قطر الأرض بالمتر
@@ -508,7 +536,6 @@
         }
 
         function clearPolygon() {
-            isDrawingMode = false;
             drawingPoints = [];
             tempMarkers.forEach(m => map.removeLayer(m));
             tempMarkers = [];
@@ -516,11 +543,10 @@
                 map.removeLayer(currentPolygonLayer);
                 currentPolygonLayer = null;
             }
-            document.getElementById('drawStatusIndicator').innerText = currentLang === 'ar' ? 'وضع العرض العادي' : 'Normal Display Mode';
-            document.getElementById('cardAreaValue').innerText = '0.00';
-            document.getElementById('cardAreaSqm').innerText = '0';
+            document.getElementById('cardAreaValue').innerText = '1.00';
+            document.getElementById('cardAreaSqm').innerText = '4200';
             document.getElementById('calculatedFeddan').value = '1.00';
-            showToast(currentLang === 'ar' ? '🗑️ تم مسح الحدود والمساحة المرسومة' : '🗑️ Boundaries cleared', 'info');
+            showToast(currentLang === 'ar' ? '🗑️ تم مسح الحدود وإعادة ضبط المساحة' : '🗑️ Boundaries cleared', 'info');
         }
 
         function updateDynamicFieldMetrics(lat, lng) {
@@ -582,8 +608,7 @@
                     const lng = position.coords.longitude;
                     document.getElementById('gpsLat').value = lat.toFixed(4);
                     document.getElementById('gpsLng').value = lng.toFixed(4);
-                    map.setView([lat, lng], 15);
-                    marker.setLatLng([lat, lng]);
+                    map.setView([lat, lng], 16);
                     updateDynamicFieldMetrics(lat, lng);
                     showToast(currentLang === 'ar' ? '✅ تم تحديث الموقع بنجاح' : '✅ Location updated successfully', 'success');
                 }, error => {
