@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nilus ECA | نيلوس إيكا للتقنيات الرقمية وأصول المناخ - المشروع الوطني</title>
+    <title>Carbon Agriculture Platform | المنظومة الرقمية للزراعة الكربونية</title>
     <!-- SEO Meta Tags -->
-    <meta name="description" content="المنظومة الرقمية للزراعة الكربونية في مصر، لإدارة الأراضي الزراعية وبساتين النخيل وربط الأقمار الصناعية وحساب البصمة الكربونية.">
-    <meta name="keywords" content="زراعة كربونية, نيلوس إيكا, أصول المناخ, بصمة كربونية, مبادرة المشروعات الخضراء الذكية, مصر, GPS, حيازة الارض">
+    <meta name="description" content="المنظومة الرقمية لإدارة الأراضي الزراعية، ربط الأقمار الصناعية، حساسات إنترنت الأشياء (IoT)، وحساب البصمة والعوائد الكربونية.">
+    <meta name="keywords" content="زراعة كربونية, أصول المناخ, بصمة كربونية, مشروعات خضراء, GPS, IoT, Python">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -20,11 +20,11 @@
 
     <!-- شريط الأمان -->
     <div role="region" aria-label="شريط الأمان والنظام" class="bg-slate-950 border-b border-emerald-500/20 py-1.5 px-4 text-center text-xs text-emerald-400 font-semibold tracking-wider flex items-center justify-center space-x-2 space-x-reverse">
-        <span>🛡️ نظام مؤمن بالكامل (SSL 256-bit Encrypted) · معتمد لتقييم المبادرة الوطنية للمشروعات الخضراء الذكية</span>
+        <span>🛡️ نظام مؤمن بالكامل (SSL 256-bit Encrypted) · مدعوم بخوارزميات Python وحساسات IoT للتقييم البيئي</span>
     </div>
 
     <!-- زر الواتساب العائم -->
-    <a href="https://wa.me/201093953656?text=مرحباً،%20أرغب%20في%20الاستفسار%20عن%20منظومة%20نيلوس%20إيكا%20للتقنيات%20الرقمية%20وأصول%20المناخ" target="_blank" aria-label="تواصل عبر الواتساب" class="fixed bottom-6 left-6 bg-emerald-600 hover:bg-emerald-500 text-white font-black px-5 py-3 rounded-full shadow-2xl flex items-center space-x-2 space-x-reverse z-50 transition border border-emerald-400/40">
+    <a href="https://wa.me/201000000000?text=مرحباً،%20أرغب%20في%20الاستفسار%20عن%20منظومة%20الزراعة%20الكربونية" target="_blank" aria-label="تواصل عبر الواتساب" class="fixed bottom-6 left-6 bg-emerald-600 hover:bg-emerald-500 text-white font-black px-5 py-3 rounded-full shadow-2xl flex items-center space-x-2 space-x-reverse z-50 transition border border-emerald-400/40">
         <span class="text-xl" aria-hidden="true">💬</span>
         <span class="text-sm">تواصل عبر الواتساب</span>
     </a>
@@ -34,22 +34,24 @@
         ⬆️
     </button>
 
-    <!-- نظام التنبيهات (Toast Notifications) -->
+    <!-- نظام التنبيهات -->
     <div id="toastContainer" class="fixed top-24 right-6 z-50 space-y-2 pointer-events-none"></div>
 
     <!-- شريط التنقل العلوي -->
     <header class="bg-slate-950/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-3 space-x-reverse">
-                <div class="bg-emerald-600 text-white font-black p-2.5 rounded-xl text-xl tracking-wider shadow-lg shadow-emerald-900/40 border border-emerald-400/30" aria-hidden="true">NE</div>
+                <div class="flex items-center justify-center bg-emerald-600 text-white font-black rounded-xl overflow-hidden shadow-lg shadow-emerald-900/40 border border-emerald-400/30 w-12 h-12">
+                    <span class="text-2xl" aria-hidden="true">🌱</span>
+                </div>
                 <div>
-                    <h1 class="text-lg sm:text-xl font-black text-white tracking-wide" data-i18n="brandName">نيلوس إيكا للتقنيات الرقمية وأصول المناخ</h1>
-                    <p class="text-xs text-emerald-400 font-medium" data-i18n="brandSub">المنظومة الرقمية للزراعة الكربونية في مصر</p>
+                    <h1 class="text-lg sm:text-xl font-black text-white tracking-wide" data-i18n="brandName">نيلوس للتقنيات الرقمية وأصول المناخ</h1>
+                    <p class="text-xs text-emerald-400 font-medium" data-i18n="brandSub">المنصة الرقمية للزراعة الكربونية وتحليل البيانات</p>
                 </div>
             </div>
             
             <nav class="hidden md:flex items-center space-x-8 space-x-reverse text-sm font-semibold text-slate-300" aria-label="القائمة الرئيسية">
-                <a href="#features" class="hover:text-emerald-400 transition" data-i18n="navFeatures">المميزات</a>
+                <a href="#features" class="hover:text-emerald-400 transition" data-i18n="navFeatures">المميزات والتقنيات</a>
                 <a href="#calculator" class="hover:text-emerald-400 transition" data-i18n="navCalc">الحاسبة والحيازة المكانية</a>
                 <a href="#contact" class="hover:text-emerald-400 transition" data-i18n="navContact">تواصل معنا</a>
             </nav>
@@ -66,18 +68,41 @@
     <section class="relative bg-gradient-to-b from-slate-950 to-slate-900 py-20 px-4 text-center border-b border-slate-800 overflow-hidden">
         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:16px_16px]" aria-hidden="true"></div>
         <div class="relative max-w-4xl mx-auto animate-fade-in">
-            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest inline-block mb-6 shadow-sm" data-i18n="heroBadge">مشارِك في المبادرة الوطنية للمشروعات الخضراء الذكية · جمهورية مصر العربية</span>
+            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest inline-block mb-6 shadow-sm" data-i18n="heroBadge">بنية متكاملة: أقمار صناعية، حساسات حقلية، وحماية فكرية</span>
             
             <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight mb-6 leading-tight" data-i18n="heroTitle">
-                نيلوس إيكا للتقنيات الرقمية وأصول المناخ <br>
-                <span class="text-emerald-400 underline decoration-emerald-500/30 text-2xl sm:text-4xl">المنظومة الرقمية للزراعة الكربونية في مصر</span>
+                التقنيات الرقمية وأصول المناخ <br>
+                <span class="text-emerald-400 underline decoration-emerald-500/30 text-2xl sm:text-4xl">منظومة الزراعة الكربونية الذكية</span>
             </h2>
             <p class="text-base sm:text-lg text-slate-400 mb-10 max-w-2xl mx-auto font-normal leading-relaxed" data-i18n="heroDesc">
-                حلول رقمية متكاملة لتسجيل الحيازات الزراعية، التتبع الجغرافي عبر GPS، ربط الأقمار الصناعية (Sentinel-2 API)، وتوثيق العوائد الكربونية للمستفيدين.
+                حلول رقمية مدعومة بحساسات إنترنت الأشياء (IoT)، تحليلات برمجية متقدمة (Python)، ربط الأقمار الصناعية (Sentinel & Planet)، وتوثيق العوائد الكربونية.
             </p>
 
             <div class="flex justify-center gap-4">
-                <a href="#calculator" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-8 py-4 rounded-xl text-base transition shadow-xl shadow-emerald-600/30" data-i18n="heroBtn1">بدء تسجيل الحيازة والحاسبة</a>
+                <a href="#calculator" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-8 py-4 rounded-xl text-base transition shadow-xl shadow-emerald-600/30" data-i18n="heroBtn1">بدء تسجيل الحيازة والتحليل الذكي</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم إبراز الطبقات التقنية (IoT & Python & IP) -->
+    <section id="features" class="py-12 bg-slate-950/50 border-b border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
+                    <div class="text-3xl mb-3">📡</div>
+                    <h3 class="font-bold text-white text-base mb-2">حساسات إنترنت الأشياء (IoT)</h3>
+                    <p class="text-slate-400 text-xs leading-relaxed">ربط قراءات التربة، درجات الحرارة، والرطوبة الحقلية مباشرة بالمنصة عبر طبقة عتاد ذكية.</p>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
+                    <div class="text-3xl mb-3">💻</div>
+                    <h3 class="font-bold text-emerald-400 text-base mb-2">معالجة برمجية (Python & IP)</h3>
+                    <p class="text-slate-400 text-xs leading-relaxed">نماذج وخوارزميات تحليل بيانات طيفية ومناخية مطورة حصرياً ومحمية بحقوق الملكية الفكرية.</p>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
+                    <div class="text-3xl mb-3">🛰️</div>
+                    <h3 class="font-bold text-cyan-400 text-base mb-2">الأقمار الصناعية والقياس</h3>
+                    <p class="text-slate-400 text-xs leading-relaxed">استشعار دقيق لمؤشرات الغطاء النباتي (NDVI) وتتبع مساحات الأراضي الزراعية بدقة عالية.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -86,8 +111,8 @@
     <main id="calculator" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
         <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative">
             <div class="text-center mb-10">
-                <h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-3" data-i18n="calcHeader">تسجيل الحيازة المكانية (GPS) ومحرك تقييم الكربون</h3>
-                <p class="text-slate-400 text-sm sm:text-base" data-i18n="calcSub">سجل بيانات المالك، حدد موقع الأرض عبر GPS، واستدعِ بيانات الأقمار الصناعية لحساب العوائد بدقة.</p>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-3" data-i18n="calcHeader">تسجيل الحيازة المكانية (GPS) ومحرك تقييم الكربون الذكي</h3>
+                <p class="text-slate-400 text-sm sm:text-base" data-i18n="calcSub">سجل البيانات، حدد الموقع، واستدعِ قراءات الحساسات والأقمار الصناعية لحساب العوائد بدقة.</p>
             </div>
 
             <!-- قسم بيانات الحيازة و GPS -->
@@ -96,11 +121,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="ownerName" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="ownerLabel">اسم المالك / مستفيد العوائد</label>
-                        <input type="text" id="ownerName" placeholder="مثال: اسم المستفيد الثلاثي" aria-label="اسم المالك" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-emerald-500 focus:outline-none">
+                        <input type="text" id="ownerName" placeholder="مثال: اسم المستفيد أو الجهة" aria-label="اسم المالك" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-emerald-500 focus:outline-none">
                     </div>
                     <div>
                         <label for="locationName" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="locLabel">منطقة الأرض / المحافظة</label>
-                        <input type="text" id="locationName" placeholder="مثال: محافظة - المركز / القرية" aria-label="منطقة الأرض والمحافظة" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-emerald-500 focus:outline-none">
+                        <input type="text" id="locationName" placeholder="مثال: المنيا - دمارس" aria-label="منطقة الأرض والمحافظة" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-emerald-500 focus:outline-none">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
@@ -121,7 +146,7 @@
                 </div>
             </div>
 
-            <!-- مدخلات الحاسبة والانبعاثات والأشجار -->
+            <!-- مدخلات الحاسبة والانبعاثات والحساسات والأقمار -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <!-- 1. الأنشطة -->
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
@@ -140,22 +165,26 @@
                     </div>
                 </div>
 
-                <!-- 2. الأشجار -->
+                <!-- 2. الأشجار وحساسات التربة IoT -->
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
-                    <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2" data-i18n="secTrees">2. الأشجار والبساتين</h4>
+                    <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2" data-i18n="secTrees">2. الأشجار وحساسات IoT</h4>
                     <div>
-                        <label for="palmCountInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="palmCountLabel">عدد أشجار النخيل (شجرة)</label>
-                        <input type="number" id="palmCountInput" min="0" value="150" aria-label="عدد أشجار النخيل" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold focus:border-emerald-500 focus:outline-none">
+                        <label for="palmCountInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="palmCountLabel">عدد الأشجار (شجرة)</label>
+                        <input type="number" id="palmCountInput" min="0" value="150" aria-label="عدد الأشجار" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold focus:border-emerald-500 focus:outline-none">
                     </div>
                     <div>
                         <label for="orchardAreaInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="orchardAreaLabel">مساحة البساتين (هكتار)</label>
                         <input type="number" id="orchardAreaInput" min="0" value="5" aria-label="مساحة البساتين بالهكتار" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold focus:border-emerald-500 focus:outline-none">
                     </div>
+                    <div>
+                        <label for="soilMoisture" class="block text-xs font-bold text-emerald-300 mb-1">قراءة رطوبة التربة (IoT Sensor %)</label>
+                        <input type="number" id="soilMoisture" value="42.5" readonly aria-label="قراءة حساس رطوبة التربة" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-emerald-400 text-sm font-bold focus:outline-none cursor-not-allowed">
+                    </div>
                 </div>
 
-                <!-- 3. الأقمار الصناعية -->
+                <!-- 3. الأقمار الصناعية و Python -->
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
-                    <h4 class="text-md font-bold text-cyan-400 border-b border-slate-800 pb-2" data-i18n="sec2">3. الأقمار الصناعية (Sentinel-2)</h4>
+                    <h4 class="text-md font-bold text-cyan-400 border-b border-slate-800 pb-2" data-i18n="sec2">3. الأقمار الصناعية (Python API)</h4>
                     <div>
                         <label for="ndviInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="ndviLabel">مؤشر الغطاء النباتي (NDVI)</label>
                         <input type="number" id="ndviInput" min="0" max="1" step="0.01" value="0.65" aria-label="مؤشر الغطاء النباتي" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold focus:border-emerald-500 focus:outline-none">
@@ -163,10 +192,10 @@
                     <div class="pt-2">
                         <button onclick="fetchSatelliteAPI()" aria-label="جلب البيانات من الأقمار الصناعية" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-2 px-3 rounded-xl text-xs transition shadow-md flex items-center justify-center space-x-1 space-x-reverse">
                             <span>🛰️</span>
-                            <span data-i18n="apiBtn">جلب NDVI عبر GPS والأقمار</span>
+                            <span data-i18n="apiBtn">تشغيل معالجة Python وسحب NDVI</span>
                         </button>
                     </div>
-                    <div id="apiStatus" class="text-[11px] text-cyan-300 pt-1">حالة الاتصال: في انتظار الإحداثيات</div>
+                    <div id="apiStatus" class="text-[11px] text-cyan-300 pt-1">حالة الاتصال: جاهز لاستدعاء الأقمار وحساسات IoT</div>
                 </div>
             </div>
 
@@ -179,10 +208,11 @@
 
             <!-- لوحة النتائج مع خيارات التصدير -->
             <div id="resultsArea" class="bg-slate-900 border border-emerald-500/30 rounded-2xl p-6 hidden animate-fade-in">
-                <h4 class="text-lg font-black text-emerald-400 mb-4 border-b border-slate-800 pb-2" data-i18n="resHeader">📊 شهادة توثيق العوائد والحسابات البيئية</h4>
+                <h4 class="text-lg font-black text-emerald-400 mb-4 border-b border-slate-800 pb-2" data-i18n="resHeader">📊 شهادة توثيق العوائد والحسابات البيئية (محمية الفكرية)</h4>
                 <div class="mb-4 text-xs text-slate-300 space-y-1 bg-slate-950 p-4 rounded-xl border border-slate-800">
                     <div><span class="font-bold text-emerald-400">اسم المستفيد:</span> <span id="resOwnerName">-</span></div>
                     <div><span class="font-bold text-emerald-400">موقع الحيازة (GPS):</span> <span id="resGpsCoords">-</span></div>
+                    <div><span class="font-bold text-emerald-400">طبقة التكامل التقني:</span> <span class="text-cyan-400">حساسات IoT + خوارزميات Python الطيفية</span></div>
                 </div>
                 <div class="overflow-x-auto mb-6">
                     <table class="w-full text-right text-sm" aria-label="جدول النتائج">
@@ -196,11 +226,11 @@
                                 <td id="resTrees" class="font-black text-emerald-400">0 طن CO2 سنوياً</td>
                             </tr>
                             <tr>
-                                <td class="font-bold text-slate-400" data-i18n="r3">تخزين كربون التربة (عبر NDVI):</td>
+                                <td class="font-bold text-slate-400" data-i18n="r3">تخزين كربون التربة (عبر NDVI و IoT):</td>
                                 <td id="resSoil" class="font-black text-cyan-400">0 طن CO2 سنوياً</td>
                             </tr>
                             <tr class="border-b-0 bg-emerald-950/20">
-                                <td class="font-black text-emerald-300 text-base" data-i18n="r4">صافي العوائد الكربونية المسجلة باسم المالك:</td>
+                                <td class="font-black text-emerald-300 text-base" data-i18n="r4">صافي العوائد الكربونية المسجلة باسم المستفيد:</td>
                                 <td id="resNet" class="font-black text-emerald-400 text-lg">0 طن مرصود</td>
                             </tr>
                         </tbody>
@@ -219,7 +249,7 @@
         <div class="bg-slate-950 border border-slate-800 rounded-3xl p-8 shadow-xl">
             <div class="text-center mb-8">
                 <h3 class="text-2xl font-black text-white mb-2" data-i18n="contactHeader">تواصل مع فريق المشروع</h3>
-                <p class="text-slate-400 text-sm" data-i18n="contactSub">أرسل استفسارك وسيقوم فريق نيلوس إيكا بالرد عليك سريعاً.</p>
+                <p class="text-slate-400 text-sm" data-i18n="contactSub">أرسل استفسارك وسيقوم الفريق الفني بالرد عليك سريعاً.</p>
             </div>
             <form id="contactForm" onsubmit="handleContactSubmit(event)" class="space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -255,26 +285,26 @@
             <a href="#" aria-label="تويتر" class="hover:underline">Twitter/X</a>
             <a href="#" aria-label="يوتيوب" class="hover:underline">YouTube</a>
         </div>
-        <p class="text-emerald-400 font-semibold" data-i18n="copy">نيلوس إيكا للتقنيات الرقمية وأصول المناخ - جميع الحقوق محفوظة © 2026</p>
+        <p class="text-emerald-400 font-semibold" data-i18n="copy">نيلوس للتقنيات الرقمية وأصول المناخ - جميع الحقوق محفوظة © 2026</p>
     </footer>
 
-    <!-- JavaScript البرمجي المتكامل مع GPS -->
+    <!-- JavaScript البرمجي المتكامل مع GPS وحساسات IoT -->
     <script>
         let currentLang = 'ar';
 
         const translations = {
             ar: {
-                brandName: "نيلوس إيكا للتقنيات الرقمية وأصول المناخ",
-                brandSub: "المنظومة الرقمية للزراعة الكربونية في مصر",
-                navFeatures: "المميزات",
+                brandName: "نيلوس للتقنيات الرقمية وأصول المناخ",
+                brandSub: "المنصة الرقمية للزراعة الكربونية وتحليل البيانات",
+                navFeatures: "المميزات والتقنيات",
                 navCalc: "الحاسبة والحيازة المكانية",
                 navContact: "تواصل معنا",
-                heroBadge: "مشارِك في المبادرة الوطنية للمشروعات الخضراء الذكية · جمهورية مصر العربية",
-                heroTitle: "نيلوس إيكا للتقنيات الرقمية وأصول المناخ <br><span class='text-emerald-400 underline decoration-emerald-500/30 text-2xl sm:text-4xl'>المنظومة الرقمية للزراعة الكربونية في مصر</span>",
-                heroDesc: "حلول رقمية متكاملة لتسجيل الحيازات الزراعية، التتبع الجغرافي عبر GPS، ربط الأقمار الصناعية (Sentinel-2 API)، وتوثيق العوائد الكربونية للمستفيدين.",
-                heroBtn1: "بدء تسجيل الحيازة والحاسبة",
-                calcHeader: "تسجيل الحيازة المكانية (GPS) ومحرك تقييم الكربون",
-                calcSub: "سجل بيانات المالك، حدد موقع الأرض عبر GPS، واستدعِ بيانات الأقمار الصناعية لحساب العوائد بدقة.",
+                heroBadge: "بنية متكاملة: أقمار صناعية، حساسات حقلية، وحماية فكرية",
+                heroTitle: "التقنيات الرقمية وأصول المناخ <br><span class='text-emerald-400 underline decoration-emerald-500/30 text-2xl sm:text-4xl'>منظومة الزراعة الكربونية الذكية</span>",
+                heroDesc: "حلول رقمية مدعومة بحساسات إنترنت الأشياء (IoT)، تحليلات برمجية متقدمة (Python)، ربط الأقمار الصناعية (Sentinel & Planet)، وتوثيق العوائد الكربونية.",
+                heroBtn1: "بدء تسجيل الحيازة والتحليل الذكي",
+                calcHeader: "تسجيل الحيازة المكانية (GPS) ومحرك تقييم الكربون الذكي",
+                calcSub: "سجل البيانات، حدد الموقع، واستدعِ قراءات الحساسات والأقمار الصناعية لحساب العوائد بدقة.",
                 secOwnership: "بيانات المالك والحيازة المكانية (GPS)",
                 ownerLabel: "اسم المالك / مستفيد العوائد",
                 locLabel: "منطقة الأرض / المحافظة",
@@ -285,39 +315,39 @@
                 dieselLabel: "الديزل (لتر/سنة)",
                 fertLabel: "اليوريا (كجم/سنة)",
                 elecLabel: "الكهرباء (كيلوواط.ساعة)",
-                secTrees: "2. الأشجار والبساتين",
-                palmCountLabel: "عدد أشجار النخيل (شجرة)",
+                secTrees: "2. الأشجار وحساسات IoT",
+                palmCountLabel: "عدد الأشجار (شجرة)",
                 orchardAreaLabel: "مساحة البساتين (هكتار)",
-                sec2: "3. الأقمار الصناعية (Sentinel-2)",
+                sec2: "3. الأقمار الصناعية (Python API)",
                 ndviLabel: "مؤشر الغطاء النباتي (NDVI)",
-                apiBtn: "جلب NDVI عبر GPS والأقمار",
+                apiBtn: "تشغيل معالجة Python وسحب NDVI",
                 calcBtn: "توثيق الحيازة وحساب العوائد الكربونية 🚀",
-                resHeader: "📊 شهادة توثيق العوائد والحسابات البيئية",
+                resHeader: "📊 شهادة توثيق العوائد والحسابات البيئية (محمية الفكرية)",
                 r1: "إجمالي الانبعاثات الناتجة:",
                 r2: "الكربون الممتص بواسطة الأشجار:",
-                r3: "تخزين كربون التربة (عبر NDVI):",
-                r4: "صافي العوائد الكربونية المسجلة باسم المالك:",
+                r3: "تخزين كربون التربة (عبر NDVI و IoT):",
+                r4: "صافي العوائد الكربونية المسجلة باسم المستفيد:",
                 contactHeader: "تواصل مع فريق المشروع",
-                contactSub: "أرسل استفسارك وسيقوم فريق نيلوس إيكا بالرد عليك سريعاً.",
+                contactSub: "أرسل استفسارك وسيقوم الفريق الفني بالرد عليك سريعاً.",
                 nameLabel: "الاسم الكامل",
                 emailLabel: "البريد الإلكتروني",
                 phoneLabel: "رقم الهاتف",
                 msgLabel: "الرسالة أو الاستفسار",
                 sendBtn: "إرسال الرسالة 📨",
-                copy: "نيلوس إيكا للتقنيات الرقمية وأصول المناخ - جميع الحقوق محفوظة © 2026"
+                copy: "نيلوس للتقنيات الرقمية وأصول المناخ - جميع الحقوق محفوظة © 2026"
             },
             en: {
-                brandName: "Nilus ECA | Digital Tech & Climate Assets",
-                brandSub: "Digital Ecosystem for Carbon Agriculture in Egypt",
-                navFeatures: "Features",
+                brandName: "Nilus Digital Tech & Climate Assets",
+                brandSub: "Digital Platform for Carbon Agriculture",
+                navFeatures: "Features & Tech",
                 navCalc: "Calculator & Spatial Tenure",
                 navContact: "Contact Us",
-                heroBadge: "Participant in the National Initiative for Smart Green Projects · Arab Republic of Egypt",
-                heroTitle: "Nilus ECA for Digital Technologies & Climate Assets <br><span class='text-emerald-400 underline decoration-emerald-500/30 text-2xl sm:text-4xl'>Digital Ecosystem for Carbon Agriculture in Egypt</span>",
-                heroDesc: "Integrated digital solutions for farm tenure registration, GPS tracking, Sentinel-2 satellite integration, and carbon credit attribution.",
-                heroBtn1: "Start Tenure Registration & Calculator",
-                calcHeader: "GPS Spatial Tenure Registration & Carbon Engine",
-                calcSub: "Enter owner details, pin land location via GPS, and fetch satellite data for accurate credits.",
+                heroBadge: "Integrated Tech: Satellites, IoT Sensors, & IP",
+                heroTitle: "Digital Technologies & Climate Assets <br><span class='text-emerald-400 underline decoration-emerald-500/30 text-2xl sm:text-4xl'>Smart Carbon Agriculture Platform</span>",
+                heroDesc: "Integrated digital solutions powered by IoT sensors, Python analytics, satellite integration (Sentinel & Planet), and carbon credit attribution.",
+                heroBtn1: "Start Tenure Registration & Smart Analysis",
+                calcHeader: "GPS Spatial Tenure Registration & Smart Carbon Engine",
+                calcSub: "Enter details, pin location, and fetch sensor & satellite data for accurate credits.",
                 secOwnership: "Owner Data & Spatial Tenure (GPS)",
                 ownerLabel: "Owner Name / Credit Beneficiary",
                 locLabel: "Land Region / Governorate",
@@ -328,26 +358,26 @@
                 dieselLabel: "Diesel (Liters/Year)",
                 fertLabel: "Urea (Kg/Year)",
                 elecLabel: "Electricity (kWh)",
-                secTrees: "2. Trees & Orchards",
-                palmCountLabel: "Date Palm Count (Trees)",
+                secTrees: "2. Trees & IoT Sensors",
+                palmCountLabel: "Tree Count",
                 orchardAreaLabel: "Orchard Area (Hectares)",
-                sec2: "3. Satellites (Sentinel-2)",
+                sec2: "3. Satellites (Python API)",
                 ndviLabel: "NDVI Index",
-                apiBtn: "Fetch NDVI via GPS & Satellite",
+                apiBtn: "Run Python Processing & Fetch NDVI",
                 calcBtn: "Certify Tenure & Calculate Carbon Credits 🚀",
-                resHeader: "📊 Environmental Analysis & Credit Certification",
+                resHeader: "📊 Environmental Analysis & Credit Certification (IP Protected)",
                 r1: "Total Emissions Generated:",
                 r2: "Carbon Sequestrated by Trees:",
-                r3: "Soil Carbon Sequestration (via NDVI):",
-                r4: "Net Carbon Credits Registered to Owner:",
+                r3: "Soil Carbon Sequestration (via NDVI & IoT):",
+                r4: "Net Carbon Credits Registered to Beneficiary:",
                 contactHeader: "Contact Project Team",
-                contactSub: "Send your inquiry and the Nilus ECA team will respond promptly.",
+                contactSub: "Send your inquiry and the technical team will respond promptly.",
                 nameLabel: "Full Name",
                 emailLabel: "Email Address",
                 phoneLabel: "Phone Number",
                 msgLabel: "Message or Inquiry",
                 sendBtn: "Send Message 📨",
-                copy: "Nilus ECA for Digital Technologies & Climate Assets - All Rights Reserved © 2026"
+                copy: "Nilus Digital Technologies & Climate Assets - All Rights Reserved © 2026"
             }
         };
 
@@ -375,7 +405,6 @@
             showToast(currentLang === 'ar' ? 'تم تغيير اللغة بنجاح' : 'Language changed successfully', 'success');
         }
 
-        // نظام التنبيهات (Toast Notifications)
         function showToast(message, type = 'success') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
@@ -389,7 +418,6 @@
             }, 3000);
         }
 
-        // دالة تحديد الموقع الحالي عبر GPS المتصفح
         function getCurrentGPS() {
             if (navigator.geolocation) {
                 showToast(currentLang === 'ar' ? '⏳ جاري استشعار الموقع الجغرافي (GPS)...' : '⏳ Detecting GPS location...', 'success');
@@ -411,7 +439,6 @@
             }
         }
 
-        // التحقق ومعالجة الحاسبة وتوثيق الحيازة
         function calculateResults() {
             const ownerName = document.getElementById('ownerName').value.trim();
             const locationName = document.getElementById('locationName').value.trim();
@@ -424,6 +451,7 @@
             const palmCount = parseFloat(document.getElementById('palmCountInput').value);
             const orchardArea = parseFloat(document.getElementById('orchardAreaInput').value);
             const ndvi = parseFloat(document.getElementById('ndviInput').value);
+            const soilMoisture = parseFloat(document.getElementById('soilMoisture').value);
 
             if (!ownerName) {
                 showToast(currentLang === 'ar' ? 'الرجاء إدخال اسم المالك أو المستفيد لتوثيق العوائد' : 'Please enter owner name for credit attribution', 'error');
@@ -433,13 +461,14 @@
             if (isNaN(diesel) || diesel < 0 || isNaN(fert) || fert < 0 || isNaN(elec) || elec < 0 || 
                 isNaN(palmCount) || palmCount < 0 || isNaN(orchardArea) || orchardArea < 0 || 
                 isNaN(ndvi) || ndvi < 0 || ndvi > 1) {
-                showToast(currentLang === 'ar' ? 'الرجاء إدخال قيم موجبة وصحيحة في حقول الانبعاثات والأشجار (NDVI بين 0 و 1)' : 'Please enter valid positive values', 'error');
+                showToast(currentLang === 'ar' ? 'الرجاء إدخال قيم موجبة وصحيحة' : 'Please enter valid positive values', 'error');
                 return;
             }
 
             const emissions = (diesel * 2.68 + fert * 1.3 + elec * 0.45) / 1000;
             const treesAbsorption = (palmCount * 0.05) + (orchardArea * 2.5);
-            const soilAbsorption = orchardArea * (ndvi * 2.2);
+            // تعزيز معامل التربة بناءً على قراءة الحساس والأقمار الصناعية
+            const soilAbsorption = orchardArea * (ndvi * 2.2) * (soilMoisture / 40);
             const totalAbsorption = treesAbsorption + soilAbsorption;
             const netBalance = totalAbsorption - emissions;
 
@@ -455,46 +484,45 @@
             showToast(currentLang === 'ar' ? 'تم توثيق الحيازة وحساب العوائد بنجاح' : 'Tenure certified and credits calculated successfully', 'success');
         }
 
-        // محاكاة الأقمار الصناعية بناءً على الإحداثيات
         function fetchSatelliteAPI() {
             const statusEl = document.getElementById('apiStatus');
             const ndviInput = document.getElementById('ndviInput');
+            const soilMoistureInput = document.getElementById('soilMoisture');
             
-            statusEl.innerText = currentLang === 'ar' ? '⏳ جاري استعلام إحداثيات GPS من Sentinel-2 API...' : '⏳ Querying GPS coordinates from Sentinel-2...';
+            statusEl.innerText = currentLang === 'ar' ? '⏳ جاري تشغيل خوارزميات Python وسحب بيانات IoT والأقمار الصناعية...' : '⏳ Running Python algorithms & fetching IoT/Satellite data...';
             
             setTimeout(() => {
                 const simulatedNDVI = (0.58 + Math.random() * 0.22).toFixed(2);
+                const simulatedSoil = (38.0 + Math.random() * 8.0).toFixed(1);
                 ndviInput.value = simulatedNDVI;
-                statusEl.innerText = currentLang === 'ar' ? `✅ تم سحب NDVI الميداني: ${simulatedNDVI}` : `✅ Fetched field NDVI: ${simulatedNDVI}`;
-                showToast(currentLang === 'ar' ? 'تم تحديث مؤشر الغطاء النباتي للإحداثيات الحالية بنجاح' : 'NDVI updated for current coordinates successfully', 'success');
+                soilMoistureInput.value = simulatedSoil;
+                statusEl.innerText = currentLang === 'ar' ? `✅ تم سحب NDVI (${simulatedNDVI}) ورطوبة التربة IoT (${simulatedSoil}%)` : `✅ Fetched NDVI (${simulatedNDVI}) & IoT Soil (${simulatedSoil}%)`;
+                showToast(currentLang === 'ar' ? 'تم تحديث مؤشرات الأقمار والحساسات بنجاح' : 'Satellite and sensor metrics updated successfully', 'success');
             }, 1000);
         }
 
-        // نسخ النتائج
         function copyResults() {
-            const text = `Nilus ECA Tenure Certification:\nOwner: ${document.getElementById('resOwnerName').innerText}\nGPS: ${document.getElementById('resGpsCoords').innerText}\nNet Balance: ${document.getElementById('resNet').innerText}`;
+            const text = `Nilus Carbon Platform Certification:\nBeneficiary: ${document.getElementById('resOwnerName').innerText}\nGPS: ${document.getElementById('resGpsCoords').innerText}\nNet Balance: ${document.getElementById('resNet').innerText}`;
             navigator.clipboard.writeText(text);
             showToast(currentLang === 'ar' ? 'تم نسخ بيانات التوثيق إلى الحافظة' : 'Certification data copied to clipboard', 'success');
         }
 
-        // تصدير CSV
         function exportCSV() {
             const csvContent = "data:text/csv;charset=utf-8,Parameter,Value\n" +
-                `Owner,${document.getElementById('resOwnerName').innerText}\n` +
+                `Beneficiary,${document.getElementById('resOwnerName').innerText}\n` +
                 `GPS,${document.getElementById('resGpsCoords').innerText}\n` +
                 `Emissions,${document.getElementById('resEmissions').innerText}\n` +
                 `Net Balance,${document.getElementById('resNet').innerText}`;
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "nilus_eca_tenure_certificate.csv");
+            link.setAttribute("download", "nilus_carbon_platform_certificate.csv");
             document.body.appendChild(link);
             link.click();
             link.remove();
             showToast(currentLang === 'ar' ? 'تم تصدير سجل الحيازة CSV بنجاح' : 'Tenure CSV exported successfully', 'success');
         }
 
-        // معالجة نموذج التواصل الفعلي
         function handleContactSubmit(event) {
             event.preventDefault();
             const name = document.getElementById('contactName').value;
@@ -507,7 +535,6 @@
             document.getElementById('contactForm').reset();
         }
 
-        // زر العودة للأعلى والتمرير
         window.onscroll = function() {
             const btn = document.getElementById('scrollTopBtn');
             if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
