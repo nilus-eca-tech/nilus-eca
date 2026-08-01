@@ -488,51 +488,12 @@
                 }).addTo(map);
                 calculatePolygonArea();
             } else {
-                document.getElementById('cardAreaValue').innerText = '1.00';
-                document.getElementById('cardAreaSqm').innerText = '4200';
-                document.getElementById('calculatedFeddan').value = '1.00';
+                document.getElementById('cardAreaValue').innerText = "1.00";
+                document.getElementById('calculatedFeddan').value = "1.00";
+                document.getElementById('cardAreaSqm').innerText = "4200";
             }
 
             showToast(currentLang === 'ar' ? '↩️ تم التراجع عن آخر نقطة' : '↩️ Last point undone', 'info');
-        }
-
-        function calculatePolygonArea() {
-            if (drawingPoints.length < 3) return;
-
-            // حساب المساحة التقريبية للمضلع بالجداول الجيوديسية (المتر المربع)
-            let areaSqMeters = calculateGeodesicPolygonArea(drawingPoints);
-            
-            // تحويل المتر المربع إلى فدان (الفدان المصري = 4200.83 متر مربع)
-            const feddans = areaSqMeters / 4200.83;
-
-            document.getElementById('cardAreaValue').innerText = feddans.toFixed(2);
-            document.getElementById('cardAreaSqm').innerText = Math.round(areaSqMeters).toLocaleString();
-            document.getElementById('calculatedFeddan').value = feddans.toFixed(2);
-
-            // حساب مركز المضلع وتحديث الإحداثيات وقراءات الاستشعار
-            let avgLat = drawingPoints.reduce((sum, p) => sum + p.lat, 0) / drawingPoints.length;
-            let avgLng = drawingPoints.reduce((sum, p) => sum + p.lng, 0) / drawingPoints.length;
-            document.getElementById('gpsLat').value = avgLat.toFixed(4);
-            document.getElementById('gpsLng').value = avgLng.toFixed(4);
-            updateDynamicFieldMetrics(avgLat, avgLng);
-        }
-
-        function calculateGeodesicPolygonArea(latlngs) {
-            let points = latlngs;
-            let area = 0;
-            let r = 6378137; // نصف قطر الأرض بالمتر
-            if (points.length > 2) {
-                for (let i = 0; i < points.length; i++) {
-                    let p1 = points[i];
-                    let p2 = points[(i + 1) % points.length];
-                    let p1LatRad = p1.lat * Math.PI / 180;
-                    let p2LatRad = p2.lat * Math.PI / 180;
-                    let pLngDiff = (p2.lng - p1.lng) * Math.PI / 180;
-                    area += pLngDiff * (2 + Math.sin(p1LatRad) + Math.sin(p2LatRad));
-                }
-                area = Math.abs(area * r * r / 2.0);
-            }
-            return area;
         }
 
         function clearPolygon() {
@@ -543,53 +504,94 @@
                 map.removeLayer(currentPolygonLayer);
                 currentPolygonLayer = null;
             }
-            document.getElementById('cardAreaValue').innerText = '1.00';
-            document.getElementById('cardAreaSqm').innerText = '4200';
-            document.getElementById('calculatedFeddan').value = '1.00';
-            showToast(currentLang === 'ar' ? '🗑️ تم مسح الحدود وإعادة ضبط المساحة' : '🗑️ Boundaries cleared', 'info');
+            document.getElementById('cardAreaValue').innerText = "1.00";
+            document.getElementById('calculatedFeddan').value = "1.00";
+            document.getElementById('cardAreaSqm').innerText = "4200";
+            showToast(currentLang === 'ar' ? '🗑️ تم مسح حدود الحقل بالكامل' : '🗑️ All boundaries cleared', 'info');
+        }
+
+        function calculatePolygonArea() {
+            if (drawingPoints.length < 3) return;
+            
+            // حساب تقريبي مساحي بناءً على إحداثيات مضلع Leaflet (مساحة جغرافية تقريبية بالمتر المربع)
+            let areaSqMeters = L.GeometryUtil ? L.GeometryUtil.geodesicArea(drawingPoints) : Math.abs(L.Polygon.meta ? 0 : calculateApproxArea(drawingPoints));
+            
+            // إذا لم يتوفر GeometryUtil، نستخدم حساب هندسي مساحي مبسط ومستقر
+            if (!areaSqMeters || areaSqMeters === 0) {
+                areaSqMeters = calculateApproxArea(drawingPoints);
+            }
+
+            const feddans = areaSqMeters / 4200; // الفدان المصري = 4200 متر مربع
+            
+            document.getElementById('cardAreaValue').innerText = feddans.toFixed(2);
+            document.getElementById('calculatedFeddan').value = feddans.toFixed(2);
+            document.getElementById('cardAreaSqm').innerText = Math.round(areaSqMeters).toLocaleString();
+
+            // حساب مركز المضلع لتحديث خطوط الطول والعرض المركزية
+            let latSum = 0, lngSum = 0;
+            drawingPoints.forEach(p => {
+                latSum += p.lat;
+                lngSum += p.lng;
+            });
+            const centerLat = latSum / drawingPoints.length;
+            const centerLng = lngSum / drawingPoints.length;
+
+            document.getElementById('gpsLat').value = centerLat.toFixed(4);
+            document.getElementById('gpsLng').value = centerLng.toFixed(4);
+            updateDynamicFieldMetrics(centerLat, centerLng);
+        }
+
+        function calculateApproxArea(points) {
+            let area = 0;
+            const len = points.length;
+            for (let i = 0; i < len; i++) {
+                let p1 = points[i];
+                let p2 = points[(i + 1) % len];
+                // تحويل تقريبي لدرجات الطول والعرض إلى أمتار عند خط عرض 28
+                let x1 = p1.lng * 111320 * Math.cos(28 * Math.PI / 180);
+                let y1 = p1.lat * 110540;
+                let x2 = p2.lng * 111320 * Math.cos(28 * Math.PI / 180);
+                let y2 = p2.lat * 110540;
+                area += (x1 * y2 - x2 * y1);
+            }
+            return Math.abs(area / 2);
         }
 
         function updateDynamicFieldMetrics(lat, lng) {
-            const syntheticNdvi = (0.35 + (Math.abs(Math.sin(lat * lng)) * 0.55)).toFixed(2);
-            const syntheticMoisture = (35 + (Math.abs(Math.cos(lat)) * 30)).toFixed(1);
-            const feddans = parseFloat(document.getElementById('calculatedFeddan').value) || 1.0;
-            const syntheticCarbon = (parseFloat(syntheticNdvi) * feddans * 3.8).toFixed(1);
-
-            document.getElementById('card2Value').innerText = syntheticMoisture + '%';
-            document.getElementById('card3Value').innerText = syntheticCarbon;
-            document.getElementById('soilMoisture').value = syntheticMoisture;
-            document.getElementById('ndviInput').value = syntheticNdvi;
+            // محاكاة قراءات حساسية ديناميكية بناءً على الموقع الجغرافي
+            const moisture = (40 + (Math.abs(lat * lng) % 15)).toFixed(1);
+            document.getElementById('soilMoisture').value = moisture;
+            document.getElementById('card2Value').innerText = moisture + '%';
+            
+            const carbonEst = (parseFloat(document.getElementById('calculatedFeddan').value || 1) * 8.3).toFixed(1);
+            document.getElementById('card3Value').innerText = carbonEst;
         }
 
         function toggleNDVILayer() {
             isNdviActive = !isNdviActive;
-            const container = document.getElementById('mapContainer');
+            const overlay = document.getElementById('ndviOverlayLayer');
             const btnText = document.getElementById('ndviBtnText');
-
             if (isNdviActive) {
-                container.classList.add('ndvi-active');
+                overlay.classList.add('ndvi-active');
                 btnText.innerText = currentLang === 'ar' ? 'إخفاء NDVI' : 'Hide NDVI';
-                showToast(currentLang === 'ar' ? '🌱 تم تفعيل طبقة الغطاء النباتي الفعلي بنجاح' : '🌱 NDVI layer activated', 'success');
+                showToast(currentLang === 'ar' ? '🌱 تم تفعيل طبقة تحليل الغطاء النباتي (NDVI)' : '🌱 NDVI vegetation layer activated', 'success');
             } else {
-                container.classList.remove('ndvi-active');
+                overlay.classList.remove('ndvi-active');
                 btnText.innerText = 'NDVI';
-                showToast(currentLang === 'ar' ? 'تم إخفاء طبقة الغطاء النباتي' : 'NDVI layer hidden', 'info');
+                showToast(currentLang === 'ar' ? '🌱 تم إيقاف طبقة الـ NDVI' : '🌱 NDVI layer deactivated', 'info');
             }
         }
 
         function captureMapSnapshot() {
             const mapElement = document.getElementById('mapContainer');
-            showToast(currentLang === 'ar' ? '⏳ جاري التقاط الصورة التوثيقية للخريطة النباتية...' : '⏳ Capturing map snapshot...', 'info');
-            
             html2canvas(mapElement, { useCORS: true, allowTaint: true }).then(canvas => {
                 capturedMapImage = canvas.toDataURL('image/png');
                 const container = document.getElementById('snapshotImageContainer');
-                container.innerHTML = `<img src="${capturedMapImage}" alt="Map Snapshot" class="max-h-64 rounded-lg border border-cyan-500/40">`;
+                container.innerHTML = `<img src="${capturedMapImage}" class="rounded-lg max-h-48 border border-cyan-500/40 shadow-md" alt="Map Snapshot">`;
                 document.getElementById('snapshotPreviewArea').classList.remove('hidden');
-                showToast(currentLang === 'ar' ? '✅ تم التقاط الصورة التوثيقية بنجاح' : '✅ Snapshot captured successfully', 'success');
+                showToast(currentLang === 'ar' ? '📸 تم التقاط وثيقة الخريطة بنجاح' : '📸 Map snapshot captured successfully', 'success');
             }).catch(err => {
-                console.error(err);
-                showToast(currentLang === 'ar' ? '❌ فشل التقاط الصورة' : '❌ Failed to capture snapshot', 'error');
+                showToast(currentLang === 'ar' ? '⚠️ تعذر التقاط صورة الخريطة' : '⚠️ Failed to capture map snapshot', 'info');
             });
         }
 
@@ -602,66 +604,76 @@
 
         function getCurrentGPS() {
             if (navigator.geolocation) {
-                showToast(currentLang === 'ar' ? '📍 جاري تحديد موقعك الجغرافي الحالي...' : '📍 Fetching your current location...', 'info');
                 navigator.geolocation.getCurrentPosition(position => {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
                     document.getElementById('gpsLat').value = lat.toFixed(4);
                     document.getElementById('gpsLng').value = lng.toFixed(4);
-                    map.setView([lat, lng], 16);
-                    updateDynamicFieldMetrics(lat, lng);
-                    showToast(currentLang === 'ar' ? '✅ تم تحديث الموقع بنجاح' : '✅ Location updated successfully', 'success');
-                }, error => {
-                    showToast(currentLang === 'ar' ? '❌ تعذر الحصول على الموقع الجغرافي' : '❌ Unable to retrieve location', 'error');
+                    map.setView([lat, lng], 15);
+                    L.marker([lat, lng]).addTo(map).bindPopup(currentLang === 'ar' ? 'موقعك الحالي' : 'Your Current Location').openPopup();
+                    showToast(currentLang === 'ar' ? '📍 تم تحديث الموقع الجغرافي بنجاح' : '📍 GPS location updated', 'success');
+                }, () => {
+                    showToast(currentLang === 'ar' ? '⚠️ تعذر الوصول للموقع الجغرافي' : '⚠️ Unable to retrieve location', 'info');
                 });
             } else {
-                showToast(currentLang === 'ar' ? '❌ المتصفح لا يدعم تحديد الموقع' : '❌ Geolocation is not supported', 'error');
+                showToast(currentLang === 'ar' ? '⚠️ المتصفح لا يدعم تحديد الموقع' : '⚠️ Geolocation not supported', 'info');
             }
         }
 
         function fetchSentinelData() {
-            showToast(currentLang === 'ar' ? '🛰️ جاري جلب أحدث نطاقات قمر Sentinel-2...' : '🛰️ Fetching latest Sentinel-2 bands...', 'info');
+            showToast(currentLang === 'ar' ? '🛰️ جاري جلب أحدث نطاقات الأقمار الصناعية (Sentinel-2 L2A)...' : '🛰️ Fetching latest Sentinel-2 L2A bands...', 'success');
             setTimeout(() => {
-                const lat = parseFloat(document.getElementById('gpsLat').value) || 28.1099;
-                const lng = parseFloat(document.getElementById('gpsLng').value) || 30.7503;
-                updateDynamicFieldMetrics(lat, lng);
-                document.getElementById('sentinelStatus').innerText = currentLang === 'ar' ? 'قمر Sentinel: تم تحديث البيانات بنجاح' : 'Sentinel: Data updated successfully';
-                showToast(currentLang === 'ar' ? '✅ تم تحديث بيانات قمر Sentinel بنجاح' : '✅ Sentinel data updated', 'success');
+                const randomNdvi = (0.35 + Math.random() * 0.45).toFixed(2);
+                document.getElementById('ndviInput').value = randomNdvi;
+                showToast(currentLang === 'ar' ? `✅ تم تحديث مؤشر NDVI بنجاح: ${randomNdvi}` : `✅ NDVI updated successfully: ${randomNdvi}`, 'success');
             }, 1000);
         }
 
         function calculateResults() {
-            const owner = document.getElementById('ownerName').value || (currentLang === 'ar' ? 'عميل غير محدد' : 'Unspecified Client');
-            const feddans = parseFloat(document.getElementById('calculatedFeddan').value) || 1.0;
+            const owner = document.getElementById('ownerName').value.trim() || (currentLang === 'ar' ? 'عميل غير محدد' : 'Unspecified Client');
+            const feddan = parseFloat(document.getElementById('calculatedFeddan').value) || 1;
             const ndvi = parseFloat(document.getElementById('ndviInput').value) || 0.45;
             const diesel = parseFloat(document.getElementById('dieselInput').value) || 0;
             const fert = parseFloat(document.getElementById('fertInput').value) || 0;
-            const trees = (parseFloat(document.getElementById('palmCountInput').value) || 0) * feddans;
+            const trees = parseFloat(document.getElementById('palmCountInput').value) || 0;
 
-            const emissions = ((diesel * 2.68) + (fert * 1.35)) / 1000;
-            const carbonAbsorbed = (trees * 0.025) + (ndvi * feddans * 4.5);
-            const netCarbon = Math.max(0, carbonAbsorbed - emissions);
-            const minIncome = netCarbon * 18;
-            const maxIncome = netCarbon * 40;
+            // حساب الانبعاثات (ديزل + يوريا) بمعاملات قياسية
+            const emissionsFromDiesel = diesel * 2.68 / 1000; // طن CO2 لكل لتر ديزل تقريباً
+            const emissionsFromFert = fert * 1.30 / 1000;     // طن CO2 مكافئ لكل كجم يوريا
+            const totalEmissions = emissionsFromDiesel + emissionsFromFert;
+
+            // حساب الامتصاص عبر الأشجار والكربون الأرضي المرتبط بالـ NDVI والمساحة
+            const absorptionFromTrees = trees * 0.025; // متوسط امتصاص الشجرة الناضجة سنوياً (طن CO2)
+            const soilCarbonAbsorption = feddan * ndvi * 2.2; // رصيد الكربون العضوي بالتربة
+            const totalAbsorption = absorptionFromTrees + soilCarbonAbsorption;
+
+            const netCarbon = Math.max(0, totalAbsorption - totalEmissions);
+            const minRevenue = netCarbon * 18;
+            const maxRevenue = netCarbon * 40;
 
             document.getElementById('resOwnerName').innerText = owner;
-            document.getElementById('resAreaVal').innerText = `${feddans.toFixed(2)} ${currentLang === 'ar' ? 'فدان' : 'Feddans'}`;
+            document.getElementById('resAreaVal').innerText = feddan.toFixed(2) + ' ' + (currentLang === 'ar' ? 'فدان' : 'Feddans');
             document.getElementById('resNdviVal').innerText = ndvi;
-            document.getElementById('resEmissions').innerText = `${emissions.toFixed(2)} طن مكافئ CO2`;
-            document.getElementById('resTrees').innerText = `${carbonAbsorbed.toFixed(2)} طن CO2 سنوياً`;
-            document.getElementById('resNet').innerText = `${netCarbon.toFixed(2)} طن مرصود (عائد مقدر: $${minIncome.toFixed(0)} - $${maxIncome.toFixed(0)})`;
+
+            document.getElementById('resEmissions').innerText = totalEmissions.toFixed(2) + (currentLang === 'ar' ? ' طن مكافئ CO2' : ' Tons CO2e');
+            document.getElementById('resTrees').innerText = totalAbsorption.toFixed(2) + (currentLang === 'ar' ? ' طن CO2 سنوياً' : ' Tons CO2/Year');
+            document.getElementById('resNet').innerText = netCarbon.toFixed(2) + (currentLang === 'ar' ? ` طن مرصود (عائد متوقع: $${minRevenue.toFixed(0)} - $${maxRevenue.toFixed(0)})` : ` Tons Monitored (Expected Income: $${minRevenue.toFixed(0)} - $${maxRevenue.toFixed(0)})`);
 
             document.getElementById('resultsArea').classList.remove('hidden');
-            showToast(currentLang === 'ar' ? '🚀 تم إتمام تحليل أصول المناخ وحساب دخل الكربون بنجاح' : '🚀 Climate assets & carbon calculation completed', 'success');
+            document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+            showToast(currentLang === 'ar' ? '🚀 تم إتمام التحليل وحساب دخل الكربون بنجاح' : '🚀 Climate assets and carbon income calculated successfully', 'success');
         }
 
         function sendCompanyEmailReport() {
-            calculateResults();
-            const owner = document.getElementById('ownerName').value || 'Nilus ECA Client';
-            showToast(currentLang === 'ar' ? `📧 جاري إرسال التقرير المالي والبيئي للعميل (${owner}) لبريد الشركة...` : `📧 Sending report for (${owner}) to company email...`, 'info');
-            setTimeout(() => {
-                showToast(currentLang === 'ar' ? '✅ تم إرسال التقرير وشهادة أصول المناخ إلى البريد بنجاح' : '✅ Report sent to company email successfully', 'success');
-            }, 1200);
+            const owner = document.getElementById('ownerName').value.trim() || 'Client';
+            const location = document.getElementById('locationName').value.trim() || 'Minya/Egypt';
+            const feddan = document.getElementById('calculatedFeddan').value;
+            
+            const subject = encodeURIComponent(`Nilus ECA - Climate & Carbon Report: ${owner}`);
+            const body = encodeURIComponent(`تقرير أصول المناخ والزراعة التعاقدية - نيلوس للتقنيات الرقمية:\n\nاسم العميل: ${owner}\nالمنطقة: ${location}\nالمساحة: ${feddan} فدان\nالتاريخ: 2026-08-01\n\nتم إصدار التقرير إلكترونياً عبر منصة نيلوس الميدانية.`);
+            
+            window.location.href = `mailto:admin@niluseca.com?subject=${subject}&body=${body}`;
+            showToast(currentLang === 'ar' ? '📧 جاري تحويل التقرير إلى بريد الشركة...' : '📧 Redirecting report to company email...', 'success');
         }
 
         function toggleLanguage() {
@@ -679,30 +691,13 @@
                 langBtn.innerHTML = 'English 🇺🇸';
             }
 
+            const dict = translations[currentLang];
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (translations[currentLang][key]) {
-                    el.innerText = translations[currentLang][key];
+                if (dict[key]) {
+                    el.innerText = dict[key];
                 }
             });
-            showToast(currentLang === 'ar' ? '🌐 تم التبديل إلى اللغة العربية' : '🌐 Switched to English', 'info');
-        }
-
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            let bgClass = 'bg-slate-800 text-cyan-300 border-cyan-500/30';
-            if (type === 'success') bgClass = 'bg-emerald-950 text-emerald-300 border-emerald-500/40';
-            if (type === 'error') bgClass = 'bg-red-950 text-red-300 border-red-500/40';
-
-            toast.className = `pointer-events-auto px-4 py-3 rounded-xl border text-xs font-bold shadow-2xl transition-all duration-300 animate-fade-in ${bgClass}`;
-            toast.innerText = message;
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
         }
 
         function scrollToTop() {
@@ -711,12 +706,26 @@
 
         window.onscroll = function() {
             const btn = document.getElementById('scrollTopBtn');
-            if (window.scrollY > 300) {
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
                 btn.classList.remove('hidden');
             } else {
                 btn.classList.add('hidden');
             }
         };
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `p-3 rounded-xl text-xs font-bold shadow-xl border transition animate-fade-in pointer-events-auto flex items-center space-x-2 space-x-reverse ${
+                type === 'success' ? 'bg-slate-950 border-cyan-500/50 text-cyan-300' : 'bg-slate-950 border-amber-500/50 text-amber-300'
+            }`;
+            toast.innerText = message;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
+        }
     </script>
 </body>
 </html>
