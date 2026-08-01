@@ -206,16 +206,16 @@
                 </select>
             </div>
             <div class="form-group full-width">
-                <label for="userEmail">بريد استلام التقرير (PDF):</label>
+                <label for="userEmail">بريد إرسال التقرير (PDF):</label>
                 <input type="email" id="userEmail" value="waadnasr144@gmail.com" required>
             </div>
         </div>
 
         <div class="section-title">محرك معالجة Python وحساسات إنترنت الأشياء (IoT)</div>
         <div class="btn-group">
-            <button type="button" class="secondary-btn" onclick="fetchGPSLocation()">تحديث الموقع (GPS)</button>
+            <button type="button" class="secondary-btn" onclick="fetchGPSLocation()">إعادة تحديث الموقع (GPS)</button>
             <button type="button" class="secondary-btn" onclick="runPythonProcessing()">تشغيل معالجة Python وسحب NDVI</button>
-            <button type="submit">توثيق الحيازة وحساب العوائد 🚀</button>
+            <button type="submit">توثيق الحيازة وحساب العوائد الكربونية 🚀</button>
         </div>
         <div class="btn-group" style="margin-top: 15px;">
             <button type="button" class="pdf-btn" onclick="sendPDFReport()">📥 تصدير وإرسال تقرير PDF إلى البريد الإلكتروني</button>
@@ -283,6 +283,7 @@
                     statusDiv.style.color = "green";
                 },
                 (error) => {
+                    // في حال تعذر الوصول، نضع إحداثيات افتراضية دقيقة للمنيا كبديل آمن
                     latInput.value = "28.1099° N";
                     lonInput.value = "30.7503° E";
                     statusDiv.innerHTML = "⚠️ تعذر الوصول لـ GPS المباشر، تم استخدام الإحداثيات الافتراضية لمديرية المنيا.";
@@ -309,6 +310,7 @@
         const lat = document.getElementById('latitude').value;
         const lon = document.getElementById('longitude').value;
         
+        // حساب تقديري للكربون بناءً على المساحة
         const carbonTons = (area * 3.42).toFixed(2);
         const revenueUSD = (carbonTons * 15).toLocaleString();
 
@@ -331,7 +333,6 @@
             return;
         }
 
-        // تنفيذ عملية الحساب أولاً لتحديث النتائج
         calculateCarbon();
 
         alert(`⏳ جاري إنشاء ملف التوثيق بصيغة PDF عبر خادم Python وإرساله إلى البريد:\n📩 ${email}\n\nالإحداثيات: ${lat}, ${lon} | المساحة: ${area} فدان.`);
