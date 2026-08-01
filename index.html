@@ -89,17 +89,17 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2 hover:border-cyan-500/40 transition">
                     <div class="flex justify-between items-center"><span class="font-bold text-sm text-white" data-i18n="card1Name">المساحة المقدرة بالحقل</span><span id="card1Status" class="bg-cyan-500/20 text-cyan-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">محدد بالماوس</span></div>
-                    <div class="text-2xl font-black text-cyan-400"><span id="cardAreaValue">1.00</span> <span class="text-xs text-slate-400 font-normal" data-i18n="unitFeddan">فدان</span></div>
-                    <p id="card1Rec" class="text-xs text-slate-400"><span id="cardAreaSqm">4200</span> م² (انقر بالماوس لتحديد أركان الحقل)</p>
+                    <div class="text-2xl font-black text-cyan-400"><span id="cardAreaValue">0.00</span> <span class="text-xs text-slate-400 font-normal" data-i18n="unitFeddan">فدان</span></div>
+                    <p id="card1Rec" class="text-xs text-slate-400"><span id="cardAreaSqm">0</span> م² (انقر بالماوس لتحديد أركان الحقل)</p>
                 </div>
                 <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2 hover:border-cyan-500/40 transition">
-                    <div class="flex justify-between items-center"><span class="font-bold text-sm text-white" data-i18n="card2Name">حالة الرطوبة والري</span><span id="card2Status" class="bg-emerald-500/20 text-emerald-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">مستقر</span></div>
-                    <div class="text-2xl font-black text-emerald-400"><span id="card2Value">42.5%</span> <span class="text-xs text-slate-400 font-normal">حساس IoT</span></div>
-                    <p id="card2Rec" class="text-xs text-slate-400">قراءة الاستشعار الميداني متوافقة مع الحقل.</p>
+                    <div class="flex justify-between items-center"><span class="font-bold text-sm text-white" data-i18n="card2Name">حالة الرطوبة والري</span><span id="card2Status" class="bg-emerald-500/20 text-emerald-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">بانتظار الإدخال</span></div>
+                    <div class="text-2xl font-black text-emerald-400"><span id="card2Value">--</span> <span class="text-xs text-slate-400 font-normal">حساس IoT</span></div>
+                    <p id="card2Rec" class="text-xs text-slate-400">قراءة الاستشعار الميداني للحقل.</p>
                 </div>
                 <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2 hover:border-cyan-500/40 transition">
                     <div class="flex justify-between items-center"><span class="font-bold text-sm text-white" data-i18n="card3Name">جاهزية الكربون</span><span id="card3Status" class="bg-amber-500/20 text-amber-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">قيد التقييم</span></div>
-                    <div class="text-2xl font-black text-amber-400"><span id="card3Value">8.3</span> <span class="text-xs text-slate-400 font-normal">طن متوقع</span></div>
+                    <div class="text-2xl font-black text-amber-400"><span id="card3Value">--</span> <span class="text-xs text-slate-400 font-normal">طن متوقع</span></div>
                     <p id="card3Rec" class="text-xs text-slate-400">يعتمد على المساحة والكتلة الحيوية المرصودة.</p>
                 </div>
             </div>
@@ -152,7 +152,7 @@
                 </div>
             </div>
 
-            <!-- بيانات الحيازة و GPS -->
+            <!-- بيانات الحيازة و GPS (فارغة تماماً وخالية من القيم الافتراضية) -->
             <div class="bg-slate-900 border border-emerald-500/30 p-6 rounded-2xl mb-8 space-y-4">
                 <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2" data-i18n="gpsSecTitle">بيانات الحيازة والمساحة المحسوبة</h4>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -166,17 +166,17 @@
                     </div>
                     <div>
                         <label for="calculatedFeddan" class="block text-xs font-bold text-cyan-400 mb-1" data-i18n="labelFeddanInput">المساحة المقدرة (بالفدان)</label>
-                        <input type="number" id="calculatedFeddan" step="0.01" value="1.00" placeholder="0.00" class="w-full bg-slate-950 border border-cyan-500/50 rounded-xl px-3 py-2.5 text-cyan-300 font-bold text-sm focus:outline-none">
+                        <input type="number" id="calculatedFeddan" step="0.01" value="" placeholder="0.00" class="w-full bg-slate-950 border border-cyan-500/50 rounded-xl px-3 py-2.5 text-cyan-300 font-bold text-sm focus:outline-none">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
                     <div>
                         <label for="gpsLat" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="labelLat">خط العرض المركز (Latitude)</label>
-                        <input type="text" id="gpsLat" value="28.1099" placeholder="0.0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:outline-none">
+                        <input type="text" id="gpsLat" value="" placeholder="0.0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:outline-none">
                     </div>
                     <div>
                         <label for="gpsLng" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="labelLng">خط الطول المركز (Longitude)</label>
-                        <input type="text" id="gpsLng" value="30.7503" placeholder="0.0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:outline-none">
+                        <input type="text" id="gpsLng" value="" placeholder="0.0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:outline-none">
                     </div>
                     <div class="flex items-end">
                         <button onclick="getCurrentGPS()" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-md flex items-center justify-center space-x-1 space-x-reverse">
@@ -187,17 +187,17 @@
                 </div>
             </div>
 
-            <!-- مؤشرات الانبعاثات والأشجار وحساسات IoT -->
+            <!-- مؤشرات الانبعاثات والأشجار وحساسات IoT (فارغة تماماً وخالية من القيم الافتراضية) -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
                     <h4 class="text-md font-bold text-amber-400 border-b border-slate-800 pb-2" data-i18n="sec1Title">1. أنشطة الحيازة والانبعاثات</h4>
                     <div>
                         <label for="dieselInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="labelDiesel">الديزل (لتر/سنة)</label>
-                        <input type="number" id="dieselInput" value="1200" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
+                        <input type="number" id="dieselInput" value="" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                     <div>
                         <label for="fertInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="labelFert">اليوريا (كجم/سنة)</label>
-                        <input type="number" id="fertInput" value="500" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
+                        <input type="number" id="fertInput" value="" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                 </div>
 
@@ -205,11 +205,11 @@
                     <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2" data-i18n="sec2Title">2. الأشجار وحساسات IoT</h4>
                     <div>
                         <label for="palmCountInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="labelTrees">عدد الأشجار (شجرة)</label>
-                        <input type="number" id="palmCountInput" value="250" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
+                        <input type="number" id="palmCountInput" value="" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                     <div>
                         <label for="soilMoisture" class="block text-xs font-bold text-emerald-300 mb-1" data-i18n="labelMoisture">رطوبة التربة (حساس IoT %)</label>
-                        <input type="number" id="soilMoisture" value="42.5" placeholder="0.0" readonly class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-emerald-400 text-sm font-bold cursor-not-allowed">
+                        <input type="number" id="soilMoisture" value="" placeholder="0.0" readonly class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-emerald-400 text-sm font-bold cursor-not-allowed">
                     </div>
                 </div>
 
@@ -217,7 +217,7 @@
                     <h4 class="text-md font-bold text-cyan-400 border-b border-slate-800 pb-2" data-i18n="sec3Title">3. مؤشرات قمر Sentinel والـ NDVI</h4>
                     <div>
                         <label for="ndviInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="labelNdvi">مؤشر الغطاء النباتي الفعلي (NDVI)</label>
-                        <input type="number" id="ndviInput" min="0" max="1" step="0.01" value="0.45" placeholder="0.00" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
+                        <input type="number" id="ndviInput" min="0" max="1" step="0.01" value="" placeholder="0.00" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                     <div class="pt-2">
                         <button onclick="fetchSentinelData()" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-2 px-3 rounded-xl text-xs transition shadow-md flex items-center justify-center space-x-1 space-x-reverse">
@@ -280,7 +280,6 @@
         let capturedMapImage = null;
         let isNdviActive = false;
 
-        // متغيرات رسم الحدود وحساب المساحة التفاعلية
         let drawingPoints = [];
         let tempMarkers = [];
         let currentPolygonLayer = null;
@@ -416,7 +415,6 @@
             };
             L.control.layers(baseMaps).addTo(map);
 
-            // تفعيل النقر المباشر على الخريطة لتشكيل مضلع حدود الحقل ورسمه نقطة بنقطة
             map.on('click', function(e) {
                 addDrawingPoint(e.latlng);
             });
@@ -428,8 +426,6 @@
 
         function addDrawingPoint(latlng) {
             drawingPoints.push(latlng);
-            
-            // إضافة علامة صغيرة على النقطة المنقورة
             const tm = L.circleMarker(latlng, { 
                 radius: 6, 
                 color: '#06b6d4', 
@@ -439,7 +435,6 @@
             }).addTo(map);
             tempMarkers.push(tm);
 
-            // إذا تم تحديد 3 نقاط أو أكثر، ارسم المضلع واحسب المساحة
             if (drawingPoints.length >= 3) {
                 if (currentPolygonLayer) {
                     map.removeLayer(currentPolygonLayer);
@@ -450,15 +445,12 @@
                     fillOpacity: 0.4, 
                     weight: 3 
                 }).addTo(map);
-                
                 calculatePolygonArea();
             } else {
-                // تحديث مؤشر الإحداثيات المركزية المبدئية
                 document.getElementById('gpsLat').value = latlng.lat.toFixed(4);
                 document.getElementById('gpsLng').value = latlng.lng.toFixed(4);
                 updateDynamicFieldMetrics(latlng.lat, latlng.lng);
             }
-
             showToast(currentLang === 'ar' ? `📍 تم تسجيل النقطة (${drawingPoints.length})` : `📍 Point recorded (${drawingPoints.length})`, 'success');
         }
 
@@ -467,12 +459,9 @@
                 showToast(currentLang === 'ar' ? '⚠️ لا توجد نقاط للتراجع عنها' : '⚠️ No points to undo', 'info');
                 return;
             }
-
             drawingPoints.pop();
             const lastMarker = tempMarkers.pop();
-            if (lastMarker) {
-                map.removeLayer(lastMarker);
-            }
+            if (lastMarker) map.removeLayer(lastMarker);
 
             if (currentPolygonLayer) {
                 map.removeLayer(currentPolygonLayer);
@@ -488,11 +477,10 @@
                 }).addTo(map);
                 calculatePolygonArea();
             } else {
-                document.getElementById('cardAreaValue').innerText = "1.00";
-                document.getElementById('calculatedFeddan').value = "1.00";
-                document.getElementById('cardAreaSqm').innerText = "4200";
+                document.getElementById('cardAreaValue').innerText = "0.00";
+                document.getElementById('calculatedFeddan').value = "";
+                document.getElementById('cardAreaSqm').innerText = "0";
             }
-
             showToast(currentLang === 'ar' ? '↩️ تم التراجع عن آخر نقطة' : '↩️ Last point undone', 'info');
         }
 
@@ -504,35 +492,26 @@
                 map.removeLayer(currentPolygonLayer);
                 currentPolygonLayer = null;
             }
-            document.getElementById('cardAreaValue').innerText = "1.00";
-            document.getElementById('calculatedFeddan').value = "1.00";
-            document.getElementById('cardAreaSqm').innerText = "4200";
+            document.getElementById('cardAreaValue').innerText = "0.00";
+            document.getElementById('calculatedFeddan').value = "";
+            document.getElementById('cardAreaSqm').innerText = "0";
             showToast(currentLang === 'ar' ? '🗑️ تم مسح حدود الحقل بالكامل' : '🗑️ All boundaries cleared', 'info');
         }
 
         function calculatePolygonArea() {
             if (drawingPoints.length < 3) return;
-            
-            // حساب تقريبي مساحي بناءً على إحداثيات مضلع Leaflet (مساحة جغرافية تقريبية بالمتر المربع)
-            let areaSqMeters = L.GeometryUtil ? L.GeometryUtil.geodesicArea(drawingPoints) : Math.abs(L.Polygon.meta ? 0 : calculateApproxArea(drawingPoints));
-            
-            // إذا لم يتوفر GeometryUtil، نستخدم حساب هندسي مساحي مبسط ومستقر
+            let areaSqMeters = L.GeometryUtil ? L.GeometryUtil.geodesicArea(drawingPoints) : calculateApproxArea(drawingPoints);
             if (!areaSqMeters || areaSqMeters === 0) {
                 areaSqMeters = calculateApproxArea(drawingPoints);
             }
-
-            const feddans = areaSqMeters / 4200; // الفدان المصري = 4200 متر مربع
+            const feddans = areaSqMeters / 4200;
             
             document.getElementById('cardAreaValue').innerText = feddans.toFixed(2);
             document.getElementById('calculatedFeddan').value = feddans.toFixed(2);
             document.getElementById('cardAreaSqm').innerText = Math.round(areaSqMeters).toLocaleString();
 
-            // حساب مركز المضلع لتحديث خطوط الطول والعرض المركزية
             let latSum = 0, lngSum = 0;
-            drawingPoints.forEach(p => {
-                latSum += p.lat;
-                lngSum += p.lng;
-            });
+            drawingPoints.forEach(p => { latSum += p.lat; lngSum += p.lng; });
             const centerLat = latSum / drawingPoints.length;
             const centerLng = lngSum / drawingPoints.length;
 
@@ -547,7 +526,6 @@
             for (let i = 0; i < len; i++) {
                 let p1 = points[i];
                 let p2 = points[(i + 1) % len];
-                // تحويل تقريبي لدرجات الطول والعرض إلى أمتار عند خط عرض 28
                 let x1 = p1.lng * 111320 * Math.cos(28 * Math.PI / 180);
                 let y1 = p1.lat * 110540;
                 let x2 = p2.lng * 111320 * Math.cos(28 * Math.PI / 180);
@@ -558,12 +536,12 @@
         }
 
         function updateDynamicFieldMetrics(lat, lng) {
-            // محاكاة قراءات حساسية ديناميكية بناءً على الموقع الجغرافي
             const moisture = (40 + (Math.abs(lat * lng) % 15)).toFixed(1);
             document.getElementById('soilMoisture').value = moisture;
             document.getElementById('card2Value').innerText = moisture + '%';
             
-            const carbonEst = (parseFloat(document.getElementById('calculatedFeddan').value || 1) * 8.3).toFixed(1);
+            const feddanVal = parseFloat(document.getElementById('calculatedFeddan').value) || 1;
+            const carbonEst = (feddanVal * 8.3).toFixed(1);
             document.getElementById('card3Value').innerText = carbonEst;
         }
 
@@ -631,20 +609,18 @@
 
         function calculateResults() {
             const owner = document.getElementById('ownerName').value.trim() || (currentLang === 'ar' ? 'عميل غير محدد' : 'Unspecified Client');
-            const feddan = parseFloat(document.getElementById('calculatedFeddan').value) || 1;
-            const ndvi = parseFloat(document.getElementById('ndviInput').value) || 0.45;
+            const feddan = parseFloat(document.getElementById('calculatedFeddan').value) || 0;
+            const ndvi = parseFloat(document.getElementById('ndviInput').value) || 0;
             const diesel = parseFloat(document.getElementById('dieselInput').value) || 0;
             const fert = parseFloat(document.getElementById('fertInput').value) || 0;
             const trees = parseFloat(document.getElementById('palmCountInput').value) || 0;
 
-            // حساب الانبعاثات (ديزل + يوريا) بمعاملات قياسية
-            const emissionsFromDiesel = diesel * 2.68 / 1000; // طن CO2 لكل لتر ديزل تقريباً
-            const emissionsFromFert = fert * 1.30 / 1000;     // طن CO2 مكافئ لكل كجم يوريا
+            const emissionsFromDiesel = diesel * 2.68 / 1000;
+            const emissionsFromFert = fert * 1.30 / 1000;
             const totalEmissions = emissionsFromDiesel + emissionsFromFert;
 
-            // حساب الامتصاص عبر الأشجار والكربون الأرضي المرتبط بالـ NDVI والمساحة
-            const absorptionFromTrees = trees * 0.025; // متوسط امتصاص الشجرة الناضجة سنوياً (طن CO2)
-            const soilCarbonAbsorption = feddan * ndvi * 2.2; // رصيد الكربون العضوي بالتربة
+            const absorptionFromTrees = trees * 0.025;
+            const soilCarbonAbsorption = feddan * ndvi * 2.2;
             const totalAbsorption = absorptionFromTrees + soilCarbonAbsorption;
 
             const netCarbon = Math.max(0, totalAbsorption - totalEmissions);
@@ -653,7 +629,7 @@
 
             document.getElementById('resOwnerName').innerText = owner;
             document.getElementById('resAreaVal').innerText = feddan.toFixed(2) + ' ' + (currentLang === 'ar' ? 'فدان' : 'Feddans');
-            document.getElementById('resNdviVal').innerText = ndvi;
+            document.getElementById('resNdviVal').innerText = ndvi || '0.00';
 
             document.getElementById('resEmissions').innerText = totalEmissions.toFixed(2) + (currentLang === 'ar' ? ' طن مكافئ CO2' : ' Tons CO2e');
             document.getElementById('resTrees').innerText = totalAbsorption.toFixed(2) + (currentLang === 'ar' ? ' طن CO2 سنوياً' : ' Tons CO2/Year');
@@ -667,7 +643,7 @@
         function sendCompanyEmailReport() {
             const owner = document.getElementById('ownerName').value.trim() || 'Client';
             const location = document.getElementById('locationName').value.trim() || 'Minya/Egypt';
-            const feddan = document.getElementById('calculatedFeddan').value;
+            const feddan = document.getElementById('calculatedFeddan').value || '0';
             
             const subject = encodeURIComponent(`Nilus ECA - Climate & Carbon Report: ${owner}`);
             const body = encodeURIComponent(`تقرير أصول المناخ والزراعة التعاقدية - نيلوس للتقنيات الرقمية:\n\nاسم العميل: ${owner}\nالمنطقة: ${location}\nالمساحة: ${feddan} فدان\nالتاريخ: 2026-08-01\n\nتم إصدار التقرير إلكترونياً عبر منصة نيلوس الميدانية.`);
