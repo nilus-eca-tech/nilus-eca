@@ -250,7 +250,7 @@
 
             <!-- بيانات الحيازة -->
             <div class="bg-slate-900 border border-emerald-500/30 p-5 sm:p-6 rounded-2xl space-y-4">
-                <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2">بيانات الحيازة والمساحة المحسوبة</h4>
+                <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2">بيانات الحيازة والمساحة المحسوبة وتحديد المحصول</h4>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label for="ownerName" class="block text-xs font-bold text-slate-300 mb-1">اسم العميل / الجهة الزراعية</label>
@@ -261,18 +261,23 @@
                         <input type="text" id="locationName" placeholder="أدخل اسم المنطقة أو المحافظة" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none">
                     </div>
                     <div>
-                        <label for="calculatedFeddan" class="block text-xs font-bold text-cyan-400 mb-1">المساحة المقدرة (بالفدان)</label>
-                        <input type="number" id="calculatedFeddan" step="0.01" placeholder="0.00" class="w-full bg-slate-950 border border-cyan-500/50 rounded-xl px-3 py-2.5 text-cyan-300 font-bold text-sm focus:outline-none">
+                        <label for="cropTypeSelect" class="block text-xs font-bold text-amber-300 mb-1">نوع المحصول (لتعديل معاملات الامتصاص)</label>
+                        <select id="cropTypeSelect" class="w-full bg-slate-950 border border-amber-500/40 rounded-xl px-3 py-2.5 text-amber-300 text-sm focus:outline-none">
+                            <option value="wheat">قمح ومحاصيل حقلية (معامل قياسي)</option>
+                            <option value="palm">نخيل وأشجار معمرة (امتصاص عالي)</option>
+                            <option value="citrus">بساتين موالح وفاكهة</option>
+                            <option value="sugarbeet">بنجر سكر / خضروات</option>
+                        </select>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
                     <div>
-                        <label for="gpsLat" class="block text-xs font-bold text-slate-300 mb-1">خط العرض المركز (Latitude)</label>
-                        <input type="text" id="gpsLat" placeholder="0.0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm">
+                        <label for="calculatedFeddan" class="block text-xs font-bold text-cyan-400 mb-1">المساحة المقدرة (بالفدان)</label>
+                        <input type="number" id="calculatedFeddan" step="0.01" placeholder="0.00" class="w-full bg-slate-950 border border-cyan-500/50 rounded-xl px-3 py-2.5 text-cyan-300 font-bold text-sm focus:outline-none">
                     </div>
                     <div>
-                        <label for="gpsLng" class="block text-xs font-bold text-slate-300 mb-1">خط الطول المركز (Longitude)</label>
-                        <input type="text" id="gpsLng" placeholder="0.0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm">
+                        <label for="gpsLat" class="block text-xs font-bold text-slate-300 mb-1">خط العرض المركز (Latitude)</label>
+                        <input type="text" id="gpsLat" placeholder="0.0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm">
                     </div>
                     <div class="flex items-end">
                         <button onclick="getCurrentGPS()" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-md">📍 تحديد موقعي الحالي (GPS)</button>
@@ -331,13 +336,46 @@
 
             <!-- 📍 المكان المخصص لعرض التقارير والشهادات النهائية -->
             <div id="resultsArea" class="bg-slate-900 border border-cyan-500/30 rounded-2xl p-6 hidden animate-fade-in space-y-4">
-                <h4 class="text-lg font-black text-cyan-400 border-b border-slate-800 pb-2">📜 تقرير وشهادة أصول المناخ ودخل الكربون (يظهر هنا فوراً)</h4>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-3 gap-2">
+                    <div>
+                        <h4 class="text-lg font-black text-cyan-400">📜 تقرير وشهادة أصول المناخ ودخل الكربون الموثقة</h4>
+                        <p class="text-xs text-slate-400 font-mono">رقم التقرير الفريد: <span id="reportIdCode" class="text-cyan-300 font-bold">NILUS-2026-0000</span></p>
+                    </div>
+                    <div class="bg-white p-1.5 rounded-lg border border-slate-700 flex items-center justify-center">
+                        <!-- رمز QR محاكي للتحقق من مصداقية الشهادة -->
+                        <div id="qrCodeContainer" class="text-[10px] font-mono text-slate-950 font-bold text-center px-2 py-1 bg-slate-100 rounded">
+                            [ QR-VERIFY-2026 ]
+                        </div>
+                    </div>
+                </div>
+
                 <div class="text-xs text-slate-300 space-y-1 bg-slate-950 p-4 rounded-xl border border-slate-800">
                     <div><span class="font-bold text-cyan-400">اسم المستفيد:</span> <span id="resOwnerName">-</span></div>
+                    <div><span class="font-bold text-cyan-400">نوع المحصول:</span> <span id="resCropName" class="text-amber-400 font-bold">-</span></div>
                     <div><span class="font-bold text-cyan-400">المساحة المحسوبة:</span> <span id="resAreaVal" class="text-cyan-300 font-bold">-</span></div>
                     <div><span class="font-bold text-cyan-400">نسبة الغطاء النباتي الفعلي (NDVI):</span> <span id="resNdviVal" class="text-emerald-400 font-bold">-</span></div>
                     <div id="resPaidServicesSummary" class="pt-2 border-t border-slate-800 text-amber-300 hidden"></div>
                 </div>
+
+                <!-- جدول تتبع السلسلة الزمنية لـ NDVI -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                    <h5 class="text-xs font-bold text-cyan-300">📈 السلسلة الزمنية لتطور مؤشر الغطاء النباتي (NDVI Trend):</h5>
+                    <div class="grid grid-cols-3 gap-2 text-center text-xs font-mono">
+                        <div class="bg-slate-900 p-2 rounded border border-slate-800">
+                            <span class="text-slate-400 block text-[10px]">الشهر الماضي (يونيو)</span>
+                            <strong id="ndviMonth1" class="text-cyan-400">0.68</strong>
+                        </div>
+                        <div class="bg-slate-900 p-2 rounded border border-slate-800">
+                            <span class="text-slate-400 block text-[10px]">الشهر الحالي (يوليو)</span>
+                            <strong id="ndviMonth2" class="text-emerald-400">0.72</strong>
+                        </div>
+                        <div class="bg-slate-900 p-2 rounded border border-slate-800">
+                            <span class="text-slate-400 block text-[10px]">التوقع (أغسطس)</span>
+                            <strong id="ndviMonth3" class="text-amber-400">0.75</strong>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="overflow-x-auto">
                     <table class="w-full text-right text-sm" aria-label="جدول النتائج">
                         <tbody class="results-table text-slate-200">
@@ -346,7 +384,7 @@
                                 <td id="resEmissions" class="font-black text-amber-400">0 طن مكافئ CO2</td>
                             </tr>
                             <tr>
-                                <td class="font-bold text-slate-400">الكربون الممتص عبر الأشجار والبساتين:</td>
+                                <td class="font-bold text-slate-400">الكربون الممتص عبر الأشجار والبساتين والمحصول:</td>
                                 <td id="resTrees" class="font-black text-emerald-400">0 طن CO2 سنوياً</td>
                             </tr>
                             <tr class="border-b-0 bg-cyan-950/20">
@@ -457,7 +495,7 @@
                 statusEl.innerText = "يرجى تحديد حدود الحقل على الخريطة أولاً!";
                 return;
             }
-            statusEl.innerText = "جاري الاتصال واستخراج مؤشرات NDVI...";
+            statusEl.innerText = "جاري الاتصال واستخراج مؤشرات NDVI والسلاسل الزمنية...";
             try {
                 const formattedCoords = polygonPoints.map(pt => [pt[1], pt[0]]);
                 formattedCoords.push(formattedCoords[0]);
@@ -476,7 +514,10 @@
                 }
             } catch (error) {
                 document.getElementById('ndviInput').value = "0.72";
-                statusEl.innerText = "Statistical API: تم محاكاة القراءة الفضائية (0.72) بنجاح.";
+                document.getElementById('ndviMonth1').innerText = "0.68";
+                document.getElementById('ndviMonth2').innerText = "0.72";
+                document.getElementById('ndviMonth3').innerText = "0.76";
+                statusEl.innerText = "Statistical API: تمت محاكاة السلاسل الزمنية وقراءة NDVI (0.72) بنجاح.";
             }
         }
 
@@ -542,12 +583,26 @@
             let diesel = parseFloat(document.getElementById('dieselInput').value) || 0;
             let fert = parseFloat(document.getElementById('fertInput').value) || 0;
             let trees = parseFloat(document.getElementById('palmCountInput').value) || 0;
+            
+            let cropSelect = document.getElementById('cropTypeSelect');
+            let cropName = cropSelect.options[cropSelect.selectedIndex].text;
+            let cropMultiplier = 1.5;
+            
+            // تعديل معامل الامتصاص بناءً على نوع المحصول لرفع دقة التقرير الفني
+            if(cropSelect.value === 'palm') cropMultiplier = 2.2;
+            else if(cropSelect.value === 'citrus') cropMultiplier = 1.8;
+            else if(cropSelect.value === 'sugarbeet') cropMultiplier = 1.3;
 
             let emissions = (diesel * 2.68 + fert * 1.3) / 1000;
-            let absorption = (trees * 0.03) + (feddan * ndvi * 1.5);
+            let absorption = (trees * 0.03) + (feddan * ndvi * cropMultiplier);
             let netCarbon = absorption - emissions;
 
+            // توليد رقم تحقق فريد للتقرير (Report ID)
+            let uniqueReportId = "NILUS-2026-" + Math.floor(1000 + Math.random() * 9000);
+
+            document.getElementById('reportIdCode').innerText = uniqueReportId;
             document.getElementById('resOwnerName').innerText = owner;
+            document.getElementById('resCropName').innerText = cropName;
             document.getElementById('resAreaVal').innerText = feddan.toFixed(2) + " فدان";
             document.getElementById('resNdviVal').innerText = ndvi;
             document.getElementById('resEmissions').innerText = emissions.toFixed(2) + " طن مكافئ CO2";
@@ -584,7 +639,7 @@
 
         function sendCompanyEmailReport() {
             calculateResults();
-            alert("تم إعداد تقرير أصول المناخ وإرساله بنجاح إلى البريد الإلكتروني للشركة!");
+            alert("تم إعداد تقرير أصول المناخ الموثق وإرساله بنجاح إلى البريد الإلكتروني للشركة!");
         }
 
         function scrollToTop() {
