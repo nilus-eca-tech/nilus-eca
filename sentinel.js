@@ -1,106 +1,111 @@
-// وحدة مشتركة لكل استدعاءات Sentinel Hub Statistical API — تستخدمها كل من
-// /api/ndvi (القيمة الحالية) وخدمة الزراعة الذكية المدفوعة (سلسلة زمنية).
-// توحيد الكود هنا يضمن مشاركة توكن OAuth المخزّن مؤقتاً بدل طلب توكن جديد من كل مسار.
-
 const axios = require('axios');
-const qs = require('qs');
 
-const { SENTINEL_CLIENT_ID, SENTINEL_CLIENT_SECRET } = process.env;
+// الثوابت والمعرّفات الصحيحة الخاصة بالاتصال بمنصة Sentinel Hub
+const SENTINEL_CONFIG = {
+  clientId: 'sh-d9ee10c4-c640-4042-b1c6-e8fde81bf083',
+  clientSecret: 'qq0FQHtUIUeintaQ9xUIZ1bNr79n7LOG',
+  layerId: 'd52b179f-0358-43dd-b844-17e7602c696d'
+};
 
-const TOKEN_URL = 'https://identity.dataspace.copernicus.eu/auth/realms/CDSE/protocol/openid-connect/token';
-const STATISTICS_URL = 'https://sh.dataspace.copernicus.eu/statistics/v1';
-
-const NDVI_EVALSCRIPT = `
-//VERSION=3
-function setup() {
-  return {
-    input: [{ bands: ["B04", "B08", "SCL", "dataMask"] }],
-    output: [
-      { id: "data", bands: 1 },
-      { id: "dataMask", bands: 1 }
-    ]
-  };
-}
-function evaluatePixel(samples) {
-  let ndvi = (samples.B08 - samples.B04) / (samples.B08 + samples.B04);
-  let validNDVIMask = (samples.B08 + samples.B04) === 0 ? 0 : 1;
-  let noWaterMask = samples.SCL === 6 ? 0 : 1;
-  return {
-    data: [ndvi],
-    dataMask: [samples.dataMask * validNDVIMask * noWaterMask]
-  };
-}
-`;
-
-let cachedToken = null;
-let tokenExpiresAt = 0;
-
+// دالة لتوليد رمز الدخول (Access Token) باستخدام بيانات الاعتماد المباشرة
 async function getAccessToken() {
-  if (cachedToken && Date.now() < tokenExpiresAt - 60_000) {
-    return cachedToken;
+  const tokenUrl = 'https://services.sentinel-hub.com/oauth/token';
+  const params = new URLSearchParams();
+  params.append('grant_type', 'client_credentials');
+  params.append('client_id', SENTINEL_CONFIG.clientId);
+  params.append('client_secret', SENTINEL_CONFIG.clientSecret);
+
+  try {
+    const response = await axios.post(tokenUrl, params, {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    });
+    return response.data.access_token;
+  } catch (error) {
+    console.error('خطأ في المصادقة مع Sentinel Hub:', error.response?.data || error.message);
+    throw new Error('فشل الاتصال المصرح به مع خادم الأقمار الصناعية');
   }
-  const body = qs.stringify({
-    grant_type: 'client_credentials',
-    client_id:  sh-d9ee10c4-c640-4042-b1c6-e8fde81bf083
-    client_secret: qq0FQHtUIUeintaQ9xUIZ1bNr79n7LOG
-  });
-  const resp = await axios.post(TOKEN_URL, body, {
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-  });
-  cachedToken = resp.data.access_token;
-  tokenExpiresAt = Date.now() + resp.data.expires_in * 1000;
-  return cachedToken;
 }
 
-/**
- * @param {{lat:number,lng:number}[]} polygon
- * @param {string} from ISO date
- * @param {string} to ISO date
- * @param {string} aggregationOf - مثال 'P10D' (كل 10 أيام)
- * @returns {Promise<object>} الاستجابة الخام من Statistical API
- */
-async function fetchNdviIntervals(polygon, from, to, aggregationOf = 'P10D') {
-  const coords = polygon.map((p) => [Number(p.lng), Number(p.lat)]);
-  coords.push(coords[0]);
+// دالة لجلب فترات مؤشر NDVI للحقل بناءً على المضلع (Polygon)
+async function fetchNdviIntervals(polygonCoordinates, fromDate, toDate, resolution = 'P10D') {
+  const accessToken = await getAccessToken();
+  const statisticsUrl = 'https://services.sentinel-hub.com/api/v1/statistics';
 
-  const token = await getAccessToken();
+  // معادلة التقييم لاستخراج مؤشر NDVI وتصفية الغيوم
+  const evalscript = `
+    //VERSION=3
+    function evaluatePixel(samples) {
+      if ([3, 8, 9, 10].includes(samples.SCL)) {
+        return { ndvi: null, dataValid: 0 };
+      }
+      let ndvi = (samples.B08 - samples.B04) / (samples.B08 + samples.B04);
+      return { ndvi: isNaN(ndvi) ? null : ndvi, dataValid: 1 };
+    }
+  `;
 
-  const statsRequest = {
+  const payload = {
     input: {
       bounds: {
-        geometry: { type: 'Polygon', coordinates: [coords] },
-        properties: { crs: 'http://www.opengis.net/def/crs/OGC/1.3/CRS84' },
+        properties: { crs: 'http://www.opengis.net/def/crs/OGC/0/CRS84' },
+        geometry: {
+          type: 'Polygon',
+          coordinates: [polygonCoordinates],
+        },
       },
-      data: [{ type: 'sentinel-2-l2a', dataFilter: { mosaickingOrder: 'leastCC' } }],
+      data: [
+        {
+          type: 'sentinel-2-l2a',
+          dataFilter: { maxCloudCoverage: 30 },
+        },
+      ],
     },
     aggregation: {
-      timeRange: { from, to },
-      aggregationInterval: { of: aggregationOf },
-      evalscript: NDVI_EVALSCRIPT,
-      resx: 10,
-      resy: 10,
+      timeRange: {
+        from: `${fromDate}T00:00:00Z`,
+        to: `${toDate}T23:59:59Z`,
+      },
+      aggregationInterval: {
+        evalscript: evalscript,
+        evalscriptVersion: 3,
+        layerId: SENTINEL_CONFIG.layerId,
+        timeStep: resolution,
+      },
+    },
+    calculations: {
+      default: {
+        histograms: {
+          default: { bins: 10, range: [-1, 1] },
+        },
+      },
     },
   };
 
-  const resp = await axios.post(STATISTICS_URL, statsRequest, {
-    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-  });
-
-  return resp.data;
+  try {
+    const response = await axios.post(statisticsUrl, payload, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('خطأ أثناء جلب بيانات NDVI:', error.response?.data || error.message);
+    throw new Error('تعذر جلب إحصائيات الأقمار الصناعية للحقل');
+  }
 }
 
-/** يحوّل استجابة Statistical API الخام إلى مصفوفة { date, ndvi } مرتبة زمنياً، متجاهلاً الفترات المغطاة بالغيوم بالكامل */
-function extractValidIntervals(raw) {
-  const intervals = raw.data || [];
-  return intervals
-    .map((i) => {
-      const b0 = i.outputs?.data?.bands?.B0;
-      const hasValidData = b0?.stats && b0.stats.sampleCount > b0.stats.noDataCount;
-      return hasValidData
-        ? { date: i.interval.from, ndvi: Number(b0.stats.mean.toFixed(3)) }
-        : null;
-    })
-    .filter(Boolean);
+// دالة لاستخراج الفترات الصالحة وتصفية القيم المعدومة أو الفارغة
+function extractValidIntervals(rawNdviData) {
+  if (!rawNdviData) return [];
+  return rawNdviData
+    .filter((item) => item.outputs?.default?.bands?.ndvi?.stats?.mean != null)
+    .map((item) => ({
+      date: item.interval.from.split('T')[0],
+      ndvi: Number(item.outputs.default.bands.ndvi.stats.mean.toFixed(3)),
+    }));
 }
 
-module.exports = { fetchNdviIntervals, extractValidIntervals };
+module.exports = {
+  fetchNdviIntervals,
+  extractValidIntervals,
+};
