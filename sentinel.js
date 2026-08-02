@@ -41,8 +41,8 @@ async function getAccessToken() {
   }
   const body = qs.stringify({
     grant_type: 'client_credentials',
-    client_id: SENTINEL_CLIENT_ID,
-    client_secret: SENTINEL_CLIENT_SECRET,
+    client_id:  sh-d9ee10c4-c640-4042-b1c6-e8fde81bf083
+    client_secret: qq0FQHtUIUeintaQ9xUIZ1bNr79n7LOG
   });
   const resp = await axios.post(TOKEN_URL, body, {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
