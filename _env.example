@@ -1,8 +1,8 @@
 # انسخ هذا الملف إلى .env واملأ القيم — لا ترفع .env أبداً إلى Git
 
-# من Copernicus Data Space Ecosystem Dashboard > User Settings > OAuth Clients
-SENTINEL_CLIENT_ID=
-SENTINEL_CLIENT_SECRET=
+# بيانات Sentinel Hub الخاصة بك (محدثة وتعمل مباشرة)
+SENTINEL_CLIENT_ID=sh-e3d1bc13-fba4-4982-9b17-a27138b48a25
+SENTINEL_CLIENT_SECRET=UG3EDpmNRbkUBaYlZkMaZY7poCZ6Wx19
 
 # بيانات AWS S3 (استخدم IAM User مخصص بصلاحية s3:PutObject فقط على هذا الـ bucket)
 AWS_REGION=eu-central-1
@@ -42,4 +42,3 @@ SMTP_PORT=465
 SMTP_SECURE=true
 SMTP_USER=
 SMTP_PASS=
-
