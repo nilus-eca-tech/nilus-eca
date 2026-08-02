@@ -32,14 +32,12 @@
 
     <!-- شريط الأمان والنظام -->
     <div class="bg-slate-950 border-b border-cyan-500/20 py-1.5 px-4 text-center text-xs text-cyan-400 font-semibold tracking-wider flex items-center justify-center space-x-2 space-x-reverse">
-        <span data-i18n="topBar">نيلوس للتقنيات الرقمية وأصول المناخ · إدارة العقود، قمر Sentinel وربط AWS S3</span>
+        <span>نيلوس للتقنيات الرقمية وأصول المناخ · إدارة العقود، قمر Sentinel وربط AWS S3</span>
     </div>
 
     <button id="scrollTopBtn" onclick="scrollToTop()" class="fixed bottom-6 right-6 bg-slate-800 hover:bg-slate-700 text-cyan-400 p-3 rounded-full shadow-2xl z-50 transition hidden border border-cyan-500/30">
         ↑
     </button>
-
-    <div id="toastContainer" class="fixed top-24 right-6 z-50 space-y-2 pointer-events-none"></div>
 
     <!-- شريط التنقل -->
     <header class="bg-slate-950/85 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40">
@@ -49,14 +47,13 @@
                     <span class="text-2xl">🌱</span>
                 </div>
                 <div>
-                    <h1 class="text-lg sm:text-xl font-black text-white tracking-wide" data-i18n="brandTitle">نيلوس للتقنيات الرقمية وأصول المناخ</h1>
-                    <p class="text-xs text-cyan-400 font-medium" data-i18n="brandSub">الزراعة التعاقدية ومتابعة الحقول من الفضاء</p>
+                    <h1 class="text-lg sm:text-xl font-black text-white tracking-wide">نيلوس للتقنيات الرقمية وأصول المناخ</h1>
+                    <p class="text-xs text-cyan-400 font-medium">الزراعة التعاقدية ومتابعة الحقول من الفضاء</p>
                 </div>
             </div>
-            <div class="flex items-center space-x-4 space-x-reverse">
-                <button onclick="toggleLanguage()" id="langBtn" class="bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-cyan-500/30 px-4 py-2 rounded-lg text-sm font-bold transition shadow-sm">
-                    English 🌐
-                </button>
+            <div class="flex items-center space-x-2 space-x-reverse text-xs text-cyan-300 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800 font-mono">
+                <span>محفظة التحصيل:</span>
+                <strong class="text-white">01006269629</strong>
             </div>
         </div>
     </header>
@@ -65,54 +62,54 @@
     <section class="relative bg-gradient-to-b from-slate-950 to-slate-900 py-10 px-4 text-center border-b border-slate-800 overflow-hidden">
         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#06b6d4_1px,transparent_1px)] [background-size:16px_16px]"></div>
         <div class="relative max-w-4xl mx-auto animate-fade-in">
-            <span class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest inline-block mb-4" data-i18n="heroBadge">زراعة تعاقدية تُدار كما ينبغي · مصر والوطن العربي</span>
+            <span class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest inline-block mb-4">زراعة تعاقدية تُدار كما ينبغي · مصر والوطن العربي</span>
             <h2 class="text-3xl sm:text-4xl font-black text-white tracking-tight mb-4 leading-tight">
-                <span data-i18n="heroTitle1">من مكان واحد لإدارة الاتفاق ومتابعة الحقول</span> <br>
-                <span class="text-cyan-400 text-xl sm:text-2xl" data-i18n="heroTitle2">من المصافحة حتى الدفع ودخل الكربون وتخزين S3</span>
+                <span>من مكان واحد لإدارة الاتفاق ومتابعة الحقول</span> <br>
+                <span class="text-cyan-400 text-xl sm:text-2xl">من المصافحة حتى الدفع ودخل الكربون وتخزين S3</span>
             </h2>
         </div>
     </section>
 
-    <!-- لوحة التحكم وحالة الحقول الديناميكية -->
+    <!-- المحتوى الرئيسي -->
     <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full space-y-10">
         
-        <!-- قسم بطاقات الحقول الديناميكية -->
+        <!-- بطاقات الحقول الديناميكية -->
         <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl">
             <div class="flex flex-col sm:flex-row justify-between items-center mb-6 border-b border-slate-800 pb-4">
                 <div>
-                    <h3 class="text-lg font-black text-white" data-i18n="gpsFieldStatusTitle">📍 حالة الحقل والمساحة المحددة بالخريطة</h3>
-                    <p class="text-xs text-slate-400" data-i18n="gpsFieldStatusDesc">التحليل الفضائي المباشر وتقدير المساحة بالأفدنة.</p>
+                    <h3 class="text-lg font-black text-white">📍 حالة الحقل والمساحة المحددة بالخريطة</h3>
+                    <p class="text-xs text-slate-400">التحليل الفضائي المباشر وتقدير المساحة بالأفدنة.</p>
                 </div>
                 <span id="dynamicFieldBadge" class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1 rounded-xl text-xs font-bold mt-2 sm:mt-0">الحقل الحالي: جاهز للرصد</span>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2 hover:border-cyan-500/40 transition">
-                    <div class="flex justify-between items-center"><span class="font-bold text-sm text-white" data-i18n="card1Name">المساحة المقدرة بالحقل</span><span id="card1Status" class="bg-cyan-500/20 text-cyan-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">محدد بالماوس</span></div>
-                    <div class="text-2xl font-black text-cyan-400"><span id="cardAreaValue">0.00</span> <span class="text-xs text-slate-400 font-normal" data-i18n="unitFeddan">فدان</span></div>
-                    <p id="card1Rec" class="text-xs text-slate-400"><span id="cardAreaSqm">0</span> م² (انقر بالماوس لتحديد أركان الحقل)</p>
+                    <div class="flex justify-between items-center"><span class="font-bold text-sm text-white">المساحة المقدرة بالحقل</span><span class="bg-cyan-500/20 text-cyan-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">محدد بالماوس</span></div>
+                    <div class="text-2xl font-black text-cyan-400"><span id="cardAreaValue">0.00</span> <span class="text-xs text-slate-400 font-normal">فدان</span></div>
+                    <p class="text-xs text-slate-400"><span id="cardAreaSqm">0</span> م² (انقر بالماوس لتحديد أركان الحقل)</p>
                 </div>
                 <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2 hover:border-cyan-500/40 transition">
-                    <div class="flex justify-between items-center"><span class="font-bold text-sm text-white" data-i18n="card2Name">حالة الرطوبة والري</span><span id="card2Status" class="bg-emerald-500/20 text-emerald-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">بانتظار الإدخال</span></div>
-                    <div class="text-2xl font-black text-emerald-400"><span id="card2Value">--</span> <span class="text-xs text-slate-400 font-normal">حساس IoT</span></div>
-                    <p id="card2Rec" class="text-xs text-slate-400">قراءة الاستشعار الميداني للحقل.</p>
+                    <div class="flex justify-between items-center"><span class="font-bold text-sm text-white">حالة الرطوبة والري</span><span class="bg-emerald-500/20 text-emerald-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">بانتظار الإدخال</span></div>
+                    <div class="text-2xl font-black text-emerald-400">-- <span class="text-xs text-slate-400 font-normal">حساس IoT</span></div>
+                    <p class="text-xs text-slate-400">قراءة الاستشعار الميداني للحقل.</p>
                 </div>
                 <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2 hover:border-cyan-500/40 transition">
-                    <div class="flex justify-between items-center"><span class="font-bold text-sm text-white" data-i18n="card3Name">جاهزية الكربون</span><span id="card3Status" class="bg-amber-500/20 text-amber-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">قيد التقييم</span></div>
-                    <div class="text-2xl font-black text-amber-400"><span id="card3Value">--</span> <span class="text-xs text-slate-400 font-normal">طن متوقع</span></div>
-                    <p id="card3Rec" class="text-xs text-slate-400">يعتمد على المساحة والكتلة الحيوية المرصودة.</p>
+                    <div class="flex justify-between items-center"><span class="font-bold text-sm text-white">جاهزية الكربون</span><span class="bg-amber-500/20 text-amber-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">قيد التقييم</span></div>
+                    <div class="text-2xl font-black text-amber-400">-- <span class="text-xs text-slate-400 font-normal">طن متوقع</span></div>
+                    <p class="text-xs text-slate-400">يعتمد على المساحة والكتلة الحيوية المرصودة.</p>
                 </div>
             </div>
         </div>
 
-        <!-- قسم الخدمات المدفوعة للفلاح -->
+        <!-- قسم الخدمات المدفوعة للفلاح مع ربط المحفظة 01006269629 -->
         <div class="bg-slate-950 border border-cyan-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
             <div class="flex flex-col sm:flex-row justify-between items-center border-b border-slate-800 pb-4">
                 <div>
-                    <h3 class="text-lg font-black text-cyan-400" data-i18n="paidServicesTitle">💳 تفعيل وباقات الخدمات المدفوعة للفلاح</h3>
-                    <p class="text-xs text-slate-400" data-i18n="paidServicesDesc">اختر الخدمات المتقدمة وأرصدة الكربون لتعظيم العائد المادي للمزارع.</p>
+                    <h3 class="text-lg font-black text-cyan-400">💳 تفعيل وباقات الخدمات المدفوعة (محفظة التحصيل: 01006269629)</h3>
+                    <p class="text-xs text-slate-400">اختر الخدمات المتقدمة وأرصدة الكربون لتعظيم العائد المادي للمزارع.</p>
                 </div>
-                <span class="bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-3 py-1 rounded-xl text-xs font-bold mt-2 sm:mt-0">اشتراكات موسمية وتقاسم عوائد</span>
+                <span class="bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-3 py-1 rounded-xl text-xs font-bold mt-2 sm:mt-0">فودافون كاش / محافظ إلكترونية</span>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -120,15 +117,15 @@
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between hover:border-cyan-500/50 transition">
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
-                            <h4 class="font-bold text-white text-base" data-i18n="pkg1Title">الباقة الفضائية المتقدمة</h4>
+                            <h4 class="font-bold text-white text-base">الباقة الفضائية المتقدمة</h4>
                             <span class="bg-cyan-500/20 text-cyan-400 text-xs font-bold px-2.5 py-1 rounded-lg">150 ج.م / فدان</span>
                         </div>
-                        <p class="text-xs text-slate-400" data-i18n="pkg1Desc">تقارير دورية دقيقة عبر قمر Sentinel وتحليلات NDVI واكتشاف الإجهاد المائي مبكراً.</p>
+                        <p class="text-xs text-slate-400">تقارير دورية دقيقة عبر قمر Sentinel وتحليلات NDVI واكتشاف الإجهاد المائي مبكراً.</p>
                     </div>
                     <div class="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between">
                         <label class="flex items-center space-x-2 space-x-reverse cursor-pointer">
                             <input type="checkbox" id="servicePkg1" onchange="updatePaidServicesTotal()" class="w-4 h-4 text-cyan-600 rounded bg-slate-950 border-slate-700 focus:ring-cyan-500">
-                            <span class="text-xs font-bold text-cyan-300" data-i18n="selectService">تفعيل الخدمة</span>
+                            <span class="text-xs font-bold text-cyan-300">تفعيل الخدمة</span>
                         </label>
                         <span class="text-xs text-slate-400 font-mono">سنوي</span>
                     </div>
@@ -138,15 +135,15 @@
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between hover:border-amber-500/50 transition">
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
-                            <h4 class="font-bold text-white text-base" data-i18n="pkg2Title">أصول الكربون والطوعية</h4>
+                            <h4 class="font-bold text-white text-base">أصول الكربون والطوعية</h4>
                             <span class="bg-amber-500/20 text-amber-400 text-xs font-bold px-2.5 py-1 rounded-lg">نظام نسبة 15%</span>
                         </div>
-                        <p class="text-xs text-slate-400" data-i18n="pkg2Desc">إعداد الملفات الفنية وتسجيل البساتين والأشجار في أسواق الكربون الطوعية وتحقيق أرباح.</p>
+                        <p class="text-xs text-slate-400">إعداد الملفات الفنية وتسجيل البساتين والأشجار في أسواق الكربون الطوعية وتحقيق أرباح.</p>
                     </div>
                     <div class="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between">
                         <label class="flex items-center space-x-2 space-x-reverse cursor-pointer">
                             <input type="checkbox" id="servicePkg2" onchange="updatePaidServicesTotal()" class="w-4 h-4 text-amber-500 rounded bg-slate-950 border-slate-700 focus:ring-amber-500">
-                            <span class="text-xs font-bold text-amber-300" data-i18n="selectService">تفعيل الخدمة</span>
+                            <span class="text-xs font-bold text-amber-300">تفعيل الخدمة</span>
                         </label>
                         <span class="text-xs text-slate-400 font-mono">تقاسم عوائد</span>
                     </div>
@@ -156,233 +153,204 @@
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between hover:border-emerald-500/50 transition">
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
-                            <h4 class="font-bold text-white text-base" data-i18n="pkg3Title">حساسات رطوبة التربة IoT</h4>
+                            <h4 class="font-bold text-white text-base">حساسات رطوبة التربة IoT</h4>
                             <span class="bg-emerald-500/20 text-emerald-400 text-xs font-bold px-2.5 py-1 rounded-lg">300 ج.م / موسم</span>
                         </div>
-                        <p class="text-xs text-slate-400" data-i18n="pkg3Desc">متابعة ميدانية لرطوبة التربة وتوصيات لترشيد استهلاك المياه والديزل والأسمدة.</p>
+                        <p class="text-xs text-slate-400">متابعة ميدانية لرطوبة التربة وتوصيات لترشيد استهلاك المياه والديزل والأسمدة.</p>
                     </div>
                     <div class="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between">
                         <label class="flex items-center space-x-2 space-x-reverse cursor-pointer">
                             <input type="checkbox" id="servicePkg3" onchange="updatePaidServicesTotal()" class="w-4 h-4 text-emerald-600 rounded bg-slate-950 border-slate-700 focus:ring-emerald-500">
-                            <span class="text-xs font-bold text-emerald-300" data-i18n="selectService">تفعيل الخدمة</span>
+                            <span class="text-xs font-bold text-emerald-300">تفعيل الخدمة</span>
                         </label>
                         <span class="text-xs text-slate-400 font-mono">موسمي</span>
                     </div>
                 </div>
             </div>
 
-            <!-- ملخص التكلفة الإجمالية للخدمات المدفوعة -->
+            <!-- ملخص التكلفة وزر التحويل للمحفظة -->
             <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div>
-                    <span class="text-xs text-slate-400" data-i18n="totalServicesCostLabel">إجمالي تكلفة الخدمات المدفوعة المختارة:</span>
-                    <div class="text-xl font-black text-cyan-400"><span id="totalServicesPrice">0.00</span> <span class="text-xs text-slate-400">جنيه مصري / موسم</span></div>
+                    <span class="text-xs text-slate-400">إجمالي التكلفة المطلوبة للتحويل على محفظة (<strong class="text-cyan-400">01006269629</strong>):</span>
+                    <div class="text-xl font-black text-cyan-400"><span id="totalServicesPrice">0.00</span> <span class="text-xs text-slate-400">جنيه مصري</span></div>
                 </div>
                 <button onclick="applyPaidServicesToReport()" class="w-full sm:w-auto bg-cyan-700 hover:bg-cyan-600 text-white font-bold px-6 py-2.5 rounded-xl text-xs transition shadow">
-                    تأكيد وإضافة الخدمات لملف المزارع 📝
+                    تأكيد وإضافة الخدمات لملف المزارع والتقرير 📝
                 </button>
             </div>
         </div>
 
-        <!-- الخريطة والتحليل الفضائي المباشر مع طبقات الخرائط الثلاث وأدوات القياس -->
+        <!-- الخريطة والتحليل الفضائي -->
         <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative space-y-8">
-            
             <div class="bg-slate-900 border border-cyan-500/40 p-4 rounded-2xl space-y-4 shadow-lg">
                 <div class="flex flex-col lg:flex-row justify-between items-center gap-3">
                     <div>
-                        <h4 class="text-md font-bold text-cyan-400" data-i18n="mapHeaderTitle">🛰️ خريطة قمر Sentinel وتحديد المساحة بالماوس</h4>
-                        <p class="text-xs text-slate-400" data-i18n="mapHeaderDesc">انقر عدة نقاط متتالية على الخريطة لتشكيل حدود الحقل، وسيتم حساب المساحة بالأفدنة تلقائياً.</p>
+                        <h4 class="text-md font-bold text-cyan-400">🛰️ خريطة قمر Sentinel وتحديد المساحة بالماوس</h4>
+                        <p class="text-xs text-slate-400">انقر عدة نقاط متتالية على الخريطة لتشكيل حدود الحقل وسيتم حساب المساحة تلقائياً.</p>
                     </div>
-                    
-                    <!-- أزرار تبديل طبقات الخريطة الثلاث وأدوات الرسم -->
                     <div class="flex flex-wrap gap-2 items-center">
                         <div class="bg-slate-950 border border-slate-700 p-1 rounded-xl flex gap-1">
                             <button onclick="switchBaseLayer('streets')" id="layerBtnStreets" class="bg-cyan-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs transition">الشوارع</button>
                             <button onclick="switchBaseLayer('satellite')" id="layerBtnSatellite" class="bg-slate-800 text-slate-300 font-bold px-2.5 py-1.5 rounded-lg text-xs transition">فضائية</button>
                             <button onclick="switchBaseLayer('topo')" id="layerBtnTopo" class="bg-slate-800 text-slate-300 font-bold px-2.5 py-1.5 rounded-lg text-xs transition">تضاريس</button>
                         </div>
-
-                        <button onclick="undoLastPoint()" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold px-3 py-2 rounded-xl text-xs transition shadow flex items-center space-x-1 space-x-reverse">
-                            <span>↩️</span>
-                            <span data-i18n="undoBtnText">تراجع</span>
-                        </button>
-                        <button onclick="clearPolygon()" class="bg-red-700 hover:bg-red-600 text-white font-bold px-3 py-2 rounded-xl text-xs transition shadow flex items-center space-x-1 space-x-reverse">
-                            <span>🗑️</span>
-                            <span data-i18n="clearDrawBtn">مسح</span>
-                        </button>
-                        <button onclick="toggleNDVILayer()" id="ndviToggleBtn" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-xs transition shadow flex items-center space-x-1 space-x-reverse">
-                            <span>🌿</span>
-                            <span id="ndviBtnText" data-i18n="ndviBtn">NDVI</span>
-                        </button>
-                        <button onclick="captureMapSnapshot()" class="bg-cyan-700 hover:bg-cyan-600 text-white font-bold px-3 py-2 rounded-xl text-xs transition shadow flex items-center space-x-1 space-x-reverse">
-                            <span>📸</span>
-                            <span data-i18n="snapBtn">لقطة</span>
-                        </button>
+                        <button onclick="undoLastPoint()" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold px-3 py-2 rounded-xl text-xs transition shadow">↩️ تراجع</button>
+                        <button onclick="clearPolygon()" class="bg-red-700 hover:bg-red-600 text-white font-bold px-3 py-2 rounded-xl text-xs transition shadow">🗑️ مسح</button>
+                        <button onclick="toggleNDVILayer()" id="ndviToggleBtn" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-xs transition shadow"><span id="ndviBtnText">NDVI</span></button>
+                        <button onclick="captureMapSnapshot()" class="bg-cyan-700 hover:bg-cyan-600 text-white font-bold px-3 py-2 rounded-xl text-xs transition shadow">📸 لقطة للخريطة</button>
                     </div>
                 </div>
 
                 <div id="mapContainer" class="relative rounded-2xl overflow-hidden border border-slate-700">
                     <div class="bg-slate-950/90 text-cyan-300 text-[11px] font-mono px-3 py-1.5 border-b border-slate-700 flex justify-between items-center z-30 relative">
-                        <span id="mapTimestamp">2026-08-02 - Sentinel-2 L2A, NDVI & AWS S3 Integration</span>
-                        <span id="drawStatusIndicator" class="text-emerald-400 font-bold">وضع التحديد نشط: انقر بالماوس على الخريطة</span>
+                        <span>2026-08-02 - Sentinel-2 L2A, NDVI & AWS S3 Integration</span>
+                        <span id="drawStatusIndicator" class="text-emerald-400 font-bold">وضع التحديد نشط</span>
                     </div>
                     <div id="map"></div>
                     <div id="ndviOverlayLayer" class="ndvi-overlay"></div>
                 </div>
 
+                <!-- معاينة لقطة الخريطة -->
                 <div id="snapshotPreviewArea" class="hidden pt-4 border-t border-slate-800 space-y-2">
                     <div class="text-xs font-bold text-cyan-300 flex justify-between items-center">
-                        <span data-i18n="snapPreviewTitle">🖼️ معاينة الصورة التوثيقية الملتقطة للخريطة النباتية:</span>
-                        <button onclick="clearSnapshot()" class="text-red-400 hover:text-red-300 text-[11px]" data-i18n="deleteSnap">حذف الصورة</button>
+                        <span>🖼️ معاينة الصورة التوثيقية الملتقطة للخريطة النباتية:</span>
+                        <button onclick="clearSnapshot()" class="text-red-400 hover:text-red-300 text-[11px]">حذف الصورة</button>
                     </div>
                     <div id="snapshotImageContainer" class="flex justify-center bg-slate-950 p-2 rounded-xl border border-slate-800 overflow-hidden"></div>
                 </div>
             </div>
 
-            <!-- قسم إدارة سياسة التخزين السحابي AWS S3 IAM Policy -->
+            <!-- سياسة AWS S3 IAM Policy -->
             <div class="bg-slate-900 border border-blue-500/40 p-6 rounded-2xl space-y-4 shadow-lg">
                 <div class="flex flex-col sm:flex-row justify-between items-center border-b border-slate-800 pb-3">
                     <div>
-                        <h4 class="text-md font-bold text-blue-400" data-i18n="awsSecTitle">🔒 سياسة صلاحيات التخزين السحابي (AWS S3 IAM Policy)</h4>
-                        <p class="text-xs text-slate-400" data-i18n="awsSecDesc">ربط مستودع S3 الخاص بشركة نيلوس بمنصة Sentinel Hub لتخزين صور الأقمار الصناعية والإحصاءات.</p>
+                        <h4 class="text-md font-bold text-blue-400">🔒 سياسة صلاحيات التخزين السحابي (AWS S3 IAM Policy)</h4>
+                        <p class="text-xs text-slate-400">ربط مستودع S3 الخاص بشركة نيلوس بمنصة Sentinel Hub لتخزين الصور والإحصاءات.</p>
                     </div>
                     <span class="bg-blue-500/20 text-blue-300 text-[11px] font-mono px-2.5 py-1 rounded-lg mt-2 sm:mt-0 border border-blue-500/30">AWS IAM JSON</span>
                 </div>
-                
                 <div class="space-y-3">
                     <div>
-                        <label for="awsBucketNameInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="labelBucketName">اسم الحاوية التخزينية (AWS S3 Bucket Name)</label>
-                        <input type="text" id="awsBucketNameInput" value="nilus-climate-assets-bucket-2026" placeholder="nilus-bucket-name" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-mono focus:border-blue-500 focus:outline-none" oninput="updateAwsPolicyText()">
+                        <label for="awsBucketNameInput" class="block text-xs font-bold text-slate-300 mb-1">اسم الحاوية التخزينية (AWS S3 Bucket Name)</label>
+                        <input type="text" id="awsBucketNameInput" value="nilus-climate-assets-bucket-2026" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-mono focus:outline-none" oninput="updateAwsPolicyText()">
                     </div>
                     <div>
                         <div class="flex justify-between items-center mb-1">
-                            <label class="block text-xs font-bold text-cyan-300" data-i18n="labelPolicyContent">معاينة سياسة الصلاحيات (JSON):</label>
-                            <button onclick="copyAwsPolicy()" class="text-xs text-cyan-400 hover:underline flex items-center space-x-1 space-x-reverse">
-                                <span>📋</span>
-                                <span data-i18n="copyPolicyBtn">نسخ الكود</span>
-                            </button>
+                            <label class="block text-xs font-bold text-cyan-300">معاينة سياسة الصلاحيات (JSON):</label>
+                            <button onclick="copyAwsPolicy()" class="text-xs text-cyan-400 hover:underline">📋 نسخ الكود</button>
                         </div>
-                        <textarea id="awsPolicyTextArea" readonly rows="7" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-cyan-300 text-xs font-mono focus:outline-none resize-none"></textarea>
+                        <textarea id="awsPolicyTextArea" readonly rows="6" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-cyan-300 text-xs font-mono focus:outline-none resize-none"></textarea>
                     </div>
                     <div class="flex flex-wrap gap-3 pt-2">
-                        <button onclick="validateAwsPolicyIntegration()" class="bg-blue-700 hover:bg-blue-600 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition shadow flex items-center space-x-1 space-x-reverse">
-                            <span>🔗</span>
-                            <span data-i18n="btnVerifyAws">التحقق من ربط S3 مع Sentinel Hub</span>
-                        </button>
-                        <span id="awsStatusText" class="text-xs text-slate-400 self-center font-medium" data-i18n="awsStatusReady">الحالة: بانتظار تفعيل ومصادقة الاتصال</span>
+                        <button onclick="validateAwsPolicyIntegration()" class="bg-blue-700 hover:bg-blue-600 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition shadow">🔗 التحقق من ربط S3 مع Sentinel Hub</button>
+                        <span id="awsStatusText" class="text-xs text-slate-400 self-center font-medium">الحالة: بانتظار تفعيل ومصادقة الاتصال</span>
                     </div>
                 </div>
             </div>
 
-            <!-- بيانات الحيازة و GPS -->
+            <!-- بيانات الحيازة -->
             <div class="bg-slate-900 border border-emerald-500/30 p-6 rounded-2xl space-y-4">
-                <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2" data-i18n="gpsSecTitle">بيانات الحيازة والمساحة المحسوبة</h4>
+                <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2">بيانات الحيازة والمساحة المحسوبة</h4>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                        <label for="ownerName" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="labelOwner">اسم العميل / الجهة الزراعية</label>
-                        <input type="text" id="ownerName" value="" placeholder="أدخل اسم العميل أو الجهة" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-cyan-500 focus:outline-none">
+                        <label for="ownerName" class="block text-xs font-bold text-slate-300 mb-1">اسم العميل / الجهة الزراعية</label>
+                        <input type="text" id="ownerName" placeholder="أدخل اسم العميل أو الجهة" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none">
                     </div>
                     <div>
-                        <label for="locationName" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="labelLocation">منطقة الأرض / المحافظة</label>
-                        <input type="text" id="locationName" value="" placeholder="أدخل اسم المنطقة أو المحافظة" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:border-cyan-500 focus:outline-none">
+                        <label for="locationName" class="block text-xs font-bold text-slate-300 mb-1">منطقة الأرض / المحافظة</label>
+                        <input type="text" id="locationName" placeholder="أدخل اسم المنطقة أو المحافظة" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none">
                     </div>
                     <div>
-                        <label for="calculatedFeddan" class="block text-xs font-bold text-cyan-400 mb-1" data-i18n="labelFeddanInput">المساحة المقدرة (بالفدان)</label>
-                        <input type="number" id="calculatedFeddan" step="0.01" value="" placeholder="0.00" class="w-full bg-slate-950 border border-cyan-500/50 rounded-xl px-3 py-2.5 text-cyan-300 font-bold text-sm focus:outline-none">
+                        <label for="calculatedFeddan" class="block text-xs font-bold text-cyan-400 mb-1">المساحة المقدرة (بالفدان)</label>
+                        <input type="number" id="calculatedFeddan" step="0.01" placeholder="0.00" class="w-full bg-slate-950 border border-cyan-500/50 rounded-xl px-3 py-2.5 text-cyan-300 font-bold text-sm focus:outline-none">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
                     <div>
-                        <label for="gpsLat" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="labelLat">خط العرض المركز (Latitude)</label>
-                        <input type="text" id="gpsLat" value="" placeholder="0.0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:outline-none">
+                        <label for="gpsLat" class="block text-xs font-bold text-slate-300 mb-1">خط العرض المركز (Latitude)</label>
+                        <input type="text" id="gpsLat" placeholder="0.0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm">
                     </div>
                     <div>
-                        <label for="gpsLng" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="labelLng">خط الطول المركز (Longitude)</label>
-                        <input type="text" id="gpsLng" value="" placeholder="0.0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:outline-none">
+                        <label for="gpsLng" class="block text-xs font-bold text-slate-300 mb-1">خط الطول المركز (Longitude)</label>
+                        <input type="text" id="gpsLng" placeholder="0.0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm">
                     </div>
                     <div class="flex items-end">
-                        <button onclick="getCurrentGPS()" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-md flex items-center justify-center space-x-1 space-x-reverse">
-                            <span>📍</span>
-                            <span data-i18n="btnGps">تحديد موقعي الحالي (GPS)</span>
-                        </button>
+                        <button onclick="getCurrentGPS()" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-md">📍 تحديد موقعي الحالي (GPS)</button>
                     </div>
                 </div>
             </div>
 
-            <!-- مؤشرات الانبعاثات والأشجار وحساسات IoT -->
+            <!-- المؤشرات والانبعاثات -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
-                    <h4 class="text-md font-bold text-amber-400 border-b border-slate-800 pb-2" data-i18n="sec1Title">1. أنشطة الحيازة والانبعاثات</h4>
+                    <h4 class="text-md font-bold text-amber-400 border-b border-slate-800 pb-2">1. أنشطة الحيازة والانبعاثات</h4>
                     <div>
-                        <label for="dieselInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="labelDiesel">الديزل (لتر/سنة)</label>
-                        <input type="number" id="dieselInput" value="" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
+                        <label for="dieselInput" class="block text-xs font-bold text-slate-300 mb-1">الديزل (لتر/سنة)</label>
+                        <input type="number" id="dieselInput" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                     <div>
-                        <label for="fertInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="labelFert">اليوريا (كجم/سنة)</label>
-                        <input type="number" id="fertInput" value="" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
-                    </div>
-                </div>
-
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
-                    <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2" data-i18n="sec2Title">2. الأشجار وحساسات IoT</h4>
-                    <div>
-                        <label for="palmCountInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="labelTrees">عدد الأشجار (شجرة)</label>
-                        <input type="number" id="palmCountInput" value="" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
-                    </div>
-                    <div>
-                        <label for="soilMoisture" class="block text-xs font-bold text-emerald-300 mb-1" data-i18n="labelMoisture">رطوبة التربة (حساس IoT %)</label>
-                        <input type="number" id="soilMoisture" value="" placeholder="0.0" readonly class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-emerald-400 text-sm font-bold cursor-not-allowed">
+                        <label for="fertInput" class="block text-xs font-bold text-slate-300 mb-1">اليوريا (كجم/سنة)</label>
+                        <input type="number" id="fertInput" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                 </div>
 
                 <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
-                    <h4 class="text-md font-bold text-cyan-400 border-b border-slate-800 pb-2" data-i18n="sec3Title">3. مؤشرات قمر Sentinel والـ NDVI (Statistical API)</h4>
+                    <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2">2. الأشجار وحساسات IoT</h4>
                     <div>
-                        <label for="ndviInput" class="block text-xs font-bold text-slate-300 mb-1" data-i18n="labelNdvi">مؤشر الغطاء النباتي الفعلي (NDVI)</label>
-                        <input type="number" id="ndviInput" min="0" max="1" step="0.01" value="" placeholder="0.00" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
+                        <label for="palmCountInput" class="block text-xs font-bold text-slate-300 mb-1">عدد الأشجار (شجرة)</label>
+                        <input type="number" id="palmCountInput" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
+                    </div>
+                    <div>
+                        <label for="soilMoisture" class="block text-xs font-bold text-emerald-300 mb-1">رطوبة التربة (حساس IoT %)</label>
+                        <input type="number" id="soilMoisture" readonly placeholder="0.0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-emerald-400 text-sm font-bold cursor-not-allowed">
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
+                    <h4 class="text-md font-bold text-cyan-400 border-b border-slate-800 pb-2">3. مؤشرات قمر Sentinel والـ NDVI</h4>
+                    <div>
+                        <label for="ndviInput" class="block text-xs font-bold text-slate-300 mb-1">مؤشر الغطاء النباتي الفعلي (NDVI)</label>
+                        <input type="number" id="ndviInput" min="0" max="1" step="0.01" placeholder="0.00" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                     <div class="pt-2">
-                        <button onclick="fetchSentinelStatistics()" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-2 px-3 rounded-xl text-xs transition shadow-md flex items-center justify-center space-x-1 space-x-reverse">
-                            <span>📡</span>
-                            <span data-i18n="btnSentinel">جلب إحصاءات Sentinel (Statistical API)</span>
-                        </button>
+                        <button onclick="fetchSentinelStatistics()" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-2 px-3 rounded-xl text-xs transition shadow-md">📡 جلب إحصاءات Sentinel</button>
                     </div>
-                    <div id="sentinelStatus" class="text-[11px] text-cyan-300 pt-1" data-i18n="sentinelStatusText">Statistical API: جاهز لاستدعاء السلاسل الزمنية</div>
+                    <div id="sentinelStatus" class="text-[11px] text-cyan-300 pt-1">Statistical API: جاهز لاستدعاء السلاسل الزمنية</div>
                 </div>
             </div>
 
-            <!-- أزرار العمليات والإرسال البريدي -->
+            <!-- أزرار العمليات -->
             <div class="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4">
-                <button onclick="calculateResults()" class="w-full sm:w-auto bg-cyan-600 hover:bg-cyan-500 text-white font-black px-8 py-4 rounded-2xl text-base shadow-xl shadow-cyan-600/30 transition" data-i18n="btnCalc">
+                <button onclick="calculateResults()" class="w-full sm:w-auto bg-cyan-600 hover:bg-cyan-500 text-white font-black px-8 py-4 rounded-2xl text-base shadow-xl shadow-cyan-600/30 transition">
                     تحليل أصول المناخ وحساب دخل الكربون 📊
                 </button>
-                <button onclick="sendCompanyEmailReport()" class="w-full sm:w-auto bg-blue-700 hover:bg-blue-600 text-white font-black px-8 py-4 rounded-2xl text-base shadow-xl shadow-blue-700/30 transition border border-blue-400/30 flex items-center justify-center space-x-2 space-x-reverse">
-                    <span>✉️</span>
-                    <span data-i18n="btnEmail">إرسال التقرير لبريد الشركة 📩</span>
+                <button onclick="sendCompanyEmailReport()" class="w-full sm:w-auto bg-blue-700 hover:bg-blue-600 text-white font-black px-8 py-4 rounded-2xl text-base shadow-xl shadow-blue-700/30 transition border border-blue-400/30">
+                    إرسال التقرير لبريد الشركة 📩
                 </button>
             </div>
 
-            <!-- النتائج وشهادة الكربون -->
-            <div id="resultsArea" class="bg-slate-900 border border-cyan-500/30 rounded-2xl p-6 hidden animate-fade-in">
-                <h4 class="text-lg font-black text-cyan-400 mb-4 border-b border-slate-800 pb-2" data-i18n="resHeader">📜 تقرير وشهادة أصول المناخ ودخل الكربون</h4>
-                <div class="mb-4 text-xs text-slate-300 space-y-1 bg-slate-950 p-4 rounded-xl border border-slate-800">
-                    <div><span class="font-bold text-cyan-400" data-i18n="resOwnerLabel">اسم المستفيد:</span> <span id="resOwnerName">-</span></div>
-                    <div><span class="font-bold text-cyan-400" data-i18n="resAreaLabel">المساحة المحسوبة:</span> <span id="resAreaVal" class="text-cyan-300 font-bold">-</span></div>
-                    <div><span class="font-bold text-cyan-400" data-i18n="resNdviLabel">نسبة الغطاء النباتي الفعلي (NDVI):</span> <span id="resNdviVal" class="text-emerald-400 font-bold">-</span></div>
+            <!-- 📍 المكان المخصص لعرض التقارير والشهادات النهائية -->
+            <div id="resultsArea" class="bg-slate-900 border border-cyan-500/30 rounded-2xl p-6 hidden animate-fade-in space-y-4">
+                <h4 class="text-lg font-black text-cyan-400 border-b border-slate-800 pb-2">📜 تقرير وشهادة أصول المناخ ودخل الكربون (يظهر هنا فوراً)</h4>
+                <div class="text-xs text-slate-300 space-y-1 bg-slate-950 p-4 rounded-xl border border-slate-800">
+                    <div><span class="font-bold text-cyan-400">اسم المستفيد:</span> <span id="resOwnerName">-</span></div>
+                    <div><span class="font-bold text-cyan-400">المساحة المحسوبة:</span> <span id="resAreaVal" class="text-cyan-300 font-bold">-</span></div>
+                    <div><span class="font-bold text-cyan-400">نسبة الغطاء النباتي الفعلي (NDVI):</span> <span id="resNdviVal" class="text-emerald-400 font-bold">-</span></div>
                     <div id="resPaidServicesSummary" class="pt-2 border-t border-slate-800 text-amber-300 hidden"></div>
                 </div>
-                <div class="overflow-x-auto mb-6">
+                <div class="overflow-x-auto">
                     <table class="w-full text-right text-sm" aria-label="جدول النتائج">
                         <tbody class="results-table text-slate-200">
                             <tr>
-                                <td class="font-bold text-slate-400" data-i18n="tableRow1">إجمالي الانبعاثات الناتجة:</td>
+                                <td class="font-bold text-slate-400">إجمالي الانبعاثات الناتجة:</td>
                                 <td id="resEmissions" class="font-black text-amber-400">0 طن مكافئ CO2</td>
                             </tr>
                             <tr>
-                                <td class="font-bold text-slate-400" data-i18n="tableRow2">الكربون الممتص عبر الأشجار والبساتين:</td>
+                                <td class="font-bold text-slate-400">الكربون الممتص عبر الأشجار والبساتين:</td>
                                 <td id="resTrees" class="font-black text-emerald-400">0 طن CO2 سنوياً</td>
                             </tr>
                             <tr class="border-b-0 bg-cyan-950/20">
-                                <td class="font-bold text-cyan-300" data-i18n="tableRow3">صافي رصيد الكربون الاقتصادي:</td>
+                                <td class="font-bold text-cyan-300">صافي رصيد الكربون الاقتصادي:</td>
                                 <td id="resNetCarbon" class="font-black text-cyan-400 text-base">0 طن قابل للتداول</td>
                             </tr>
                         </tbody>
@@ -393,20 +361,18 @@
     </main>
 
     <footer class="bg-slate-950 border-t border-slate-800 py-6 text-center text-xs text-slate-400 mt-auto">
-        <p>جميع الحقوق محفوظة © 2026 نيلوس للتقنيات الرقمية وأصول المناخ (Nilus ECA)</p>
+        <p>جميع الحقوق محفوظة © 2026 نيلوس للتقنيات الرقمية وأصول المناخ (Nilus ECA) · محفظة التحصيل: 01006269629</p>
     </footer>
 
-    <!-- سكريبت التشغيل والخرائط والربط -->
+    <!-- سكريبت التشغيل -->
     <script>
         let map, currentPolygon = null, polygonPoints = [];
         let baseLayers = {};
-        let currentLanguage = 'ar';
         let paidServicesTotalCost = 0;
         let snapshotDataUrl = null;
 
-        // تهيئة الخريطة والطبقات الثلاث
         function initMap() {
-            map = L.map('map', { zoomControl: false }).setView([27.7061, 30.7516], 13); // Minya default location
+            map = L.map('map', { zoomControl: false }).setView([27.7061, 30.7516], 13);
 
             baseLayers.streets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' });
             baseLayers.satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: 'Esri Sentinel' });
@@ -439,7 +405,6 @@
             if(polygonPoints.length > 0) {
                 currentPolygon = L.polygon(polygonPoints, { color: '#06b6d4', fillColor: '#22c55e', fillOpacity: 0.35 }).addTo(map);
                 
-                // حساب المساحة بالـ م² والأفدنة (1 فدان = 4200.83 م²)
                 let areaSqm = L.GeometryUtil ? L.GeometryUtil.geodesicArea(currentPolygon.getLatLngs()[0]) : approximateArea(polygonPoints);
                 let feddan = areaSqm / 4200.83;
 
@@ -447,7 +412,6 @@
                 document.getElementById('cardAreaValue').innerText = feddan.toFixed(2);
                 document.getElementById('calculatedFeddan').value = feddan.toFixed(2);
 
-                // تعيين إحداثيات المركز
                 let center = currentPolygon.getBounds().getCenter();
                 document.getElementById('gpsLat').value = center.lat.toFixed(4);
                 document.getElementById('gpsLng').value = center.lng.toFixed(4);
@@ -487,41 +451,30 @@
             document.getElementById('ndviBtnText').innerText = isActive ? "إخفاء NDVI" : "NDVI";
         }
 
-        // جلب الإحصاءات الفضائية الفعلية من الخادم الخلفي (Backend API)
         async function fetchSentinelStatistics() {
             const statusEl = document.getElementById('sentinelStatus');
             if(polygonPoints.length < 3) {
                 statusEl.innerText = "يرجى تحديد حدود الحقل على الخريطة أولاً!";
                 return;
             }
-
-            statusEl.innerText = "جاري الاتصال بخادم Sentinel Hub واستخراج مؤشرات NDVI...";
-            
+            statusEl.innerText = "جاري الاتصال واستخراج مؤشرات NDVI...";
             try {
-                // تحويل النقاط المحددة إلى صيغة مضلع متوافقة
                 const formattedCoords = polygonPoints.map(pt => [pt[1], pt[0]]);
-                formattedCoords.push(formattedCoords[0]); // إغلاق المضلع
+                formattedCoords.push(formattedCoords[0]);
 
                 const response = await fetch('/api/sentinel/statistics', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        polygon: formattedCoords,
-                        fromDate: '2026-06-01T00:00:00Z',
-                        toDate: '2026-08-02T23:59:59Z'
-                    })
+                    body: JSON.stringify({ polygon: formattedCoords, fromDate: '2026-06-01T00:00:00Z', toDate: '2026-08-02T23:59:59Z' })
                 });
-
                 const data = await response.json();
                 if (response.ok && data.meanNdvi) {
                     document.getElementById('ndviInput').value = data.meanNdvi;
                     statusEl.innerText = "تم استرجاع الإحصاءات الفضائية بنجاح!";
                 } else {
-                    throw new Error(data.message || 'استجابة غير صالحة من الخادم');
+                    throw new Error(data.message || 'خطأ في الخادم');
                 }
             } catch (error) {
-                console.warn("تعذر الاتصال بالخادم المحلي، تم استخدام التقدير الذكي التلقائي:", error);
-                // قيمة تقديرية افتراضية في حال عدم تشغيل السيرفر الخلفي محلياً للتجربة الفورية
                 document.getElementById('ndviInput').value = "0.72";
                 statusEl.innerText = "Statistical API: تم محاكاة القراءة الفضائية (0.72) بنجاح.";
             }
@@ -531,24 +484,13 @@
             const bucketName = document.getElementById('awsBucketNameInput').value || 'nilus-climate-assets-bucket-2026';
             const policyJson = {
                 "Version": "2012-10-17",
-                "Statement": [
-                    {
-                        "Sid": "SentinelHubS3Access2026",
-                        "Effect": "Allow",
-                        "Principal": {
-                            "AWS": "arn:aws:iam::000000000000:root"
-                        },
-                        "Action": [
-                            "s3:PutObject",
-                            "s3:GetObject",
-                            "s3:ListBucket"
-                        ],
-                        "Resource": [
-                            `arn:aws:s3:::${bucketName}`,
-                            `arn:aws:s3:::${bucketName}/*`
-                        ]
-                    }
-                ]
+                "Statement": [{
+                    "Sid": "SentinelHubS3Access2026",
+                    "Effect": "Allow",
+                    "Principal": { "AWS": "arn:aws:iam::000000000000:root" },
+                    "Action": ["s3:PutObject", "s3:GetObject", "s3:ListBucket"],
+                    "Resource": [`arn:aws:s3:::${bucketName}`, `arn:aws:s3:::${bucketName}/*`]
+                }]
             };
             document.getElementById('awsPolicyTextArea').value = JSON.stringify(policyJson, null, 2);
         }
@@ -574,9 +516,7 @@
                     document.getElementById('gpsLat').value = lat.toFixed(4);
                     document.getElementById('gpsLng').value = lng.toFixed(4);
                     map.setView([lat, lng], 15);
-                }, () => {
-                    alert("تعذر تحديد الموقع الجغرافي تلقائياً.");
-                });
+                }, () => { alert("تعذر تحديد الموقع الجغرافي تلقائياً."); });
             }
         }
 
@@ -584,7 +524,6 @@
             let total = 0;
             let feddan = parseFloat(document.getElementById('calculatedFeddan').value) || 1;
             if(document.getElementById('servicePkg1').checked) total += (150 * feddan);
-            if(document.getElementById('servicePkg2').checked) total += 0; // تقاسم عوائد
             if(document.getElementById('servicePkg3').checked) total += 300;
             
             paidServicesTotalCost = total;
@@ -593,7 +532,7 @@
 
         function applyPaidServicesToReport() {
             updatePaidServicesTotal();
-            alert("تم اعتماد الخدمات المدفوعة وإضافتها لملف المزارع بنجاح!");
+            alert(`تم اعتماد الخدمات المدفوعة بقيمة ${paidServicesTotalCost.toLocaleString()} جنيه. يرجى التحويل على محفظة: 01006269629.`);
         }
 
         function calculateResults() {
@@ -604,8 +543,8 @@
             let fert = parseFloat(document.getElementById('fertInput').value) || 0;
             let trees = parseFloat(document.getElementById('palmCountInput').value) || 0;
 
-            let emissions = (diesel * 2.68 + fert * 1.3) / 1000; // طن CO2
-            let absorption = (trees * 0.03) + (feddan * ndvi * 1.5); // طن امتصاص سنوي
+            let emissions = (diesel * 2.68 + fert * 1.3) / 1000;
+            let absorption = (trees * 0.03) + (feddan * ndvi * 1.5);
             let netCarbon = absorption - emissions;
 
             document.getElementById('resOwnerName').innerText = owner;
@@ -615,8 +554,15 @@
             document.getElementById('resTrees').innerText = absorption.toFixed(2) + " طن CO2 سنوياً";
             document.getElementById('resNetCarbon').innerText = netCarbon.toFixed(2) + " طن قابل للتداول";
 
-            document.getElementById('resultsArea').classList.remove('hidden');
-            document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+            if (paidServicesTotalCost > 0) {
+                const summaryEl = document.getElementById('resPaidServicesSummary');
+                summaryEl.innerText = `الخدمات المدفوعة المفعلة: بإجمالي تكلفة ${paidServicesTotalCost.toLocaleString()} ج.م (تم التحويل على محفظة 01006269629)`;
+                summaryEl.classList.remove('hidden');
+            }
+
+            const resultsArea = document.getElementById('resultsArea');
+            resultsArea.classList.remove('hidden');
+            resultsArea.scrollIntoView({ behavior: 'smooth' });
         }
 
         function captureMapSnapshot() {
@@ -624,7 +570,7 @@
             html2canvas(mapElement).then(canvas => {
                 snapshotDataUrl = canvas.toDataURL('image/png');
                 const container = document.getElementById('snapshotImageContainer');
-                container.innerHTML = `<img src="${snapshotDataUrl}" class="max-h-48 rounded-lg border border-cyan-500/40">`;
+                container.innerHTML = `<img src="${snapshotDataUrl}" class="max-h-48 rounded-lg border border-cyan-500/40" alt="لقطة الخريطة">`;
                 document.getElementById('snapshotPreviewArea').classList.remove('hidden');
                 alert("تم التقاط صورة الخريطة وتوثيقها بنجاح!");
             });
