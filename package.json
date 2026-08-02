@@ -1,7 +1,7 @@
 {
   "name": "nilus-eca-backend",
   "version": "1.0.0",
-  "description": "خادم خلفي وسيط بين واجهة Nilus ECA وبين Copernicus Sentinel Hub Statistical API + AWS S3",
+  "description": "خادم خلفي: Sentinel Hub NDVI + AWS S3 + خدمة الزراعة الذكية المدفوعة عبر Paymob",
   "private": true,
   "main": "server.js",
   "scripts": {
