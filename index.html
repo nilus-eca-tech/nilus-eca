@@ -105,7 +105,7 @@
             </div>
         </div>
 
-        <!-- قسم الخدمات المدفوعة للفلاح (المضافة حديثاً) -->
+        <!-- قسم الخدمات المدفوعة للفلاح -->
         <div class="bg-slate-950 border border-cyan-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
             <div class="flex flex-col sm:flex-row justify-between items-center border-b border-slate-800 pb-4">
                 <div>
@@ -183,7 +183,7 @@
             </div>
         </div>
 
-        <!-- الخريطة والتحليل الفضائي المباشر مع أدوات القياس -->
+        <!-- الخريطة والتحليل الفضائي المباشر مع طبقات الخرائط الثلاث وأدوات القياس -->
         <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative space-y-8">
             
             <div class="bg-slate-900 border border-cyan-500/40 p-4 rounded-2xl space-y-4 shadow-lg">
@@ -192,14 +192,23 @@
                         <h4 class="text-md font-bold text-cyan-400" data-i18n="mapHeaderTitle">🛰️ خريطة قمر Sentinel وتحديد المساحة بالماوس</h4>
                         <p class="text-xs text-slate-400" data-i18n="mapHeaderDesc">انقر عدة نقاط متتالية على الخريطة لتشكيل حدود الحقل، وسيتم حساب المساحة بالأفدنة تلقائياً.</p>
                     </div>
-                    <div class="flex flex-wrap gap-2">
+                    
+                    <!-- أزرار تبديل طبقات الخريطة الثلاث وأدوات الرسم -->
+                    <div class="flex flex-wrap gap-2 items-center">
+                        <!-- تفعيل الطبقات الثلاث -->
+                        <div class="bg-slate-950 border border-slate-700 p-1 rounded-xl flex gap-1">
+                            <button onclick="switchBaseLayer('streets')" id="layerBtnStreets" class="bg-cyan-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs transition">الشوارع</button>
+                            <button onclick="switchBaseLayer('satellite')" id="layerBtnSatellite" class="bg-slate-800 text-slate-300 font-bold px-2.5 py-1.5 rounded-lg text-xs transition">فضائية</button>
+                            <button onclick="switchBaseLayer('topo')" id="layerBtnTopo" class="bg-slate-800 text-slate-300 font-bold px-2.5 py-1.5 rounded-lg text-xs transition">تضاريس</button>
+                        </div>
+
                         <button onclick="undoLastPoint()" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold px-3 py-2 rounded-xl text-xs transition shadow flex items-center space-x-1 space-x-reverse">
                             <span>↩️</span>
-                            <span data-i18n="undoBtnText">تراجع عن نقطة</span>
+                            <span data-i18n="undoBtnText">تراجع</span>
                         </button>
                         <button onclick="clearPolygon()" class="bg-red-700 hover:bg-red-600 text-white font-bold px-3 py-2 rounded-xl text-xs transition shadow flex items-center space-x-1 space-x-reverse">
                             <span>🗑️</span>
-                            <span data-i18n="clearDrawBtn">مسح الكل</span>
+                            <span data-i18n="clearDrawBtn">مسح</span>
                         </button>
                         <button onclick="toggleNDVILayer()" id="ndviToggleBtn" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-xs transition shadow flex items-center space-x-1 space-x-reverse">
                             <span>🌿</span>
@@ -398,6 +407,10 @@
         let tempMarkers = [];
         let currentPolygonLayer = null;
 
+        // طبقات الخرائط الثلاث الأساسية
+        let baseLayers = {};
+        let activeBaseLayerKey = 'streets';
+
         const translations = {
             ar: {
                 topBar: "نيلوس للتقنيات الرقمية وأصول المناخ · إدارة العقود، قمر Sentinel وربط AWS S3",
@@ -424,8 +437,8 @@
                 totalServicesCostLabel: "إجمالي تكلفة الخدمات المدفوعة المختارة:",
                 mapHeaderTitle: "🛰️ خريطة قمر Sentinel وتحديد المساحة بالماوس",
                 mapHeaderDesc: "انقر عدة نقاط متتالية على الخريطة لتشكيل حدود الحقل، وسيتم حساب المساحة بالأفدنة تلقائياً.",
-                undoBtnText: "تراجع عن نقطة",
-                clearDrawBtn: "مسح الكل",
+                undoBtnText: "تراجع",
+                clearDrawBtn: "مسح",
                 ndviBtn: "NDVI",
                 snapBtn: "لقطة",
                 snapPreviewTitle: "🖼️ معاينة الصورة التوثيقية الملتقطة للخريطة النباتية:",
@@ -490,8 +503,8 @@
                 totalServicesCostLabel: "Total Selected Paid Services Cost:",
                 mapHeaderTitle: "🛰️ Sentinel Satellite & Mouse Area Mapping",
                 mapHeaderDesc: "Click consecutive points on the map to outline field boundaries and calculate feddans automatically.",
-                undoBtnText: "Undo Point",
-                clearDrawBtn: "Clear All",
+                undoBtnText: "Undo",
+                clearDrawBtn: "Clear",
                 ndviBtn: "NDVI",
                 snapBtn: "Snapshot",
                 snapPreviewTitle: "🖼️ Captured Map Snapshot Preview:",
@@ -535,10 +548,25 @@
 
         document.addEventListener("DOMContentLoaded", function() {
             map = L.map('map').setView([28.1099, 30.7503], 13);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+
+            // تعريف الطبقات الثلاث (الشوارع، الفضائية، التضاريس)
+            baseLayers.streets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
+            });
+
+            baseLayers.satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 19,
+                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+            });
+
+            baseLayers.topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                maxZoom: 17,
+                attribution: 'Map data: &copy; OpenStreetMap contributors, SRTM | Map style: &copy; OpenTopoMap (CC-BY-SA)'
+            });
+
+            // إضافة الطبقة الافتراضية الأولى
+            baseLayers.streets.addTo(map);
 
             map.on('click', function(e) {
                 const latlng = e.latlng;
@@ -561,7 +589,6 @@
                         fillOpacity: 0.35
                     }).addTo(map);
 
-                    // حساب المساحة تقريبياً بالمتر المربع والأفدنة
                     const areaSqm = L.GeometryUtil ? L.GeometryUtil.geodesicArea(currentPolygonLayer.getLatLngs()[0]) : calculateApproxArea(drawingPoints);
                     const feddans = (areaSqm / 4200.83).toFixed(2);
 
@@ -586,8 +613,23 @@
             updateAwsPolicyJson();
         });
 
+        // دالة تبديل طبقات الخريطة الثلاث
+        function switchBaseLayer(layerKey) {
+            if (baseLayers[activeBaseLayerKey]) {
+                map.removeLayer(baseLayers[activeBaseLayerKey]);
+            }
+            if (baseLayers[layerKey]) {
+                baseLayers[layerKey].addTo(map);
+                activeBaseLayerKey = layerKey;
+            }
+
+            // تحديث أشكال الأزرار بصرياً
+            document.getElementById('layerBtnStreets').className = "font-bold px-2.5 py-1.5 rounded-lg text-xs transition " + (layerKey === 'streets' ? 'bg-cyan-700 text-white' : 'bg-slate-800 text-slate-300');
+            document.getElementById('layerBtnSatellite').className = "font-bold px-2.5 py-1.5 rounded-lg text-xs transition " + (layerKey === 'satellite' ? 'bg-cyan-700 text-white' : 'bg-slate-800 text-slate-300');
+            document.getElementById('layerBtnTopo').className = "font-bold px-2.5 py-1.5 rounded-lg text-xs transition " + (layerKey === 'topo' ? 'bg-cyan-700 text-white' : 'bg-slate-800 text-slate-300');
+        }
+
         function calculateApproxArea(pts) {
-            // حساب تقريبي مبسط للمساحة في حال عدم توفر مكتبة حساب المساحة الجيوديسية مباشرة
             if (pts.length < 3) return 0;
             let area = 0;
             for (let i = 0; i < pts.length; i++) {
@@ -760,7 +802,6 @@
             const soilMoisture = document.getElementById('soilMoisture');
             const sentinelStatus = document.getElementById('sentinelStatus');
 
-            // محاكاة استدعاء Statistical API لقمر Sentinel
             const simulatedNdvi = (0.45 + Math.random() * 0.35).toFixed(2);
             const simulatedMoisture = (45 + Math.random() * 30).toFixed(1);
 
@@ -777,7 +818,7 @@
             const fert = parseFloat(document.getElementById('fertInput').value) || 50;
             const trees = parseFloat(document.getElementById('palmCountInput').value) || 30;
 
-            const emissions = ((diesel * 2.68) + (fert * 1.33)) / 1000; // طن مكافئ CO2
+            const emissions = ((diesel * 2.68) + (fert * 1.33)) / 1000;
             const sequestered = (trees * 0.025) + (feddans * ndvi * 1.2);
             const netCarbon = Math.max(0, sequestered - emissions).toFixed(2);
 
