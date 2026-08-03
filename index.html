@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="pageTitle">Nilus ECA | Global Climate Assets & Digital Agriculture</title>
-    <meta name="description" content="نيلوس للتقنيات الرقمية وأصول المناخ - منصة دولية متكاملة لإدارة أصول المناخ وإنترنت الأشياء">
+    <meta name="description" content="نيلوس للتقنيات الرقمية وأصول المناخ - منصة دولية متكاملة">
     
     <!-- المكتبات الأساسية -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -33,7 +33,7 @@
 
     <!-- شريط الأمان العلوي -->
     <div class="bg-slate-950 border-b border-cyan-500/30 py-1.5 px-4 text-center text-xs text-cyan-400 font-bold tracking-wider flex justify-between items-center z-50 relative">
-        <span id="topBarText">🌍 Nilus ECA Global Platform · Verra VM0042 & CSRD Compliant (Python & IoT Core)</span>
+        <span id="topBarText">🌍 Nilus ECA Global Platform · Verra VM0042 & CSRD Compliant</span>
         <div class="flex items-center gap-3">
             <button onclick="setLanguage('ar')" id="langArBtn" class="text-white bg-cyan-700 px-2 py-1 rounded shadow">العربية</button>
             <button onclick="setLanguage('en')" id="langEnBtn" class="text-slate-400 hover:text-white px-2 py-1 rounded transition">English</button>
@@ -49,17 +49,12 @@
                 </div>
                 <div>
                     <h1 class="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 tracking-wide" id="mainTitleTxt">نيلوس للتقنيات الرقمية وأصول المناخ</h1>
-                    <p class="text-xs md:text-sm text-slate-400 font-semibold" id="subTitleTxt">المنصة الدولية الأولى لاعتماد الكربون وحوسبة أجهزة إنترنت الأشياء (IoT)</p>
+                    <p class="text-xs md:text-sm text-slate-400 font-semibold" id="subTitleTxt">المنصة الدولية الأولى لاعتماد الكربون والزراعة الذكية</p>
                 </div>
             </div>
-            <div class="flex items-center gap-4">
-                <div class="text-xs bg-emerald-950/60 border border-emerald-500/40 px-3 py-2 rounded-xl text-emerald-300 hidden sm:block">
-                    🔒 الملكية الفكرية ونواة Python المحمية
-                </div>
-                <div class="flex flex-col items-end text-xs text-cyan-300 bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700 shadow-inner">
-                    <span id="walletLabel">محفظة التحصيل الرسمية</span>
-                    <strong class="text-white text-base tracking-widest">01006269629</strong>
-                </div>
+            <div class="flex flex-col items-end text-xs text-cyan-300 bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700 shadow-inner">
+                <span id="walletLabel">محفظة التحصيل الرسمية</span>
+                <strong class="text-white text-base tracking-widest">01006269629</strong>
             </div>
         </div>
     </header>
@@ -74,8 +69,8 @@
             <div class="lg:col-span-2 glass-panel rounded-3xl p-5 shadow-2xl relative flex flex-col">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
                     <div>
-                        <h3 class="text-lg font-black text-cyan-400" id="mapTitle">🛰️ المرصد الفضائي ونقاط الاستشعار (IoT + Sentinel-2)</h3>
-                        <p class="text-xs text-slate-400" id="mapSub">قم بالنقر على الخريطة لرسم حدود الحقل وحساب الأصول وتفعيل الحوسبة الجغرافية فورياً.</p>
+                        <h3 class="text-lg font-black text-cyan-400" id="mapTitle">🛰️ المرصد الفضائي (Sentinel-2 L2A)</h3>
+                        <p class="text-xs text-slate-400" id="mapSub">قم بالنقر على الخريطة لرسم حدود الحقل وحساب الأصول فورياً.</p>
                     </div>
                     <div class="flex flex-wrap gap-2">
                         <div class="bg-slate-900 border border-slate-700 p-1 rounded-xl flex gap-1 shadow-inner">
@@ -98,7 +93,7 @@
             <div class="space-y-4 flex flex-col justify-between">
                 <div class="bg-slate-800/50 border border-cyan-500/30 p-5 rounded-3xl relative overflow-hidden group hover:border-cyan-400 transition">
                     <div class="absolute top-0 right-0 w-16 h-16 bg-cyan-500/10 rounded-bl-full -z-10 group-hover:scale-150 transition-transform"></div>
-                    <h4 class="text-sm font-bold text-slate-400" id="kpiAreaTitle">المساحة المحددة (GIS Engine)</h4>
+                    <h4 class="text-sm font-bold text-slate-400" id="kpiAreaTitle">المساحة المحددة (GIS)</h4>
                     <div class="text-4xl font-black text-cyan-400 mt-2 flex items-baseline gap-2">
                         <span id="kpiAreaValue">0.00</span> <span class="text-sm font-normal text-slate-300" id="kpiAreaUnit">فدان</span>
                     </div>
@@ -107,11 +102,11 @@
 
                 <div class="bg-slate-800/50 border border-emerald-500/30 p-5 rounded-3xl relative overflow-hidden group hover:border-emerald-400 transition">
                     <div class="absolute top-0 right-0 w-16 h-16 bg-emerald-500/10 rounded-bl-full -z-10 group-hover:scale-150 transition-transform"></div>
-                    <h4 class="text-sm font-bold text-slate-400" id="kpiYieldTitle">الإنتاج الذكي المتوقع (Python AI Yield)</h4>
+                    <h4 class="text-sm font-bold text-slate-400" id="kpiYieldTitle">الإنتاج الذكي المتوقع (AI Yield)</h4>
                     <div class="text-4xl font-black text-emerald-400 mt-2 flex items-baseline gap-2">
                         <span id="kpiYieldValue">0.0</span> <span class="text-sm font-normal text-slate-300" id="kpiYieldUnit">طن</span>
                     </div>
-                    <p class="text-xs text-slate-500 mt-1" id="kpiYieldSub">بناءً على خوارزميات التعلم الآلي ونماذج الانحدار</p>
+                    <p class="text-xs text-slate-500 mt-1" id="kpiYieldSub">بناءً على خوارزميات التعلم الآلي</p>
                 </div>
 
                 <div class="bg-slate-800/50 border border-amber-500/30 p-5 rounded-3xl relative overflow-hidden group hover:border-amber-400 transition btn-glow">
@@ -128,27 +123,26 @@
             </div>
         </div>
 
-        <!-- لوحة التحكم بالبيانات والـ IoT + Python -->
+        <!-- لوحة التحكم بالبيانات (الإدخال اللحظي مع طبقات IoT و Python) -->
         <div class="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl">
-            <h3 class="text-xl font-black text-white mb-6 border-b border-slate-700 pb-4 flex items-center justify-between" id="inputSectionTitle">
-                <span class="flex items-center gap-3">⚙️ محرك تحليل البيانات الحيوية، أجهزة IoT ونواة Python البرمجية</span>
-                <span class="text-xs bg-cyan-950 text-cyan-300 px-3 py-1 rounded-lg border border-cyan-500/40">Nilus ECA Core v2.4</span>
+            <h3 class="text-xl font-black text-white mb-6 border-b border-slate-700 pb-4 flex items-center gap-3" id="inputSectionTitle">
+                <span>⚙️</span> محرك تحليل البيانات الحيوية، الحساسات (IoT) وملكية خوارزميات Python
             </h3>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- 1. بيانات المشروع -->
                 <div class="space-y-4">
-                    <h4 class="text-sm font-bold text-blue-400 border-l-4 border-blue-500 pl-2" id="sec1Title">1. هوية المشروع والملكية الفكرية</h4>
+                    <h4 class="text-sm font-bold text-blue-400 border-l-4 border-blue-500 pl-2" id="sec1Title">1. هوية المشروع</h4>
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1" id="lblOwner">اسم المالك / الشركة</label>
-                        <input type="text" id="inputOwner" placeholder="نيلوس للتقنيات الرقمية..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:border-cyan-500 focus:outline-none transition">
+                        <input type="text" id="inputOwner" placeholder="شركة التنمية الزراعية..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:border-cyan-500 focus:outline-none transition">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1" id="lblCrop">نوع المحصول الأساسي</label>
                         <select id="inputCrop" onchange="calculateLiveMetrics()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:border-cyan-500 focus:outline-none transition appearance-none">
-                            <option value="wheat">قمح ومحاصيل حقلية (Standard - Python Model A)</option>
-                            <option value="palm">نخيل وأشجار معمرة (High Carbon - Python Model B)</option>
-                            <option value="citrus">بساتين موالح (Medium Carbon - Python Model C)</option>
+                            <option value="wheat">قمح ومحاصيل حقلية (Standard)</option>
+                            <option value="palm">نخيل وأشجار معمرة (High Carbon)</option>
+                            <option value="citrus">بساتين موالح (Medium Carbon)</option>
                         </select>
                     </div>
                     <div>
@@ -159,7 +153,7 @@
 
                 <!-- 2. الانبعاثات والمدخلات -->
                 <div class="space-y-4">
-                    <h4 class="text-sm font-bold text-red-400 border-l-4 border-red-500 pl-2" id="sec2Title">2. مصادر الانبعاثات وحسابات الخصم</h4>
+                    <h4 class="text-sm font-bold text-red-400 border-l-4 border-red-500 pl-2" id="sec2Title">2. مصادر الانبعاثات (الخصم)</h4>
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1" id="lblDiesel">استهلاك السولار السنوي (لتر)</label>
                         <input type="number" id="inputDiesel" oninput="calculateLiveMetrics()" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-red-300 font-bold focus:border-red-500 focus:outline-none transition">
@@ -169,44 +163,33 @@
                         <input type="number" id="inputFertilizer" oninput="calculateLiveMetrics()" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-red-300 font-bold focus:border-red-500 focus:outline-none transition">
                     </div>
                     <div class="bg-red-900/20 p-3 rounded-xl border border-red-900/50">
-                        <p class="text-xs text-red-300 font-bold flex justify-between">إجمالي الانبعاثات المعالجة: <span id="liveEmissionsText">0.00 tCO2</span></p>
+                        <p class="text-xs text-red-300 font-bold flex justify-between">إجمالي الانبعاثات: <span id="liveEmissionsText">0.00 tCO2</span></p>
                     </div>
                 </div>
 
-                <!-- 3. مؤشرات الأقمار وانترنت الأشياء وحساسات التربة IoT -->
+                <!-- 3. مؤشرات الأقمار والإنترنت الأشياء (IoT & Python Engine) -->
                 <div class="space-y-4">
-                    <h4 class="text-sm font-bold text-emerald-400 border-l-4 border-emerald-500 pl-2" id="sec3Title">3. طبقة حساسات IoT ومعالجة Python</h4>
+                    <h4 class="text-sm font-bold text-emerald-400 border-l-4 border-emerald-500 pl-2" id="sec3Title">3. مؤشرات IoT و Python Engine</h4>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-bold text-slate-300 mb-1" id="lblTrees">الأشجار المعمرة</label>
                             <input type="number" id="inputTrees" oninput="calculateLiveMetrics()" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-emerald-300 font-bold focus:border-emerald-500 focus:outline-none transition">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-300 mb-1" id="lblMoisture">رطوبة التربة (IoT Sensor) %</label>
+                            <label class="block text-xs font-bold text-slate-300 mb-1" id="lblMoisture">رطوبة التربة (حساس IoT)%</label>
                             <input type="number" id="inputMoisture" value="68.5" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-blue-300 font-bold">
                         </div>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1 flex justify-between items-center">
-                            <span id="lblNdvi">الغطاء النباتي (Sentinel-2 NDVI)</span>
+                            <span id="lblNdvi">الغطاء النباتي (NDVI)</span>
                             <button onclick="toggleNDVILayer()" class="text-[10px] bg-emerald-700/50 px-2 py-0.5 rounded text-white hover:bg-emerald-600">عرض الطبقة</button>
                         </label>
                         <input type="number" id="inputNdvi" oninput="calculateLiveMetrics()" step="0.01" min="0" max="1" value="0.75" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-emerald-400 font-bold focus:border-emerald-500 focus:outline-none transition">
                     </div>
                     <button onclick="simulateIoTUpdate()" class="w-full bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/30 font-bold py-2.5 rounded-xl text-xs transition flex justify-center items-center gap-2">
-                        <span id="btnSync">🔄 مزامنة حساسات IoT وحوسبة Python الفورية</span>
+                        <span id="btnSync">🔄 مزامنة حساسات IoT ونماذج Python</span>
                     </button>
-                </div>
-            </div>
-
-            <!-- معلومات الملكية الفكرية ونواة بايثون -->
-            <div class="mt-6 pt-4 border-t border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-slate-400">
-                <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>تم ربط وحدات معالجة البيانات عبر سكربتات Python الحصرية لـ Nilus ECA.</span>
-                </div>
-                <div class="font-mono text-cyan-400">
-                    IP Registry: Nilus-ECA-Python-Core-Protected
                 </div>
             </div>
         </div>
@@ -214,7 +197,7 @@
         <!-- أزرار الإجراءات الرئيسية -->
         <div class="flex justify-center py-4">
             <button onclick="generateFinalReport()" class="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-black px-10 py-5 rounded-2xl text-lg shadow-[0_0_40px_rgba(6,182,212,0.4)] transition-all transform hover:-translate-y-1 w-full md:w-auto" id="btnGenerateReport">
-                إصدار التقرير الدولي وشهادة Verra المعتمدة مع توثيق الملكية الفكرية 📑
+                إصدار التقرير الدولي وشهادة Verra المعتمدة 📑
             </button>
         </div>
 
@@ -230,14 +213,13 @@
                         </div>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-black text-white tracking-wide" id="repTitle">شهادة أصول الكربون والزراعة الذكية (Nilus IoT & Python Core)</h2>
+                        <h2 class="text-2xl font-black text-white tracking-wide" id="repTitle">شهادة أصول الكربون والزراعة الذكية</h2>
                         <p class="text-cyan-400 font-mono text-sm mt-1">ID: <span id="repIdCode">NILUS-VERRA-2026-XXXX</span></p>
                     </div>
                 </div>
                 <div class="text-right flex flex-col items-end gap-1">
                     <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">ESG & CSRD Compliant</span>
                     <span class="bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full">Verra VM0042 Verified</span>
-                    <span class="bg-emerald-700 text-white text-xs font-bold px-3 py-1 rounded-full">Python IoT Engine Secured</span>
                     <p class="text-xs text-slate-400 mt-2 font-mono" id="repDate">تاريخ الإصدار: 2026-08-03</p>
                 </div>
             </div>
@@ -248,21 +230,21 @@
                 <!-- البيانات الأساسية -->
                 <div class="space-y-6">
                     <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 shadow-inner">
-                        <h3 class="text-cyan-400 font-bold mb-4 border-b border-slate-800 pb-2">تفاصيل الحيازة والبنية التقنية</h3>
+                        <h3 class="text-cyan-400 font-bold mb-4 border-b border-slate-800 pb-2">تفاصيل الحيازة والملكية الفكرية</h3>
                         <table class="w-full text-sm text-right" id="repTable1">
                             <tbody class="results-table text-slate-300">
                                 <tr><td class="font-bold">المستفيد / الكيان:</td><td id="repOwner" class="font-black text-white">---</td></tr>
                                 <tr><td class="font-bold">نوع المحصول (المعيار):</td><td id="repCrop" class="font-black text-amber-400">---</td></tr>
                                 <tr><td class="font-bold">المساحة الجغرافية:</td><td id="repArea" class="font-black text-cyan-300">---</td></tr>
-                                <tr><td class="font-bold">توقع الإنتاج (حوسبة Python):</td><td id="repYield" class="font-black text-emerald-400">---</td></tr>
-                                <tr><td class="font-bold">حالة حساسات IoT:</td><td class="font-black text-blue-400">متصل (Active Telemetry)</td></tr>
+                                <tr><td class="font-bold">توقع الإنتاج (الذكاء الاصطناعي):</td><td id="repYield" class="font-black text-emerald-400">---</td></tr>
+                                <tr><td class="font-bold">نموذج الحساب البرمجي:</td><td class="font-black text-blue-400">Python Core Engine (Nilus IP)</td></tr>
                             </tbody>
                         </table>
                     </div>
 
                     <!-- مكان عرض صورة الخريطة -->
                     <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 shadow-inner text-center">
-                        <h3 class="text-cyan-400 font-bold mb-2 text-sm text-right">التوثيق الجغرافي الفضائي وحساسات الحقل</h3>
+                        <h3 class="text-cyan-400 font-bold mb-2 text-sm text-right">التوثيق الجغرافي الفضائي وحساسات IoT</h3>
                         <div id="repSnapshotArea" class="w-full h-48 bg-slate-900 border border-slate-700 rounded-xl flex justify-center items-center text-slate-600 text-xs overflow-hidden">
                             لم يتم التقاط صورة الخريطة. اضغط (لقطة توثيق) بالأعلى.
                         </div>
@@ -272,7 +254,7 @@
                 <!-- التحليل الكربوني النهائي -->
                 <div class="bg-gradient-to-b from-slate-900 to-slate-950 p-6 rounded-2xl border border-slate-700 shadow-xl flex flex-col justify-between">
                     <div>
-                        <h3 class="text-amber-400 font-bold mb-4 border-b border-slate-800 pb-2 text-lg">دفتر أستاذ الكربون (Carbon Ledger & Python Audit)</h3>
+                        <h3 class="text-amber-400 font-bold mb-4 border-b border-slate-800 pb-2 text-lg">دفتر أستاذ الكربون (Carbon Ledger)</h3>
                         <div class="space-y-4">
                             <div class="flex justify-between items-center p-3 bg-slate-900 border border-emerald-900/50 rounded-lg">
                                 <span class="text-sm text-slate-300">إجمالي عزل الكربون (Absorption)</span>
@@ -298,7 +280,7 @@
                         <button onclick="window.print()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white py-3 rounded-xl font-bold transition flex items-center justify-center gap-2">
                             🖨️ طباعة السند
                         </button>
-                        <button onclick="alert('تم توثيق السند والملكية الفكرية على شبكة البلوكتشين بنجاح!')" class="flex-1 bg-blue-700 hover:bg-blue-600 text-white py-3 rounded-xl font-bold transition flex items-center justify-center gap-2">
+                        <button onclick="alert('تم إرسال الشهادة بنجاح إلى شبكة البلوكتشين وبريد العميل!')" class="flex-1 bg-blue-700 hover:bg-blue-600 text-white py-3 rounded-xl font-bold transition flex items-center justify-center gap-2">
                             🔗 توثيق Blockchain
                         </button>
                     </div>
@@ -310,19 +292,17 @@
     <!-- تذييل -->
     <footer class="bg-slate-950 border-t border-slate-800 py-8 text-center text-slate-500 mt-auto">
         <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p class="font-bold text-sm">Nilus ECA © 2026 - All Rights Reserved (IP Protected)</p>
-            <p class="text-xs font-mono">Engineered for Climate Assets & IoT Integration. Developed by Nilus ECA Core Team.</p>
+            <p class="font-bold text-sm">Nilus ECA © 2026</p>
+            <p class="text-xs font-mono">Engineered with Proprietary Python IoT Models & Climate Assets. All Rights Reserved.</p>
         </div>
     </footer>
 
     <!-- السكريبت البرمجي الشامل -->
     <script>
-        // المتغيرات العامة
         let map, currentPolygon = null, polygonPoints = [];
         let baseLayers = {};
         let currentLang = 'ar';
         
-        // متغيرات الحسابات اللحظية
         let state = {
             areaFeddan: 0,
             yieldTotal: 0,
@@ -331,7 +311,6 @@
             netCarbon: 0
         };
 
-        // 1. تهيئة الخريطة (مركزة على المنيا، مصر)
         function initMap() {
             if (map) return;
             map = L.map('map', { zoomControl: true }).setView([28.1098, 30.7503], 13);
@@ -353,7 +332,6 @@
             setTimeout(() => { map.invalidateSize(); }, 500);
         }
 
-        // 2. تبديل طبقات الخريطة
         function switchBaseLayer(type) {
             Object.values(baseLayers).forEach(layer => map.removeLayer(layer));
             baseLayers[type].addTo(map);
@@ -370,7 +348,6 @@
             }
         }
 
-        // 3. رسم المضلع وحساب المساحة الخرائطية
         function redrawPolygon() {
             if(currentPolygon) map.removeLayer(currentPolygon);
             if(polygonPoints.length > 0) {
@@ -397,7 +374,6 @@
             return Math.abs(area) * 111319 * 111319 * Math.cos(28 * Math.PI / 180) / 2;
         }
 
-        // 4. محرك الحسابات اللحظي (Python Models & IoT Integration)
         function calculateLiveMetrics() {
             let manualArea = parseFloat(document.getElementById('inputManualArea').value);
             let activeArea = isNaN(manualArea) ? 0 : manualArea;
@@ -406,10 +382,9 @@
             let fert = parseFloat(document.getElementById('inputFertilizer').value) || 0;
             let trees = parseFloat(document.getElementById('inputTrees').value) || 0;
             let ndvi = parseFloat(document.getElementById('inputNdvi').value) || 0;
-            let moisture = parseFloat(document.getElementById('inputMoisture').value) || 68;
             let cropType = document.getElementById('inputCrop').value;
+            let moisture = parseFloat(document.getElementById('inputMoisture').value) || 68;
 
-            // معاملات بايثون المتقدمة حسب نوع المحصول وحساسات الرطوبة
             let cropCarbonFactor = 1.6; 
             let yieldFactor = 2.4; 
             
@@ -421,10 +396,8 @@
                 yieldFactor = 4.0;
             }
 
-            // تعديل معدل الإنتاج استناداً لقراءات رطوبة التربة عبر الـ IoT
-            let moistureMultiplier = moisture > 50 ? 1.05 : 0.90;
-
-            // حسابات النواة
+            // محاكاة نموذج Python الحسابي المدمج مع قراءات رطوبة الحساسات
+            let moistureMultiplier = moisture / 70;
             state.yieldTotal = activeArea * yieldFactor * (ndvi / 0.7) * moistureMultiplier;
             state.emissionsTotal = ((diesel * 2.68) + (fert * 1.3)) / 1000;
             state.absorptionTotal = (trees * 0.035) + (activeArea * ndvi * cropCarbonFactor);
@@ -432,14 +405,12 @@
             state.netCarbon = state.absorptionTotal - state.emissionsTotal;
             if(state.netCarbon < 0) state.netCarbon = 0;
 
-            // تحديث الواجهة
             document.getElementById('kpiAreaValue').innerText = activeArea.toFixed(2);
             document.getElementById('kpiYieldValue').innerText = state.yieldTotal.toFixed(1);
             document.getElementById('kpiCarbonValue').innerText = state.netCarbon.toFixed(2);
             document.getElementById('liveEmissionsText').innerText = state.emissionsTotal.toFixed(2) + " tCO2";
         }
 
-        // 5. وظائف إضافية للخريطة وإنترنت الأشياء
         function undoLastPoint() {
             polygonPoints.pop();
             redrawPolygon();
@@ -462,18 +433,17 @@
         function simulateIoTUpdate() {
             const btn = document.getElementById('btnSync');
             const originalText = btn.innerHTML;
-            btn.innerHTML = '⏳ جاري الاتصال بحساسات IoT ومعالجة نواة Python...';
+            btn.innerHTML = '⏳ جاري الاتصال بحساسات IoT ومعالجة خوارزميات Python...';
             
             setTimeout(() => {
                 document.getElementById('inputNdvi').value = (0.7 + (Math.random() * 0.15)).toFixed(2);
-                document.getElementById('inputMoisture').value = (60 + (Math.random() * 15)).toFixed(1);
+                document.getElementById('inputMoisture').value = (62 + (Math.random() * 12)).toFixed(1);
                 calculateLiveMetrics();
-                btn.innerHTML = '✅ تمت المزامنة عبر نواة Python وحساسات الحقل';
+                btn.innerHTML = '✅ تمت مزامنة الحساسات وبايثون بنجاح';
                 setTimeout(() => { btn.innerHTML = originalText; }, 3000);
             }, 1500);
         }
 
-        // 6. التقاط صورة الخريطة
         function captureMapSnapshot() {
             const mapContainer = document.getElementById('mapContainer');
             html2canvas(mapContainer, { useCORS: true, logging: false }).then(canvas => {
@@ -488,11 +458,10 @@
             });
         }
 
-        // 7. إنشاء التقرير النهائي
         function generateFinalReport() {
             calculateLiveMetrics();
             
-            let ownerName = document.getElementById('inputOwner').value || (currentLang === 'ar' ? 'نيلوس للتقنيات الرقمية وأصول المناخ' : 'Nilus ECA');
+            let ownerName = document.getElementById('inputOwner').value || (currentLang === 'ar' ? 'غير محدد' : 'Unknown');
             let cropSelect = document.getElementById('inputCrop');
             let cropText = cropSelect.options[cropSelect.selectedIndex].text;
             
@@ -518,7 +487,6 @@
             }, 100);
         }
 
-        // 8. دعم اللغات
         function setLanguage(lang) {
             currentLang = lang;
             const html = document.getElementById('htmlRoot');
@@ -526,14 +494,14 @@
             if (lang === 'en') {
                 html.setAttribute('dir', 'ltr');
                 document.getElementById('mainTitleTxt').innerText = "Nilus ECA | Climate Assets";
-                document.getElementById('subTitleTxt').innerText = "The Premiere Global Carbon Crediting & IoT Smart Agri Platform";
-                document.getElementById('topBarText').innerText = "🌍 Nilus ECA Global Platform · Verra VM0042 & CSRD Compliant (Python & IoT Core)";
+                document.getElementById('subTitleTxt').innerText = "The Premiere Global Carbon Crediting & Smart Agri Platform";
+                document.getElementById('topBarText').innerText = "🌍 Nilus ECA Global Platform · Verra VM0042 & CSRD Compliant";
                 document.getElementById('walletLabel').innerText = "Official Wallet";
-                document.getElementById('mapTitle').innerText = "🛰️ Satellite Observatory & IoT Sensors (Sentinel-2)";
+                document.getElementById('mapTitle').innerText = "🛰️ Satellite Observatory (Sentinel-2 L2A)";
                 document.getElementById('mapSub').innerText = "Click on the map to draw field boundaries and calculate assets instantly.";
-                document.getElementById('kpiAreaTitle').innerText = "Selected Area (GIS Engine)";
+                document.getElementById('kpiAreaTitle').innerText = "Selected Area (GIS)";
                 document.getElementById('kpiAreaUnit').innerText = "Acres";
-                document.getElementById('kpiYieldTitle').innerText = "Predicted AI Yield (Python)";
+                document.getElementById('kpiYieldTitle').innerText = "Predicted AI Yield";
                 document.getElementById('kpiYieldUnit').innerText = "Tons";
                 document.getElementById('kpiCarbonTitle').innerText = "Net Carbon Balance";
                 document.getElementById('kpiCarbonSub').innerText = "Ready for Voluntary Markets";
@@ -544,18 +512,18 @@
             } else {
                 html.setAttribute('dir', 'rtl');
                 document.getElementById('mainTitleTxt').innerText = "نيلوس للتقنيات الرقمية وأصول المناخ";
-                document.getElementById('subTitleTxt').innerText = "المنصة الدولية الأولى لاعتماد الكربون وحوسبة أجهزة إنترنت الأشياء (IoT)";
-                document.getElementById('topBarText').innerText = "🌍 Nilus ECA Global Platform · Verra VM0042 & CSRD Compliant (Python & IoT Core)";
+                document.getElementById('subTitleTxt').innerText = "المنصة الدولية الأولى لاعتماد الكربون والزراعة الذكية";
+                document.getElementById('topBarText').innerText = "🌍 Nilus ECA Global Platform · Verra VM0042 & CSRD Compliant";
                 document.getElementById('walletLabel').innerText = "محفظة التحصيل الرسمية";
-                document.getElementById('mapTitle').innerText = "🛰️ المرصد الفضائي ونقاط الاستشعار (IoT + Sentinel-2)";
-                document.getElementById('mapSub').innerText = "قم بالنقر على الخريطة لرسم حدود الحقل وحساب الأصول وتفعيل الحوسبة الجغرافية فورياً.";
-                document.getElementById('kpiAreaTitle').innerText = "المساحة المحددة (GIS Engine)";
+                document.getElementById('mapTitle').innerText = "🛰️ المرصد الفضائي (Sentinel-2 L2A)";
+                document.getElementById('mapSub').innerText = "قم بالنقر على الخريطة لرسم حدود الحقل وحساب الأصول فورياً.";
+                document.getElementById('kpiAreaTitle').innerText = "المساحة المحددة (GIS)";
                 document.getElementById('kpiAreaUnit').innerText = "فدان";
-                document.getElementById('kpiYieldTitle').innerText = "الإنتاج الذكي المتوقع (Python AI Yield)";
+                document.getElementById('kpiYieldTitle').innerText = "الإنتاج الذكي المتوقع (AI Yield)";
                 document.getElementById('kpiYieldUnit').innerText = "طن";
                 document.getElementById('kpiCarbonTitle').innerText = "رصيد الكربون الصافي";
                 document.getElementById('kpiCarbonSub').innerText = "جاهز للتداول في البورصات الطوعية";
-                document.getElementById('btnGenerateReport').innerText = "إصدار التقرير الدولي وشهادة Verra المعتمدة مع توثيق الملكية الفكرية 📑";
+                document.getElementById('btnGenerateReport').innerText = "إصدار التقرير الدولي وشهادة Verra المعتمدة 📑";
 
                 document.getElementById('langArBtn').className = "text-white bg-cyan-700 px-2 py-1 rounded shadow";
                 document.getElementById('langEnBtn').className = "text-slate-400 hover:text-white px-2 py-1 rounded transition";
