@@ -1,0 +1,5 @@
+.env
+node_modules/
+reports-db.json
+*.log
+.DS_Store

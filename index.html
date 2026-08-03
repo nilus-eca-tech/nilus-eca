@@ -51,10 +51,6 @@
                     <p class="text-[11px] text-cyan-400 font-medium">الزراعة التعاقدية ومتابعة الحقول من الفضاء</p>
                 </div>
             </div>
-            <div class="flex items-center space-x-2 space-x-reverse text-xs text-cyan-300 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800 font-mono">
-                <span>محفظة التحصيل:</span>
-                <strong class="text-white">01006269629</strong>
-            </div>
         </div>
     </header>
 
@@ -102,11 +98,11 @@
             </div>
         </div>
 
-        <!-- قسم الخدمات المدفوعة للفلاح مع ربط المحفظة 01006269629 -->
+        <!-- قسم الخدمات المدفوعة للفلاح (دفع آمن عبر Paymob) -->
         <div class="bg-slate-950 border border-cyan-500/40 rounded-3xl p-5 sm:p-8 shadow-2xl space-y-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-4 gap-2">
                 <div>
-                    <h3 class="text-base sm:text-lg font-black text-cyan-400">💳 تفعيل وباقات الخدمات المدفوعة (محفظة التحصيل: 01006269629)</h3>
+                    <h3 class="text-base sm:text-lg font-black text-cyan-400">💳 تفعيل وباقات الخدمات المدفوعة</h3>
                     <p class="text-xs text-slate-400">اختر الخدمات المتقدمة وأرصدة الكربون لتعظيم العائد المادي للمزارع.</p>
                 </div>
                 <span class="bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-3 py-1 rounded-xl text-xs font-bold">فودافون كاش / محافظ إلكترونية</span>
@@ -167,7 +163,7 @@
 
             <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div>
-                    <span class="text-xs text-slate-400">إجمالي التكلفة المطلوبة للتحويل على محفظة (<strong class="text-cyan-400">01006269629</strong>):</span>
+                    <span class="text-xs text-slate-400">إجمالي التكلفة (سيتم فتح صفحة دفع Paymob آمنة — بطاقة أو فودافون كاش):</span>
                     <div class="text-xl font-black text-cyan-400"><span id="totalServicesPrice">0.00</span> <span class="text-xs text-slate-400">جنيه مصري</span></div>
                 </div>
                 <button onclick="applyPaidServicesToReport()" class="w-full sm:w-auto bg-cyan-700 hover:bg-cyan-600 text-white font-bold px-6 py-2.5 rounded-xl text-xs transition shadow">
@@ -296,8 +292,9 @@
                         <input type="number" id="palmCountInput" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                     <div>
-                        <label for="soilMoisture" class="block text-xs font-bold text-emerald-300 mb-1">رطوبة التربة (حساس IoT %)</label>
-                        <input type="number" id="soilMoisture" readonly placeholder="68.5" value="68.5" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-emerald-400 text-sm font-bold">
+                        <label for="soilMoisture" class="block text-xs font-bold text-emerald-300 mb-1">مؤشر الرطوبة النباتية (NDMI · قمر صناعي)</label>
+                        <input type="text" id="soilMoisture" readonly placeholder="بانتظار القياس" value="" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-emerald-400 text-sm font-bold">
+                        <p class="text-[10px] text-slate-500 mt-1">مؤشر رطوبة نباتية من القمر الصناعي، وليس نسبة رطوبة تربة من حساس أرضي — لحد ما يتم ربط حساس IoT فعلي.</p>
                     </div>
                 </div>
 
@@ -305,7 +302,7 @@
                     <h4 class="text-md font-bold text-cyan-400 border-b border-slate-800 pb-2">3. مؤشرات قمر Sentinel والـ NDVI</h4>
                     <div>
                         <label for="ndviInput" class="block text-xs font-bold text-slate-300 mb-1">مؤشر الغطاء النباتي الفعلي (NDVI)</label>
-                        <input type="number" id="ndviInput" min="0" max="1" step="0.01" placeholder="0.75" value="0.75" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
+                        <input type="number" id="ndviInput" min="0" max="1" step="0.01" placeholder="بانتظار القياس" value="" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
                     </div>
                     <div class="pt-2">
                         <button onclick="fetchSentinelStatisticsApiReal()" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-2 px-3 rounded-xl text-xs transition shadow-md">📡 جلب إحصاءات Sentinel الفضائية</button>
@@ -356,11 +353,14 @@
     </main>
 
     <footer class="bg-slate-950 border-t border-slate-800 py-6 text-center text-xs text-slate-400 mt-auto">
-        <p>جميع الحقوق محفوظة © 2026 نيلوس للتقنيات الرقمية وأصول المناخ (Nilus ECA) · محفظة التحصيل: 01006269629</p>
+        <p>جميع الحقوق محفوظة © 2026 نيلوس للتقنيات الرقمية وأصول المناخ (Nilus ECA)</p>
     </footer>
 
     <!-- السكريبت البرمجي الحقيقي والكامل -->
     <script>
+        // رابط الـ backend الحقيقي — غيّره لرابط الاستضافة الفعلي بعد النشر
+        const API_BASE = window.NILUS_API_BASE || 'http://localhost:3001/api/public';
+
         let map, currentPolygon = null, polygonPoints = [];
         let baseLayers = {};
         let paidServicesTotalCost = 0;
@@ -446,42 +446,54 @@
             document.getElementById('ndviBtnText').innerText = isActive ? "إخفاء NDVI" : "NDVI";
         }
 
-        /* اتصال حقيقي ومباشر لـ Sentinel Hub Statistical API أو محاكاة برمجية موثوقة في حال عدم توفر التوكن */
+        /* اتصال حقيقي بـ Sentinel Hub عبر الـ backend (وليس مباشرة من المتصفح، حماية لمفاتيح OAuth) */
         async function fetchSentinelStatisticsApiReal() {
             const statusEl = document.getElementById('sentinelStatus');
             if(polygonPoints.length < 3) {
                 statusEl.innerText = "⚠️ يرجى تحديد أركان الحقل على الخريطة أولاً!";
                 return;
             }
-            statusEl.innerText = "📡 جاري إرسال الطلب إلى Sentinel Hub OGC Statistical API...";
-            
+            statusEl.innerText = "📡 جاري إرسال الطلب إلى Sentinel Hub عبر السيرفر...";
+            statusEl.className = "text-[11px] text-cyan-300 pt-1";
+
             try {
-                // تجهيز الإحداثيات بصيغة GeoJSON Polygon المطلوبة عالمياً لـ Sentinel Hub
-                let ring = polygonPoints.map(pt => [pt[1], pt[0]]);
-                ring.push(ring[0]); // إغلاق المضلع
-                
-                let evalscriptPayload = `
-                    //VERSION=3
-                    function setup() {
-                        return { input: ["B04", "B08"], output: { bands: 1 } };
-                    }
-                    function evaluatePixel(sample) {
-                        let ndvi = (sample.B08 - sample.B04) / (sample.B08 + sample.B04);
-                        return [ndvi];
-                    }
-                `;
+                const polygon = polygonPoints.map(pt => ({ lat: pt[0], lng: pt[1] }));
+                const resp = await fetch(`${API_BASE}/ndvi-preview`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ polygon })
+                });
+                const data = await resp.json();
 
-                // محاكاة استجابة حقيقية مبنية على الخوارزمية الفضائية المعتمدة مع حساب الإحداثيات الفعلية المرسومة
-                setTimeout(() => {
-                    // توليد مؤشر NDVI واقعي بناءً على الموقع والموسم الزراعي الحالي (أغسطس 2026)
-                    let calculatedNdvi = (0.68 + (Math.random() * 0.18)).toFixed(2);
-                    document.getElementById('ndviInput').value = calculatedNdvi;
-                    statusEl.innerText = `✅ تم استخراج إحصاءات Sentinel بنجاح (NDVI: ${calculatedNdvi}) عبر الاتصال السحابي!`;
-                    statusEl.className = "text-[11px] text-emerald-400 font-bold pt-1";
-                }, 1200);
+                if (!resp.ok) {
+                    statusEl.innerText = `⚠️ ${data.error || 'تعذّر جلب بيانات Sentinel.'}`;
+                    statusEl.className = "text-[11px] text-amber-400 font-bold pt-1";
+                    return;
+                }
 
+                document.getElementById('ndviInput').value = data.latest.ndvi;
+                statusEl.innerText = `✅ NDVI الفعلي: ${data.latest.ndvi} (بتاريخ ${data.latest.date}، من ${data.latest.sampleCount} بيكسل صافي)`;
+                statusEl.className = "text-[11px] text-emerald-400 font-bold pt-1";
+
+                // نفس الاستدعاء بيجيب مؤشر الرطوبة النباتية (NDMI) من نفس اللقطة
+                try {
+                    const moistResp = await fetch(`${API_BASE}/moisture-preview`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ polygon })
+                    });
+                    const moistData = await moistResp.json();
+                    if (moistResp.ok) {
+                        document.getElementById('soilMoisture').value = moistData.latest.ndmi;
+                    } else {
+                        document.getElementById('soilMoisture').value = '';
+                        document.getElementById('soilMoisture').placeholder = 'لا توجد قراءة صالحة';
+                    }
+                } catch (moistErr) {
+                    document.getElementById('soilMoisture').placeholder = 'تعذّر الجلب';
+                }
             } catch (error) {
-                statusEl.innerText = "❌ حدث خطأ في الاتصال بـ API قمر Sentinel.";
+                statusEl.innerText = "❌ تعذّر الاتصال بالسيرفر. تأكد إن الـ backend شغّال.";
                 statusEl.className = "text-[11px] text-red-400 font-bold pt-1";
             }
         }
@@ -508,10 +520,24 @@
             alert("تم نسخ سياسة الصلاحيات (IAM Policy) بنجاح!");
         }
 
-        function validateAwsPolicyIntegration() {
+        async function validateAwsPolicyIntegration() {
             const statusText = document.getElementById('awsStatusText');
-            statusText.innerText = "الحالة: تم التحقق والمصادقة والربط السحابي بنجاح مع S3!";
-            statusText.className = "text-xs text-emerald-400 self-center font-bold";
+            statusText.innerText = "جاري التحقق الفعلي من الحاوية...";
+            statusText.className = "text-xs text-cyan-300 self-center font-medium";
+            try {
+                const resp = await fetch(`${API_BASE}/storage-verify`);
+                const data = await resp.json();
+                if (resp.ok && data.verified) {
+                    statusText.innerText = `الحالة: تم التحقق فعلياً من الوصول لحاوية ${data.bucket} ✅`;
+                    statusText.className = "text-xs text-emerald-400 self-center font-bold";
+                } else {
+                    statusText.innerText = `الحالة: فشل التحقق — ${data.error || 'راجع إعدادات AWS في .env'}`;
+                    statusText.className = "text-xs text-red-400 self-center font-bold";
+                }
+            } catch (err) {
+                statusText.innerText = "الحالة: تعذّر الاتصال بالسيرفر للتحقق.";
+                statusText.className = "text-xs text-red-400 self-center font-bold";
+            }
         }
 
         function getCurrentGPS() {
@@ -536,33 +562,84 @@
             document.getElementById('totalServicesPrice').innerText = total.toLocaleString();
         }
 
-        function applyPaidServicesToReport() {
+        async function applyPaidServicesToReport() {
             updatePaidServicesTotal();
-            alert(`تم اعتماد الخدمات المدفوعة بقيمة ${paidServicesTotalCost.toLocaleString()} جنيه. يرجى التحويل على محفظة: 01006269629.`);
+            const services = [];
+            if (document.getElementById('servicePkg1').checked) services.push('satellite_package');
+            if (document.getElementById('servicePkg3').checked) services.push('iot_soil_sensor');
+            if (services.length === 0) { alert('اختر خدمة واحدة على الأقل أولاً.'); return; }
+
+            const ownerName = document.getElementById('ownerName').value;
+            if (!ownerName) { alert('من فضلك أدخل اسم العميل أولاً.'); return; }
+            const phone = prompt('رقم الموبايل لإتمام الدفع عبر Paymob:');
+            if (!phone) return;
+
+            try {
+                const resp = await fetch(`${API_BASE}/payments/create-intention`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ownerName, phone,
+                        feddan: parseFloat(document.getElementById('calculatedFeddan').value) || 1,
+                        services
+                    })
+                });
+                const data = await resp.json();
+                if (!resp.ok) { alert(data.error || 'تعذّر إنشاء عملية الدفع.'); return; }
+
+                // تحويل فعلي لصفحة دفع Paymob — لا يُعتبر الطلب "مؤكداً" إلا بعد
+                // رجوع الدفع فعلاً عبر webhook على السيرفر، وليس بمجرد الضغط على الزر
+                window.location.href = data.checkoutUrl;
+            } catch (err) {
+                alert('تعذّر الاتصال بالسيرفر لإتمام الدفع.');
+            }
         }
 
-        function calculateResults() {
+        let lastCarbonResult = null; // يُستخدم لاحقاً عند إرسال التقرير بالبريد
+
+        async function calculateResults() {
             let owner = document.getElementById('ownerName').value || 'مزارع معتمد';
             let feddan = parseFloat(document.getElementById('calculatedFeddan').value) || 0;
-            let ndvi = parseFloat(document.getElementById('ndviInput').value) || 0.5;
+            let ndviRaw = document.getElementById('ndviInput').value;
             let diesel = parseFloat(document.getElementById('dieselInput').value) || 0;
             let fert = parseFloat(document.getElementById('fertInput').value) || 0;
-            let trees = parseFloat(document.getElementById('palmCountInput').value) || 0;
 
-            let emissions = (diesel * 2.68 + fert * 1.3) / 1000;
-            let absorption = (trees * 0.03) + (feddan * ndvi * 1.5);
-            let netCarbon = absorption - emissions;
+            if (!ndviRaw) {
+                alert('اضغط "جلب إحصاءات القمر الصناعي" أولاً للحصول على مؤشر NDVI فعلي قبل الحساب.');
+                return;
+            }
+            let ndvi = parseFloat(ndviRaw);
+
+            let healthBand = ndvi < 0.2 ? 'ضعيف جداً' : ndvi < 0.4 ? 'ضعيف' : ndvi < 0.6 ? 'متوسط' : ndvi < 0.8 ? 'جيد' : 'ممتاز';
+
+            let result;
+            try {
+                const resp = await fetch(`${API_BASE}/carbon-estimate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        areaFeddan: feddan, dieselLiters: diesel, ureaKg: fert,
+                        vegetationHealthBand: healthBand
+                    })
+                });
+                result = await resp.json();
+                if (!resp.ok) throw new Error(result.error || 'فشل الحساب');
+            } catch (err) {
+                alert('تعذّر الاتصال بسيرفر حساب الكربون. تأكد إن الـ backend شغّال.');
+                return;
+            }
+            lastCarbonResult = result;
 
             document.getElementById('resOwnerName').innerText = owner;
             document.getElementById('resAreaVal').innerText = feddan.toFixed(2) + " فدان";
             document.getElementById('resNdviVal').innerText = ndvi;
-            document.getElementById('resEmissions').innerText = emissions.toFixed(2) + " طن مكافئ CO2";
-            document.getElementById('resTrees').innerText = absorption.toFixed(2) + " طن CO2 سنوياً";
-            document.getElementById('resNetCarbon').innerText = netCarbon.toFixed(2) + " طن قابل للتداول";
+            document.getElementById('resEmissions').innerText = result.emissions.totalEmissionsTons.toFixed(2) + " طن مكافئ CO2";
+            document.getElementById('resTrees').innerText = result.sequestration.estimatedTonsPerYear.toFixed(2) + " طن CO2 سنوياً (تقديري)";
+            document.getElementById('resNetCarbon').innerText = result.netCarbonTonsPerYear.toFixed(2) + " طن (تقدير أولي غير معتمد)";
 
             if (paidServicesTotalCost > 0) {
                 const summaryEl = document.getElementById('resPaidServicesSummary');
-                summaryEl.innerText = `الخدمات المدفوعة المفعلة: بإجمالي تكلفة ${paidServicesTotalCost.toLocaleString()} ج.م (تم التحويل على محفظة 01006269629)`;
+                summaryEl.innerText = `الخدمات المدفوعة المفعلة: بإجمالي تكلفة ${paidServicesTotalCost.toLocaleString()} ج.م`;
                 summaryEl.classList.remove('hidden');
             }
 
@@ -571,15 +648,29 @@
             resultsArea.scrollIntoView({ behavior: 'smooth' });
         }
 
-        function captureMapSnapshot() {
+        async function captureMapSnapshot() {
             const mapElement = document.getElementById('mapContainer');
-            html2canvas(mapElement).then(canvas => {
-                snapshotDataUrl = canvas.toDataURL('image/png');
-                const container = document.getElementById('snapshotImageContainer');
-                container.innerHTML = `<img src="${snapshotDataUrl}" class="max-h-48 rounded-lg border border-cyan-500/40" alt="لقطة الخريطة">`;
-                document.getElementById('snapshotPreviewArea').classList.remove('hidden');
-                alert("تم التقاط صورة الخريطة وتوثيقها بنجاح!");
-            });
+            const canvas = await html2canvas(mapElement);
+            snapshotDataUrl = canvas.toDataURL('image/png');
+            const container = document.getElementById('snapshotImageContainer');
+            container.innerHTML = `<img src="${snapshotDataUrl}" class="max-h-48 rounded-lg border border-cyan-500/40" alt="لقطة الخريطة">`;
+            document.getElementById('snapshotPreviewArea').classList.remove('hidden');
+
+            try {
+                const fieldId = document.getElementById('ownerName').value || `field-${Date.now()}`;
+                const resp = await fetch(`${API_BASE}/upload-snapshot`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ imageBase64: snapshotDataUrl, fieldId })
+                });
+                if (resp.ok) {
+                    alert("تم التقاط الصورة وتوثيقها فعلياً في S3 بنجاح!");
+                } else {
+                    alert("تم التقاط الصورة، لكن التوثيق في S3 فشل — الصورة محفوظة محلياً فقط في هذه الصفحة.");
+                }
+            } catch (err) {
+                alert("تم التقاط الصورة، لكن تعذّر الاتصال بالسيرفر لتوثيقها.");
+            }
         }
 
         function clearSnapshot() {
@@ -588,9 +679,37 @@
             document.getElementById('snapshotPreviewArea').classList.add('hidden');
         }
 
-        function sendCompanyEmailReport() {
-            calculateResults();
-            alert("تم إعداد تقرير أصول المناخ وإرساله بنجاح إلى البريد الإلكتروني للشركة!");
+        async function sendCompanyEmailReport() {
+            await calculateResults();
+            if (!lastCarbonResult) return;
+
+            const reportData = {
+                owner: document.getElementById('ownerName').value,
+                location: document.getElementById('locationName').value,
+                areaFeddan: parseFloat(document.getElementById('calculatedFeddan').value) || 0,
+                ndvi: document.getElementById('ndviInput').value,
+                emissionsTons: lastCarbonResult.emissions.totalEmissionsTons,
+                absorbedTons: lastCarbonResult.sequestration.estimatedTonsPerYear,
+                netCarbonTons: lastCarbonResult.netCarbonTonsPerYear,
+                incomeMin: lastCarbonResult.netCarbonTonsPerYear * 18,
+                incomeMax: lastCarbonResult.netCarbonTonsPerYear * 40,
+            };
+
+            try {
+                const resp = await fetch(`${API_BASE}/send-report-email`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ reportData, snapshotDataUrl })
+                });
+                const data = await resp.json();
+                if (resp.ok && data.sent) {
+                    alert("تم إرسال تقرير أصول المناخ فعلياً إلى بريد الشركة!");
+                } else {
+                    alert(`تعذّر إرسال التقرير: ${data.error || 'خطأ غير معروف'}`);
+                }
+            } catch (err) {
+                alert("تعذّر الاتصال بالسيرفر لإرسال التقرير.");
+            }
         }
 
         function scrollToTop() {
