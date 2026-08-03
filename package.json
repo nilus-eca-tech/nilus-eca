@@ -1,25 +1,23 @@
 {
-  "name": "nilus-eca-backend",
-  "version": "1.1.0",
-  "description": "خادم Nilus ECA: Sentinel Hub + S3 + Paymob + طبقة الامتثال (Audit Trail / RBAC / VVB Dashboard / PDD Reports)",
-  "private": true,
+  "name": "nilus-eca-smart-farming-backend",
+  "version": "1.0.0",
+  "description": "Backend حقيقي لخدمة الزراعة الذكية بشركة Nilus ECA - يربط Sentinel Hub Statistical API، AWS S3، Paymob، وإرسال التقارير بالبريد",
   "main": "server.js",
+  "type": "commonjs",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js",
-    "migrate": "psql \"$DATABASE_URL\" -f db/schema.sql",
-    "create-admin": "node scripts/createAdmin.js"
+    "dev": "node --watch server.js"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.600.0",
-    "axios": "^1.7.2",
-    "bcrypt": "^5.1.1",
+    "express": "^4.19.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "jsonwebtoken": "^9.0.2",
-    "pdfkit": "^0.15.0",
-    "pg": "^8.12.0",
-    "qs": "^6.12.1"
+    "axios": "^1.7.7",
+    "@aws-sdk/client-s3": "^3.637.0",
+    "@aws-sdk/s3-request-presigner": "^3.637.0",
+    "nodemailer": "^6.9.14",
+    "express-rate-limit": "^7.4.0",
+    "helmet": "^7.1.0",
+    "joi": "^17.13.3"
   }
 }
