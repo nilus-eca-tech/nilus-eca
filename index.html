@@ -3,116 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nilus ECA | Admin & User Global Portal</title>
-    
-    <!-- المكتبات الأساسية -->
+    <title id="pageTitle">Nilus ECA | Global Climate Assets & Digital Agriculture</title>
+    <meta name="description" content="نيلوس للتقنيات الرقمية وأصول المناخ - معايير Verra الدولية، تقارير ESG، رصد الأقمار الصناعية وربط AWS S3">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
     <style>
         body { font-family: 'Cairo', 'Inter', sans-serif; scroll-behavior: smooth; }
-        .glass-panel { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(12px); border: 1px solid rgba(6, 182, 212, 0.2); }
+        .results-table td { padding: 10px; border-bottom: 1px solid #334155; }
         #map { height: 400px; width: 100%; z-index: 10; cursor: crosshair; }
         .ndvi-overlay {
-            position: absolute; inset: 0; pointer-events: none; z-index: 20; opacity: 0; transition: opacity 0.5s ease;
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 20;
+            opacity: 0;
+            transition: opacity 0.5s ease;
             background: radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.45) 0%, rgba(234, 179, 8, 0.3) 50%, rgba(239, 68, 68, 0.2) 90%);
         }
         .ndvi-active .ndvi-overlay { opacity: 1; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         .animate-slide-up { animation: slideUp 0.4s ease-out forwards; }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col selection:bg-cyan-500 selection:text-white">
 
-    <!-- شريط التنقل العلوي وتبديل الصلاحيات (Admin / User) -->
-    <div class="bg-slate-950 border-b border-cyan-500/30 py-2 px-4 flex flex-col sm:flex-row justify-between items-center gap-3 z-50">
-        <div class="flex items-center gap-3">
-            <div class="bg-cyan-600 text-white font-black px-2.5 py-1 rounded-lg text-xs shadow">NILUS ECA</div>
-            <span class="text-xs text-slate-400">منصة أصول المناخ والزراعة الذكية (Verra VM0042)</span>
-        </div>
-        
-        <!-- أزرار التبديل بين واجهة المستخدم ولوحة تحكم الإدارة -->
-        <div class="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-800">
-            <button onclick="switchView('user')" id="navUserBtn" class="bg-cyan-700 text-white font-bold px-4 py-1.5 rounded-lg text-xs transition">👤 واجهة المستخدم</button>
-            <button onclick="switchView('admin')" id="navAdminBtn" class="text-slate-400 hover:text-white font-bold px-4 py-1.5 rounded-lg text-xs transition">⚙️ لوحة الإدارة (Admin)</button>
+    <!-- شريط الأمان والتوثيق العالمي -->
+    <div class="bg-slate-950 border-b border-cyan-500/20 py-2 px-4 text-center text-xs text-cyan-400 font-semibold tracking-wider flex justify-between items-center max-w-7xl mx-auto w-full">
+        <span>🌍 Nilus ECA Global Platform · Verra VM0042 & ESG</span>
+        <div class="flex items-center gap-2">
+            <button onclick="setLanguage('ar')" id="langArBtn" class="text-white font-bold bg-cyan-700 px-2 py-0.5 rounded text-[10px]">العربية</button>
+            <button onclick="setLanguage('en')" id="langEnBtn" class="text-slate-400 hover:text-white px-2 py-0.5 rounded text-[10px]">English</button>
+            <span class="text-slate-600">|</span>
+            <select id="currencySelect" onchange="updateCurrency()" class="bg-slate-900 text-cyan-300 text-[10px] rounded border border-slate-700 px-1 py-0.5">
+                <option value="EGP">EGP (ج.م)</option>
+                <option value="USD">USD ($)</option>
+            </select>
         </div>
     </div>
 
-    <!-- المحتوى الرئيسي -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full space-y-6 flex-grow">
+    <!-- شريط التنقل الرئيسي والتبديل بين الواجهات -->
+    <header class="bg-slate-950/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="flex items-center justify-center bg-cyan-600 text-white font-black rounded-xl overflow-hidden shadow-lg shadow-cyan-900/40 border border-cyan-400/30 w-10 h-10">
+                    <span class="text-xl">🌐</span>
+                </div>
+                <div>
+                    <h1 class="text-base sm:text-lg font-black text-white tracking-wide" id="mainTitleTxt">نيلوس للتقنيات الرقمية وأصول المناخ</h1>
+                    <p class="text-[11px] text-cyan-400 font-medium" id="subTitleTxt">منصة دولية لاعتماد الكربون والزراعة الذكية بمعايير Verra</p>
+                </div>
+            </div>
 
+            <!-- أزرار التبديل بين واجهة المستخدم ولوحة تحكم الإدارة -->
+            <div class="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-800">
+                <button onclick="switchView('user')" id="navUserBtn" class="bg-cyan-700 text-white font-bold px-4 py-1.5 rounded-lg text-xs transition">👤 واجهة المستخدم</button>
+                <button onclick="switchView('admin')" id="navAdminBtn" class="text-slate-400 hover:text-white font-bold px-4 py-1.5 rounded-lg text-xs transition">⚙️ لوحة الإدارة (Admin)</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8 flex-grow">
+        
         <!-- ========================================== -->
         <!-- 1. واجهة المستخدم (User Dashboard)          -->
         <!-- ========================================== -->
-        <div id="userDashboardView" class="space-y-6 animate-slide-up">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                
-                <!-- الخريطة التفاعلية -->
-                <div class="lg:col-span-2 glass-panel rounded-3xl p-5 shadow-2xl relative flex flex-col">
-                    <div class="flex justify-between items-center mb-4">
+        <div id="userDashboardView" class="space-y-8 animate-slide-up">
+            <div class="bg-slate-950 border border-slate-800 rounded-3xl p-5 sm:p-8 shadow-2xl relative space-y-6">
+                <div class="bg-slate-900 border border-cyan-500/40 p-4 rounded-2xl space-y-4 shadow-lg">
+                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3">
                         <div>
-                            <h3 class="text-md font-black text-cyan-400">🛰️ خريطة قمر Sentinel وتحديد الحقل</h3>
-                            <p class="text-xs text-slate-400">انقر على الخريطة لرسم حدود الحقل وحساب المساحة تلقائياً.</p>
+                            <h4 class="text-md font-bold text-cyan-400">🛰️ خريطة قمر Sentinel وتحديد الحقل تفاعلياً</h4>
+                            <p class="text-xs text-slate-400">اضغط على النقاط داخل الخريطة لتحديد حدود الحقل واستخراج المساحة و NDVI فوراً.</p>
                         </div>
-                        <div class="flex gap-2">
-                            <button onclick="undoLastPoint()" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 px-3 py-1.5 rounded-xl text-xs font-bold border border-cyan-900">↩️ تراجع</button>
-                            <button onclick="clearPolygon()" class="bg-red-900/40 text-red-300 px-3 py-1.5 rounded-xl text-xs font-bold border border-red-900/50">🗑️ مسح</button>
+                        <div class="flex flex-wrap gap-2 items-center w-full lg:w-auto">
+                            <div class="bg-slate-950 border border-slate-700 p-1 rounded-xl flex gap-1">
+                                <button onclick="switchBaseLayer('streets')" id="layerBtnStreets" class="bg-cyan-700 text-white font-bold px-2 py-1 rounded-lg text-xs transition">الشوارع</button>
+                                <button onclick="switchBaseLayer('satellite')" id="layerBtnSatellite" class="bg-slate-800 text-slate-300 font-bold px-2 py-1 rounded-lg text-xs transition">فضائية</button>
+                            </div>
+                            <button onclick="undoLastPoint()" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3 py-2 rounded-xl text-xs transition">↩️ تراجع</button>
+                            <button onclick="clearPolygon()" class="bg-red-700 hover:bg-red-600 text-white font-bold px-3 py-2 rounded-xl text-xs transition">🗑️ مسح</button>
+                            <button onclick="toggleNDVILayer()" id="ndviToggleBtn" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-xs transition"><span id="ndviBtnText">NDVI</span></button>
                         </div>
                     </div>
-                    
-                    <div id="mapContainer" class="relative rounded-2xl overflow-hidden border border-slate-700 shadow-inner flex-grow">
+
+                    <div id="mapContainer" class="relative rounded-2xl overflow-hidden border border-slate-700 shadow-inner">
                         <div id="map"></div>
                         <div id="ndviOverlayLayer" class="ndvi-overlay"></div>
                     </div>
                 </div>
 
-                <!-- مؤشرات الحسابات الحية -->
-                <div class="space-y-4 flex flex-col justify-between">
-                    <div class="bg-slate-800/60 border border-cyan-500/30 p-4 rounded-2xl">
-                        <span class="text-xs font-bold text-slate-400">المساحة المحددة (GIS)</span>
-                        <div class="text-3xl font-black text-cyan-400 mt-1"><span id="kpiAreaValue">0.00</span> <span class="text-xs text-slate-300 font-normal">فدان</span></div>
-                        <p class="text-[11px] text-slate-500"><span id="kpiAreaSqm">0</span> متر مربع</p>
+                <!-- بطاقات المؤشرات الحية -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2">
+                        <span class="font-bold text-xs text-slate-300 block">المساحة المحددة (GIS)</span>
+                        <div class="text-2xl font-black text-cyan-400"><span id="cardAreaValue">0.00</span> <span class="text-xs text-slate-400 font-normal">فدان</span></div>
+                        <p class="text-[11px] text-slate-400"><span id="cardAreaSqm">0</span> متر مربع</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2">
+                        <span class="font-bold text-xs text-slate-300 block">الإنتاج المتوقع (AI)</span>
+                        <div class="text-2xl font-black text-emerald-400"><span id="predictedYieldVal">0.0</span> <span class="text-xs text-slate-400 font-normal">طن</span></div>
+                        <p class="text-[11px] text-slate-400">محاكاة التعلم الآلي.</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2">
+                        <span class="font-bold text-xs text-slate-300 block">رصيد الكربون القابل للتداول</span>
+                        <div class="text-2xl font-black text-amber-400"><span id="cardCarbonVal">0.0</span> <span class="text-xs text-slate-400 font-normal">طن CO2</span></div>
+                        <p class="text-[11px] text-slate-400">معيار Verra VM0042.</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2">
+                        <span class="font-bold text-xs text-slate-300 block">مؤشر الإفصاح ESG</span>
+                        <div class="text-2xl font-black text-blue-400">-- <span class="text-xs text-slate-400 font-normal">بانتظار الإدخال</span></div>
+                        <p class="text-[11px] text-slate-400">تقارير الشركات الكبرى.</p>
+                    </div>
+                </div>
+
+                <!-- إعدادات الحيازة والمحصول -->
+                <div class="bg-slate-900 border border-emerald-500/30 p-5 rounded-2xl space-y-4">
+                    <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2">بيانات الحيازة والمحصول</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="ownerName" class="block text-xs font-bold text-slate-300 mb-1">اسم المستفيد / الشركة</label>
+                            <input type="text" id="ownerName" placeholder="أدخل اسم العميل" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm">
+                        </div>
+                        <div>
+                            <label for="cropTypeSelect" class="block text-xs font-bold text-amber-300 mb-1">نوع المحصول (Verra VM0042)</label>
+                            <select id="cropTypeSelect" class="w-full bg-slate-950 border border-amber-500/40 rounded-xl px-3 py-2 text-amber-300 text-sm">
+                                <option value="wheat">قمح ومحاصيل حقلية</option>
+                                <option value="palm">نخيل وأشجار معمرة</option>
+                                <option value="citrus">بساتين موالح وفاكهة</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="calculatedFeddan" class="block text-xs font-bold text-cyan-400 mb-1">المساحة (فدان)</label>
+                            <input type="number" id="calculatedFeddan" step="0.01" placeholder="0.00" class="w-full bg-slate-950 border border-cyan-500/50 rounded-xl px-3 py-2 text-cyan-300 font-bold text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- زر إصدار التقارير وإرسال الطلب للأدمن -->
+                <div class="flex flex-col sm:flex-row justify-center gap-4 pt-2">
+                    <button onclick="calculateResults()" class="bg-cyan-600 hover:bg-cyan-500 text-white font-black px-8 py-4 rounded-2xl text-base shadow-xl shadow-cyan-600/30 transition">
+                        إصدار مسودة شهادة Verra وتقارير الكربون 📊
+                    </button>
+                    <button onclick="submitUserProjectToAdmin()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-8 py-4 rounded-2xl text-base shadow-xl shadow-emerald-600/30 transition">
+                        إرسال الطلب للاعتماد الرسمي للإدارة 🚀
+                    </button>
+                </div>
+
+                <!-- نتائج التحقيق ومسودة الشهادة مع التنبيه القانوني الصارم -->
+                <div id="resultsArea" class="bg-slate-900 border-2 border-amber-500/50 rounded-2xl p-6 hidden animate-fade-in space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                        <h4 class="text-lg font-black text-amber-400">📜 مسودة شهادة أصول الكربون (غير معتمدة رسمياً)</h4>
+                        <span class="bg-red-950 text-red-400 border border-red-800 px-3 py-1 rounded-lg text-xs font-bold">بانتظار المصادقة</span>
                     </div>
 
-                    <div class="bg-slate-800/60 border border-emerald-500/30 p-4 rounded-2xl">
-                        <span class="text-xs font-bold text-slate-400">الإنتاج المتوقع (AI Yield)</span>
-                        <div class="text-3xl font-black text-emerald-400 mt-1"><span id="kpiYieldValue">0.0</span> <span class="text-xs text-slate-300 font-normal">طن</span></div>
+                    <!-- التنبيه القانوني الإداري الصارم -->
+                    <div class="bg-red-950/40 border border-red-500/40 p-4 rounded-xl text-xs text-red-200 leading-relaxed">
+                        <strong>⚠️ تنبيه قانوني وإداري هام:</strong> هذه الوثيقة تعتبر مجرد <strong>مسودة أولية (Draft)</strong> لاستعراض البيانات والقياسات الفضائية فقط، و<strong>لا تكتسب أي صفة قانونية أو رسمية، ولا تُعد معتمدة أو قابلة للتداول في الأسواق الطوعية للكربون، إلا بعد مراجعتها، التدقيق الميداني، والمصادقة الرسمية وختمها من إدارة منصة نيلوس (Nilus ECA)</strong> وفقاً لمعايير Verra VM0042.
                     </div>
 
-                    <div class="bg-slate-800/60 border border-amber-500/30 p-4 rounded-2xl">
-                        <span class="text-xs font-bold text-slate-400">رصيد الكربون الصافي (Verra)</span>
-                        <div class="text-3xl font-black text-amber-400 mt-1"><span id="kpiCarbonValue">0.0</span> <span class="text-xs text-slate-300 font-normal">tCO2e</span></div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-slate-300 pt-2">
+                        <div><span class="font-bold text-cyan-400">المستفيد:</span> <span id="resOwnerName">-</span></div>
+                        <div><span class="font-bold text-cyan-400">المساحة المقدرة:</span> <span id="resAreaVal">-</span></div>
+                        <div><span class="font-bold text-cyan-400">الإنتاج المتوقع (AI):</span> <span id="resAiYield" class="text-emerald-400 font-bold">-</span></div>
+                        <div><span class="font-bold text-cyan-400">رصيد الكربون المبدئي:</span> <span id="resNetCarbon" class="text-cyan-400 font-bold">-</span></div>
                     </div>
                 </div>
-            </div>
-
-            <!-- لوحة المدخلات -->
-            <div class="glass-panel rounded-3xl p-6 shadow-xl grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">اسم المالك / المستفيد</label>
-                    <input type="text" id="inputOwner" placeholder="أدخل اسم العميل أو الشركة..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-amber-300 mb-1">نوع المحصول الأساسي</label>
-                    <select id="inputCrop" onchange="calculateLiveMetrics()" class="w-full bg-slate-900 border border-amber-500/40 rounded-xl px-3 py-2 text-amber-300 text-sm">
-                        <option value="wheat">قمح ومحاصيل حقلية</option>
-                        <option value="palm">نخيل وأشجار معمرة</option>
-                        <option value="citrus">بساتين موالح</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-cyan-400 mb-1">المساحة اليدوية (فدان)</label>
-                    <input type="number" id="inputManualArea" oninput="calculateLiveMetrics()" step="0.01" class="w-full bg-slate-900 border border-cyan-500/50 rounded-xl px-3 py-2 text-cyan-300 font-bold text-sm">
-                </div>
-            </div>
-
-            <div class="flex justify-center">
-                <button onclick="submitUserProject()" class="bg-cyan-600 hover:bg-cyan-500 text-white font-black px-8 py-3.5 rounded-2xl shadow-lg transition text-sm">
-                    إرسال الطلب وإصدار شهادة الكربون 📑
-                </button>
             </div>
         </div>
 
@@ -124,47 +185,47 @@
             <div class="flex justify-between items-center border-b border-slate-800 pb-4">
                 <div>
                     <h2 class="text-xl font-black text-white">⚙️ لوحة تحكم المشرف (Admin Control Center)</h2>
-                    <p class="text-xs text-slate-400">إدارة المشاريع المتقدمة، مراجعة الاعتمادات، ومتابعة الأرصدة الكربونية.</p>
+                    <p class="text-xs text-slate-400">مراجعة طلبات شهادات الكربون، المصادقة الرسمية، وإدارة الحقول المعتمدة.</p>
                 </div>
                 <div class="bg-cyan-950/50 border border-cyan-500/30 px-4 py-2 rounded-xl text-xs text-cyan-300">
-                    عدد المشاريع المسجلة: <strong id="adminTotalProjects" class="text-white">0</strong>
+                    إجمالي المشاريع الواردة: <strong id="adminTotalProjects" class="text-white">0</strong>
                 </div>
             </div>
 
             <!-- إحصائيات عامة للإدارة -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl">
-                    <span class="text-xs text-slate-400">إجمالي المساحات المعتمدة</span>
+                    <span class="text-xs text-slate-400">إجمالي المساحات قيد المراجعة والمعتمدة</span>
                     <div class="text-2xl font-bold text-cyan-400 mt-1"><span id="adminTotalArea">0.00</span> فدان</div>
                 </div>
                 <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl">
-                    <span class="text-xs text-slate-400">إجمالي أرصدة الكربون المصدرة</span>
+                    <span class="text-xs text-slate-400">إجمالي الأرصدة الكربونية المرتقبة</span>
                     <div class="text-2xl font-bold text-amber-400 mt-1"><span id="adminTotalCarbon">0.00</span> tCO2e</div>
                 </div>
                 <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl">
-                    <span class="text-xs text-slate-400">حالة الخوادم والأقمار</span>
-                    <div class="text-2xl font-bold text-emerald-400 mt-1">متصل (AWS S3)</div>
+                    <span class="text-xs text-slate-400">حالة الربط السيادي (AWS S3)</span>
+                    <div class="text-2xl font-bold text-emerald-400 mt-1">نشط ومؤمن 🟢</div>
                 </div>
             </div>
 
-            <!-- جدول المشاريع الواردة من المستخدمين -->
-            <div class="glass-panel rounded-3xl p-6 shadow-xl space-y-4">
-                <h3 class="text-sm font-bold text-cyan-400">سجل طلبات شهادات الكربون والمشاريع</h3>
+            <!-- جدول إدارة المشاريع -->
+            <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
+                <h3 class="text-sm font-bold text-cyan-400">سجل طلبات العملاء والمزارعين</h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right text-xs">
                         <thead>
                             <tr class="border-b border-slate-800 text-slate-400">
-                                <th class="p-3">رقم المعرف</th>
+                                <th class="p-3">رقم الطلب</th>
                                 <th class="p-3">المستفيد / المالك</th>
                                 <th class="p-3">المساحة (فدان)</th>
                                 <th class="p-3">رصيد الكربون (tCO2e)</th>
-                                <th class="p-3">الحالة</th>
-                                <th class="p-3">الإجراء</th>
+                                <th class="p-3">حالة الاعتماد القانوني</th>
+                                <th class="p-3">الإجراء الإداري</th>
                             </tr>
                         </thead>
                         <tbody id="adminProjectsTableBody" class="text-slate-300">
                             <tr>
-                                <td colspan="6" class="p-4 text-center text-slate-500">لا توجد مشاريع مسجلة حتى الآن. قم بإضافة مشروع من واجهة المستخدم.</td>
+                                <td colspan="6" class="p-4 text-center text-slate-500">لا توجد طلبات مسجلة حتى الآن.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -174,45 +235,52 @@
 
     </main>
 
-    <!-- تذييل -->
-    <footer class="bg-slate-950 border-t border-slate-800 py-4 text-center text-xs text-slate-500 mt-auto">
-        <p>Nilus ECA Global Platform © 2026 - All Rights Reserved</p>
+    <footer class="bg-slate-950 border-t border-slate-800 py-6 text-center text-xs text-slate-400 mt-auto">
+        <p>All Rights Reserved © 2026 Nilus ECA (نيلوس للتقنيات الرقمية وأصول المناخ)</p>
     </footer>
 
-    <!-- البرمجة والمنطق -->
+    <!-- البرمجة والمنطق بالكامل -->
     <script>
         let map, currentPolygon = null, polygonPoints = [];
         let baseLayers = {};
-        
-        // قاعدة بيانات محلية لتخزين مشاريع المستخدمين وعرضها للأدمن
-        let projectsDatabase = [];
-
-        let state = {
-            areaFeddan: 0,
-            yieldTotal: 0,
-            netCarbon: 0
-        };
+        let currentLang = 'ar';
+        let projectsDatabase = []; // قاعدة بيانات المشاريع لربط الواجهتين
 
         function initMap() {
             if (map) return;
-            map = L.map('map', { zoomControl: true }).setView([28.1098, 30.7503], 13);
-            baseLayers.streets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+            map = L.map('map', { zoomControl: true }).setView([27.7061, 30.7516], 13);
+
+            baseLayers.streets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' });
+            baseLayers.satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: 'Esri' });
+
+            baseLayers.streets.addTo(map);
 
             map.on('click', function(e) {
                 polygonPoints.push([e.latlng.lat, e.latlng.lng]);
                 redrawPolygon();
             });
+            
             setTimeout(() => { map.invalidateSize(); }, 300);
+        }
+
+        function switchBaseLayer(type) {
+            Object.values(baseLayers).forEach(layer => map.removeLayer(layer));
+            baseLayers[type].addTo(map);
+            document.getElementById('layerBtnStreets').className = type === 'streets' ? "bg-cyan-700 text-white font-bold px-2 py-1 rounded-lg text-xs" : "bg-slate-800 text-slate-300 font-bold px-2 py-1 rounded-lg text-xs";
+            document.getElementById('layerBtnSatellite').className = type === 'satellite' ? "bg-cyan-700 text-white font-bold px-2 py-1 rounded-lg text-xs" : "bg-slate-800 text-slate-300 font-bold px-2 py-1 rounded-lg text-xs";
         }
 
         function redrawPolygon() {
             if(currentPolygon) map.removeLayer(currentPolygon);
             if(polygonPoints.length > 0) {
-                currentPolygon = L.polygon(polygonPoints, { color: '#06b6d4', weight: 3, fillColor: '#22c55e', fillOpacity: 0.4 }).addTo(map);
+                currentPolygon = L.polygon(polygonPoints, { color: '#06b6d4', fillColor: '#22c55e', fillOpacity: 0.35 }).addTo(map);
                 let areaSqm = approximateArea(polygonPoints);
-                state.areaFeddan = areaSqm / 4200.83;
-                document.getElementById('inputManualArea').value = state.areaFeddan.toFixed(2);
-                calculateLiveMetrics();
+                let feddan = areaSqm / 4200.83;
+
+                document.getElementById('cardAreaSqm').innerText = Math.round(areaSqm).toLocaleString();
+                document.getElementById('cardAreaValue').innerText = feddan.toFixed(2);
+                document.getElementById('calculatedFeddan').value = feddan.toFixed(2);
+                document.getElementById('predictedYieldVal').innerText = (feddan * 2.4).toFixed(1);
             }
         }
 
@@ -224,21 +292,7 @@
                 area += pts[i][1] * pts[j][0];
                 area -= pts[j][1] * pts[i][0];
             }
-            return Math.abs(area) * 111319 * 111319 * Math.cos(28 * Math.PI / 180) / 2;
-        }
-
-        function calculateLiveMetrics() {
-            let manualArea = parseFloat(document.getElementById('inputManualArea').value) || 0;
-            let cropType = document.getElementById('inputCrop').value;
-            let factor = cropType === 'palm' ? 2.8 : 1.6;
-
-            state.yieldTotal = manualArea * 2.5;
-            state.netCarbon = manualArea * factor * 0.75;
-
-            document.getElementById('kpiAreaValue').innerText = manualArea.toFixed(2);
-            document.getElementById('kpiAreaSqm').innerText = Math.round(manualArea * 4200.83).toLocaleString();
-            document.getElementById('kpiYieldValue').innerText = state.yieldTotal.toFixed(1);
-            document.getElementById('kpiCarbonValue').innerText = state.netCarbon.toFixed(2);
+            return Math.abs(area) * 111319 * 111319 * Math.cos(27.7 * Math.PI / 180) / 2;
         }
 
         function undoLastPoint() {
@@ -249,8 +303,57 @@
         function clearPolygon() {
             polygonPoints = [];
             if(currentPolygon) map.removeLayer(currentPolygon);
-            document.getElementById('inputManualArea').value = '';
-            calculateLiveMetrics();
+            document.getElementById('cardAreaSqm').innerText = '0';
+            document.getElementById('cardAreaValue').innerText = '0.00';
+            document.getElementById('calculatedFeddan').value = '';
+            document.getElementById('predictedYieldVal').innerText = '0.0';
+            document.getElementById('cardCarbonVal').innerText = '0.0';
+        }
+
+        function toggleNDVILayer() {
+            const container = document.getElementById('mapContainer');
+            container.classList.toggle('ndvi-active');
+        }
+
+        function calculateResults() {
+            let owner = document.getElementById('ownerName').value || 'مستفيد غير محدد';
+            let feddan = parseFloat(document.getElementById('calculatedFeddan').value) || 0;
+            let netCarbon = (feddan * 1.6).toFixed(2);
+            let aiYield = (feddan * 2.45).toFixed(2);
+
+            document.getElementById('resOwnerName').innerText = owner;
+            document.getElementById('resAreaVal').innerText = feddan.toFixed(2) + " فدان";
+            document.getElementById('resAiYield').innerText = aiYield + " طن متري";
+            document.getElementById('resNetCarbon').innerText = netCarbon + " طن (مسودة)";
+            document.getElementById('cardCarbonVal').innerText = netCarbon;
+
+            const resultsArea = document.getElementById('resultsArea');
+            resultsArea.classList.remove('hidden');
+            resultsArea.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // إرسال الطلب للوحة الإدارة
+        function submitUserProjectToAdmin() {
+            let owner = document.getElementById('ownerName').value;
+            let feddan = parseFloat(document.getElementById('calculatedFeddan').value) || 0;
+            
+            if(!owner || feddan <= 0) {
+                alert('الرجاء إدخال اسم المستفيد وتحديد المساحة على الخريطة أولاً.');
+                return;
+            }
+
+            let netCarbon = (feddan * 1.6).toFixed(2);
+            let newProject = {
+                id: 'NILUS-' + Math.floor(1000 + Math.random() * 9000),
+                owner: owner,
+                area: feddan.toFixed(2),
+                carbon: netCarbon,
+                verified: false
+            };
+
+            projectsDatabase.push(newProject);
+            alert('تم إرسال الطلب بنجاح إلى لوحة تحكم الإدارة في انتظار المصادقة والاعتماد القانوني!');
+            switchView('admin');
         }
 
         // التبديل بين واجهة المستخدم ولوحة الأدمن
@@ -275,35 +378,7 @@
             }
         }
 
-        // إرسال المشروع من المستخدم وحفظه لتظهر في لوحة الأدمن
-        function submitUserProject() {
-            calculateLiveMetrics();
-            let owner = document.getElementById('inputOwner').value || 'مزارع معتمد';
-            let area = parseFloat(document.getElementById('inputManualArea').value) || 0;
-            
-            if(area <= 0) {
-                alert('الرجاء تحديد مساحة صحيحة أولاً عبر الخريطة أو الإدخال اليدوي.');
-                return;
-            }
-
-            let newProject = {
-                id: 'NILUS-' + Math.floor(1000 + Math.random() * 9000),
-                owner: owner,
-                area: area.toFixed(2),
-                carbon: state.netCarbon.toFixed(2),
-                status: 'معتمد (Verified)'
-            };
-
-            projectsDatabase.push(newProject);
-            alert('تم إصدار شهادة الكربون بنجاح وإرسالها إلى لوحة تحكم الإدارة!');
-            
-            // تفريغ الحقول
-            document.getElementById('inputOwner').value = '';
-            clearPolygon();
-            switchView('admin'); // الانتقال التلقائي للوحة الأدمن لمشاهدة الطلب
-        }
-
-        // تحديث جدول لوحة الإدارة
+        // تحديث جدول لوحة الإدارة (Admin Table)
         function renderAdminTable() {
             const tbody = document.getElementById('adminProjectsTableBody');
             document.getElementById('adminTotalProjects').innerText = projectsDatabase.length;
@@ -312,7 +387,7 @@
             let totalCarbon = 0;
 
             if(projectsDatabase.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500">لا توجد مشاريع مسجلة حتى الآن.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500">لا توجد طلبات مسجلة حتى الآن.</td></tr>`;
                 document.getElementById('adminTotalArea').innerText = '0.00';
                 document.getElementById('adminTotalCarbon').innerText = '0.00';
                 return;
@@ -323,15 +398,24 @@
                 totalArea += parseFloat(p.area);
                 totalCarbon += parseFloat(p.carbon);
 
+                let statusBadge = p.verified 
+                    ? `<span class="bg-emerald-950 text-emerald-400 border border-emerald-800 px-2.5 py-1 rounded-md text-[11px] font-bold">معتمد رسمياً ✅</span>` 
+                    : `<span class="bg-amber-950 text-amber-400 border border-amber-800 px-2.5 py-1 rounded-md text-[11px] font-bold">قيد المراجعة (مسودة غير قانونية) ⚠️</span>`;
+
+                let actionBtn = p.verified 
+                    ? `<button onclick="toggleVerify(${index})" class="text-amber-400 hover:text-amber-300 font-bold ml-2">إلغاء الاعتماد</button>`
+                    : `<button onclick="toggleVerify(${index})" class="text-emerald-400 hover:text-emerald-300 font-bold ml-2">اعتماد وختم رسمي 📜</button>`;
+
                 html += `
                     <tr class="border-b border-slate-800/60 hover:bg-slate-900/50">
                         <td class="p-3 font-mono text-cyan-400">${p.id}</td>
                         <td class="p-3 font-bold text-white">${p.owner}</td>
                         <td class="p-3">${p.area} فدان</td>
                         <td class="p-3 font-bold text-amber-400">${p.carbon} tCO2e</td>
-                        <td class="p-3"><span class="bg-emerald-900/50 text-emerald-300 px-2 py-0.5 rounded text-[10px]">${p.status}</span></td>
+                        <td class="p-3">${statusBadge}</td>
                         <td class="p-3">
-                            <button onclick="deleteProject(${index})" class="text-red-400 hover:text-red-300 font-bold">حذف</button>
+                            ${actionBtn}
+                            <button onclick="deleteProject(${index})" class="text-red-400 hover:text-red-300 font-bold mr-2">حذف</button>
                         </td>
                     </tr>
                 `;
@@ -342,14 +426,34 @@
             document.getElementById('adminTotalCarbon').innerText = totalCarbon.toFixed(2);
         }
 
+        function toggleVerify(index) {
+            projectsDatabase[index].verified = !projectsDatabase[index].verified;
+            renderAdminTable();
+        }
+
         function deleteProject(index) {
             projectsDatabase.splice(index, 1);
             renderAdminTable();
         }
 
+        function setLanguage(lang) {
+            currentLang = lang;
+            const html = document.getElementById('htmlRoot');
+            if(lang === 'en') {
+                html.setAttribute('dir', 'ltr');
+                document.getElementById('mainTitleTxt').innerText = "Nilus ECA | Climate Assets";
+                document.getElementById('subTitleTxt').innerText = "Global Carbon Crediting Platform";
+            } else {
+                html.setAttribute('dir', 'rtl');
+                document.getElementById('mainTitleTxt').innerText = "نيلوس للتقنيات الرقمية وأصول المناخ";
+                document.getElementById('subTitleTxt').innerText = "منصة دولية لاعتماد الكربون والزراعة الذكية بمعايير Verra";
+            }
+        }
+
+        function updateCurrency() {}
+
         window.onload = function() {
             initMap();
-            calculateLiveMetrics();
         };
     </script>
 </body>
