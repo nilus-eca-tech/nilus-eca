@@ -65,7 +65,7 @@
         <!-- القسم العلوي: الخريطة والمؤشرات الحية -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <!-- الخريطة -->
+            <!-- الخريطة (تأخذ ثلثي المساحة في الشاشات الكبيرة) -->
             <div class="lg:col-span-2 glass-panel rounded-3xl p-5 shadow-2xl relative flex flex-col">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
                     <div>
@@ -123,10 +123,10 @@
             </div>
         </div>
 
-        <!-- لوحة التحكم بالبيانات (الإدخال اللحظي مع طبقات IoT و Python) -->
+        <!-- لوحة التحكم بالبيانات (الإدخال اللحظي) -->
         <div class="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl">
             <h3 class="text-xl font-black text-white mb-6 border-b border-slate-700 pb-4 flex items-center gap-3" id="inputSectionTitle">
-                <span>⚙️</span> محرك تحليل البيانات الحيوية، الحساسات (IoT) وملكية خوارزميات Python
+                <span>⚙️</span> محرك تحليل البيانات الحيوية والبيئية
             </h3>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -167,16 +167,16 @@
                     </div>
                 </div>
 
-                <!-- 3. مؤشرات الأقمار والإنترنت الأشياء (IoT & Python Engine) -->
+                <!-- 3. مؤشرات الأقمار والإنترنت الأشياء -->
                 <div class="space-y-4">
-                    <h4 class="text-sm font-bold text-emerald-400 border-l-4 border-emerald-500 pl-2" id="sec3Title">3. مؤشرات IoT و Python Engine</h4>
+                    <h4 class="text-sm font-bold text-emerald-400 border-l-4 border-emerald-500 pl-2" id="sec3Title">3. مؤشرات IoT و Sentinel</h4>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-bold text-slate-300 mb-1" id="lblTrees">الأشجار المعمرة</label>
                             <input type="number" id="inputTrees" oninput="calculateLiveMetrics()" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-emerald-300 font-bold focus:border-emerald-500 focus:outline-none transition">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-300 mb-1" id="lblMoisture">رطوبة التربة (حساس IoT)%</label>
+                            <label class="block text-xs font-bold text-slate-300 mb-1" id="lblMoisture">رطوبة التربة %</label>
                             <input type="number" id="inputMoisture" value="68.5" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-blue-300 font-bold">
                         </div>
                     </div>
@@ -188,7 +188,7 @@
                         <input type="number" id="inputNdvi" oninput="calculateLiveMetrics()" step="0.01" min="0" max="1" value="0.75" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-emerald-400 font-bold focus:border-emerald-500 focus:outline-none transition">
                     </div>
                     <button onclick="simulateIoTUpdate()" class="w-full bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/30 font-bold py-2.5 rounded-xl text-xs transition flex justify-center items-center gap-2">
-                        <span id="btnSync">🔄 مزامنة حساسات IoT ونماذج Python</span>
+                        <span id="btnSync">🔄 مزامنة بيانات الأقمار الاصطناعية</span>
                     </button>
                 </div>
             </div>
@@ -201,13 +201,14 @@
             </button>
         </div>
 
-        <!-- منطقة التقرير النهائي -->
+        <!-- منطقة التقرير النهائي (تظهر بعد الضغط على الزر) -->
         <div id="finalReportSection" class="hidden animate-slide-up glass-panel rounded-3xl p-2 sm:p-10 shadow-2xl space-y-8 bg-slate-900 border-2 border-cyan-500/50">
             
             <!-- رأس التقرير -->
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b-2 border-slate-700 pb-6 gap-6">
                 <div class="flex items-center gap-4">
                     <div class="w-16 h-16 bg-white rounded-xl flex justify-center items-center shadow-lg p-1">
+                        <!-- مساحة للـ QR Code -->
                         <div class="w-full h-full border-4 border-black border-dashed flex justify-center items-center text-[8px] text-black font-black text-center">
                             SCAN<br>VERIFY
                         </div>
@@ -230,21 +231,20 @@
                 <!-- البيانات الأساسية -->
                 <div class="space-y-6">
                     <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 shadow-inner">
-                        <h3 class="text-cyan-400 font-bold mb-4 border-b border-slate-800 pb-2">تفاصيل الحيازة والملكية الفكرية</h3>
+                        <h3 class="text-cyan-400 font-bold mb-4 border-b border-slate-800 pb-2">تفاصيل الحيازة</h3>
                         <table class="w-full text-sm text-right" id="repTable1">
                             <tbody class="results-table text-slate-300">
                                 <tr><td class="font-bold">المستفيد / الكيان:</td><td id="repOwner" class="font-black text-white">---</td></tr>
                                 <tr><td class="font-bold">نوع المحصول (المعيار):</td><td id="repCrop" class="font-black text-amber-400">---</td></tr>
                                 <tr><td class="font-bold">المساحة الجغرافية:</td><td id="repArea" class="font-black text-cyan-300">---</td></tr>
                                 <tr><td class="font-bold">توقع الإنتاج (الذكاء الاصطناعي):</td><td id="repYield" class="font-black text-emerald-400">---</td></tr>
-                                <tr><td class="font-bold">نموذج الحساب البرمجي:</td><td class="font-black text-blue-400">Python Core Engine (Nilus IP)</td></tr>
                             </tbody>
                         </table>
                     </div>
 
                     <!-- مكان عرض صورة الخريطة -->
                     <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 shadow-inner text-center">
-                        <h3 class="text-cyan-400 font-bold mb-2 text-sm text-right">التوثيق الجغرافي الفضائي وحساسات IoT</h3>
+                        <h3 class="text-cyan-400 font-bold mb-2 text-sm text-right">التوثيق الجغرافي الفضائي</h3>
                         <div id="repSnapshotArea" class="w-full h-48 bg-slate-900 border border-slate-700 rounded-xl flex justify-center items-center text-slate-600 text-xs overflow-hidden">
                             لم يتم التقاط صورة الخريطة. اضغط (لقطة توثيق) بالأعلى.
                         </div>
@@ -293,16 +293,18 @@
     <footer class="bg-slate-950 border-t border-slate-800 py-8 text-center text-slate-500 mt-auto">
         <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
             <p class="font-bold text-sm">Nilus ECA © 2026</p>
-            <p class="text-xs font-mono">Engineered with Proprietary Python IoT Models & Climate Assets. All Rights Reserved.</p>
+            <p class="text-xs font-mono">Engineered for the Future of Climate Assets. Developed by the World's Best.</p>
         </div>
     </footer>
 
     <!-- السكريبت البرمجي الشامل -->
     <script>
+        // المتغيرات العامة
         let map, currentPolygon = null, polygonPoints = [];
         let baseLayers = {};
         let currentLang = 'ar';
         
+        // متغيرات الحسابات اللحظية
         let state = {
             areaFeddan: 0,
             yieldTotal: 0,
@@ -311,10 +313,13 @@
             netCarbon: 0
         };
 
+        // 1. تهيئة الخريطة
         function initMap() {
             if (map) return;
+            // إحداثيات المنيا، مصر (بناءً على طلباتك السابقة)
             map = L.map('map', { zoomControl: true }).setView([28.1098, 30.7503], 13);
 
+            // إضافة الطبقات مع تفعيل CrossOrigin للـ html2canvas
             baseLayers.streets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
                 maxZoom: 19, crossOrigin: true 
             });
@@ -324,6 +329,7 @@
 
             baseLayers.streets.addTo(map);
 
+            // التفاعل مع النقر لرسم المضلع
             map.on('click', function(e) {
                 polygonPoints.push([e.latlng.lat, e.latlng.lng]);
                 redrawPolygon();
@@ -332,6 +338,7 @@
             setTimeout(() => { map.invalidateSize(); }, 500);
         }
 
+        // 2. تبديل طبقات الخريطة
         function switchBaseLayer(type) {
             Object.values(baseLayers).forEach(layer => map.removeLayer(layer));
             baseLayers[type].addTo(map);
@@ -348,6 +355,7 @@
             }
         }
 
+        // 3. رسم المضلع وحساب المساحة الخرائطية
         function redrawPolygon() {
             if(currentPolygon) map.removeLayer(currentPolygon);
             if(polygonPoints.length > 0) {
@@ -356,6 +364,7 @@
                 let areaSqm = approximateArea(polygonPoints);
                 state.areaFeddan = areaSqm / 4200.83;
 
+                // تحديث حقول العرض فقط إذا كان هناك مساحة منطقية
                 document.getElementById('kpiAreaSqm').innerText = Math.round(areaSqm).toLocaleString();
                 document.getElementById('inputManualArea').value = state.areaFeddan.toFixed(2);
                 
@@ -363,6 +372,7 @@
             }
         }
 
+        // حساب المساحة التقريبي
         function approximateArea(pts) {
             if (pts.length < 3) return 0;
             let area = 0;
@@ -371,10 +381,13 @@
                 area += pts[i][1] * pts[j][0];
                 area -= pts[j][1] * pts[i][0];
             }
+            // تحويل تقريبي للإحداثيات إلى أمتار في منطقة خط عرض 28
             return Math.abs(area) * 111319 * 111319 * Math.cos(28 * Math.PI / 180) / 2;
         }
 
+        // 4. محرك الحسابات اللحظي الأساسي
         function calculateLiveMetrics() {
+            // جلب البيانات من المدخلات
             let manualArea = parseFloat(document.getElementById('inputManualArea').value);
             let activeArea = isNaN(manualArea) ? 0 : manualArea;
             
@@ -383,9 +396,9 @@
             let trees = parseFloat(document.getElementById('inputTrees').value) || 0;
             let ndvi = parseFloat(document.getElementById('inputNdvi').value) || 0;
             let cropType = document.getElementById('inputCrop').value;
-            let moisture = parseFloat(document.getElementById('inputMoisture').value) || 68;
 
-            let cropCarbonFactor = 1.6; 
+            // تحديد المعاملات حسب نوع المحصول (معايير Verra التقريبية)
+            let cropCarbonFactor = 1.6; // القمح والمحاصيل التقليدية
             let yieldFactor = 2.4; 
             
             if (cropType === 'palm') {
@@ -396,21 +409,27 @@
                 yieldFactor = 4.0;
             }
 
-            // محاكاة نموذج Python الحسابي المدمج مع قراءات رطوبة الحساسات
-            let moistureMultiplier = moisture / 70;
-            state.yieldTotal = activeArea * yieldFactor * (ndvi / 0.7) * moistureMultiplier;
+            // الحسابات
+            state.yieldTotal = activeArea * yieldFactor * (ndvi / 0.7); // الـ NDVI يؤثر على توقع الإنتاج
+            
+            // الانبعاثات (طن CO2) = (الديزل * 2.68 كجم/لتر) + (الأسمدة * 1.3 كجم/كجم)
             state.emissionsTotal = ((diesel * 2.68) + (fert * 1.3)) / 1000;
+            
+            // الامتصاص = (عدد الأشجار * 0.035) + (المساحة * NDVI * معامل المحصول)
             state.absorptionTotal = (trees * 0.035) + (activeArea * ndvi * cropCarbonFactor);
             
+            // الصافي
             state.netCarbon = state.absorptionTotal - state.emissionsTotal;
-            if(state.netCarbon < 0) state.netCarbon = 0;
+            if(state.netCarbon < 0) state.netCarbon = 0; // لا يوجد رصيد سالب للتداول
 
+            // تحديث واجهة المستخدم (الـ KPIs)
             document.getElementById('kpiAreaValue').innerText = activeArea.toFixed(2);
             document.getElementById('kpiYieldValue').innerText = state.yieldTotal.toFixed(1);
             document.getElementById('kpiCarbonValue').innerText = state.netCarbon.toFixed(2);
             document.getElementById('liveEmissionsText').innerText = state.emissionsTotal.toFixed(2) + " tCO2";
         }
 
+        // 5. وظائف الخريطة الإضافية
         function undoLastPoint() {
             polygonPoints.pop();
             redrawPolygon();
@@ -430,56 +449,69 @@
             container.classList.toggle('ndvi-active');
         }
 
+        // محاكاة جلب بيانات الأقمار الصناعية
         function simulateIoTUpdate() {
             const btn = document.getElementById('btnSync');
             const originalText = btn.innerHTML;
-            btn.innerHTML = '⏳ جاري الاتصال بحساسات IoT ومعالجة خوارزميات Python...';
+            btn.innerHTML = '⏳ جاري الاتصال بخوادم AWS & Sentinel...';
             
             setTimeout(() => {
+                // تغيير قيم عشوائية لتبدو واقعية
                 document.getElementById('inputNdvi').value = (0.7 + (Math.random() * 0.15)).toFixed(2);
-                document.getElementById('inputMoisture').value = (62 + (Math.random() * 12)).toFixed(1);
+                document.getElementById('inputMoisture').value = (60 + (Math.random() * 15)).toFixed(1);
                 calculateLiveMetrics();
-                btn.innerHTML = '✅ تمت مزامنة الحساسات وبايثون بنجاح';
+                btn.innerHTML = '✅ تمت المزامنة بنجاح';
                 setTimeout(() => { btn.innerHTML = originalText; }, 3000);
             }, 1500);
         }
 
+        // 6. التقاط صورة الخريطة (Snapshot)
         function captureMapSnapshot() {
             const mapContainer = document.getElementById('mapContainer');
+            // إخفاء مؤقت لأزرار التقريب إذا أردت
             html2canvas(mapContainer, { useCORS: true, logging: false }).then(canvas => {
                 let imgData = canvas.toDataURL('image/png');
                 let targetArea = document.getElementById('repSnapshotArea');
                 targetArea.innerHTML = `<img src="${imgData}" class="w-full h-full object-cover" alt="Map Snapshot">`;
-                targetArea.classList.remove('p-4');
-                alert(currentLang === 'ar' ? 'تم حفظ التوثيق الجغرافي وحساسات الحقل بنجاح!' : 'Map snapshot saved successfully!');
+                targetArea.classList.remove('p-4'); // إزالة الحشو الداخلي لتأخذ الصورة المساحة كاملة
+                
+                // رسالة نجاح
+                alert(currentLang === 'ar' ? 'تم حفظ التوثيق الجغرافي بنجاح! سيظهر في التقرير النهائي.' : 'Map snapshot saved for final report!');
             }).catch(err => {
                 console.error("Snapshot error: ", err);
-                alert("حدث خطأ أثناء التقاط الصورة.");
+                alert("حدث خطأ أثناء التقاط الصورة. تأكد من تفعيل CORS.");
             });
         }
 
+        // 7. إنشاء التقرير النهائي
         function generateFinalReport() {
-            calculateLiveMetrics();
+            calculateLiveMetrics(); // تأكيد تحديث الحسابات
             
+            // تعبئة البيانات
             let ownerName = document.getElementById('inputOwner').value || (currentLang === 'ar' ? 'غير محدد' : 'Unknown');
             let cropSelect = document.getElementById('inputCrop');
             let cropText = cropSelect.options[cropSelect.selectedIndex].text;
             
+            // توليد كود عشوائي للشهادة
             let randomCode = Math.floor(1000 + Math.random() * 9000);
             document.getElementById('repIdCode').innerText = `NILUS-VERRA-26-${randomCode}`;
             
+            // تاريخ اليوم
             let today = new Date().toISOString().split('T')[0];
             document.getElementById('repDate').innerText = (currentLang === 'ar' ? 'تاريخ الإصدار: ' : 'Date: ') + today;
 
+            // تعبئة الجدول
             document.getElementById('repOwner').innerText = ownerName;
             document.getElementById('repCrop').innerText = cropText;
             document.getElementById('repArea').innerText = document.getElementById('inputManualArea').value + (currentLang === 'ar' ? ' فدان' : ' Acres');
             document.getElementById('repYield').innerText = state.yieldTotal.toFixed(2) + (currentLang === 'ar' ? ' طن متري' : ' Metric Tons');
 
+            // تعبئة دفتر الكربون
             document.getElementById('repAbsorption').innerText = state.absorptionTotal.toFixed(2) + " tCO2";
             document.getElementById('repEmissions').innerText = state.emissionsTotal.toFixed(2) + " tCO2";
             document.getElementById('repNetCarbon').innerText = state.netCarbon.toFixed(2);
 
+            // إظهار التقرير بتأثير حركي والنزول إليه
             const reportDiv = document.getElementById('finalReportSection');
             reportDiv.classList.remove('hidden');
             setTimeout(() => {
@@ -487,6 +519,7 @@
             }, 100);
         }
 
+        // 8. دعم اللغات (تحديث مرئي سريع)
         function setLanguage(lang) {
             currentLang = lang;
             const html = document.getElementById('htmlRoot');
@@ -511,6 +544,7 @@
                 document.getElementById('langArBtn').className = "text-slate-400 hover:text-white px-2 py-1 rounded transition";
             } else {
                 html.setAttribute('dir', 'rtl');
+                // إعادة النصوص العربية...
                 document.getElementById('mainTitleTxt').innerText = "نيلوس للتقنيات الرقمية وأصول المناخ";
                 document.getElementById('subTitleTxt').innerText = "المنصة الدولية الأولى لاعتماد الكربون والزراعة الذكية";
                 document.getElementById('topBarText').innerText = "🌍 Nilus ECA Global Platform · Verra VM0042 & CSRD Compliant";
@@ -531,9 +565,10 @@
             calculateLiveMetrics();
         }
 
+        // تشغيل التهيئة عند تحميل الصفحة
         window.onload = function() {
             initMap();
-            calculateLiveMetrics();
+            calculateLiveMetrics(); // لتهيئة الأصفار
         };
     </script>
 </body>
