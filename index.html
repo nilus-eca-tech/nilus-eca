@@ -3,602 +3,510 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">Nilus ECA | إدارة أصول المناخ والخدمات الفضائية للمزارع</title>
-    <meta name="description" content="نيلوس للتقنيات الرقمية وأصول المناخ - خدمات الأقمار الصناعية المتكاملة للفلاح: مساحة، NDVI، رطوبة تربة، إجهاد، إنتاجية، وكربون">
+    <title>منظومة نيلوس الرقمية للزراعة الكربونية | Nilus ECA</title>
+    <meta name="description" content="نموذج تجريبي أولي لمنظومة نيلوس الرقمية للزراعة الكربونية في مصر وأفريقيا — تطبيق تجريبي على ست محافظات صعيدية: الفيوم، بني سويف، المنيا، أسيوط، سوهاج، قنا.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Cairo', 'Inter', sans-serif; scroll-behavior: smooth; }
-        .results-table td { padding: 10px; border-bottom: 1px solid #334155; }
-        #map { height: 420px; width: 100%; z-index: 10; cursor: crosshair; }
-        .ndvi-overlay {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            z-index: 20;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            background: radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.45) 0%, rgba(234, 179, 8, 0.3) 50%, rgba(239, 68, 68, 0.2) 90%);
+        :root{
+            --bg:#06120f; --bg2:#0a1c17; --panel:#0e241d; --line:#1c3a30;
+            --gold:#c9a24b; --gold2:#e6c675; --nile:#2f9e8f; --nile2:#5fd6c2;
+            --text:#eaf3ef; --muted:#8fac9f;
         }
-        .ndvi-active .ndvi-overlay { opacity: 1; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        body{ font-family:'Cairo','Space Grotesk',sans-serif; background:var(--bg); color:var(--text); scroll-behavior:smooth; }
+        .font-mono-fig{ font-family:'IBM Plex Mono',monospace; font-variant-numeric: tabular-nums; }
+        .font-display{ font-family:'Space Grotesk','Cairo',sans-serif; }
+        .panel{ background:var(--panel); border:1px solid var(--line); border-radius:22px; }
+        .hairline{ border-color:var(--line); }
+        .gold{ color:var(--gold2); }
+        .nile-text{ color:var(--nile2); }
+        .btn-gold{ background:linear-gradient(135deg,var(--gold),#a9822f); color:#0a1108; font-weight:800; }
+        .btn-gold:hover{ filter:brightness(1.08); }
+        #map{ height:440px; width:100%; border-radius:18px; cursor:crosshair; z-index:5; }
+        .grain{ background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.035) 1px, transparent 0); background-size: 22px 22px; }
+        .ledger-row{ border-bottom:1px dashed var(--line); }
+        .ledger-row:last-child{ border-bottom:none; }
+        .gov-node{ transition: all .25s ease; }
+        .gov-node.active{ background:rgba(201,162,75,0.14); border-color:var(--gold); }
+        .gov-node.active .gov-dot{ background:var(--gold2); box-shadow:0 0 0 6px rgba(201,162,75,0.18); }
+        @keyframes riverFlow{ 0%{stroke-dashoffset:400;} 100%{stroke-dashoffset:0;} }
+        .river-line{ stroke-dasharray:6 6; animation: riverFlow 14s linear infinite; }
+        ::-webkit-scrollbar{ width:8px; } ::-webkit-scrollbar-thumb{ background:var(--line); border-radius:8px; }
+        @media (prefers-reduced-motion: reduce){ .river-line{ animation:none; } }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col selection:bg-cyan-500 selection:text-white" onload="initMap()">
+<body class="min-h-screen flex flex-col grain">
 
-    <!-- شريط الأمان والنظام -->
-    <div class="bg-slate-950 border-b border-cyan-500/20 py-2 px-4 text-center text-xs text-cyan-400 font-semibold tracking-wider">
-        <span>نيلوس للتقنيات الرقمية وأصول المناخ · الخدمات الفضائية المتكاملة لخدمة الفلاح والمزارع المصري</span>
+    <!-- شريط علوي: سياق المسابقة -->
+    <div class="bg-[#0a1108] border-b border-[color:var(--line)] py-2 px-4 text-center text-[11px] sm:text-xs tracking-wide" style="color:var(--gold2)">
+        مُقدَّم إلى مسابقة المبادرة الوطنية للمشروعات الخضراء الذكية — نموذج تجريبي أولي على ست محافظات صعيدية قبل التوسع في مصر وأفريقيا
     </div>
 
-    <button id="scrollTopBtn" onclick="scrollToTop()" class="fixed bottom-6 right-6 bg-slate-800 hover:bg-slate-700 text-cyan-400 p-3 rounded-full shadow-2xl z-50 transition hidden border border-cyan-500/30">
-        ↑
-    </button>
-
-    <!-- شريط التنقل -->
-    <header class="bg-slate-950/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div class="flex items-center space-x-3 space-x-reverse">
-                <div class="flex items-center justify-center bg-cyan-600 text-white font-black rounded-xl overflow-hidden shadow-lg shadow-cyan-900/40 border border-cyan-400/30 w-10 h-10">
-                    <span class="text-xl">🌱</span>
-                </div>
+    <!-- الهيدر -->
+    <header class="border-b sticky top-0 z-40 backdrop-blur-md" style="background:rgba(6,18,15,0.92); border-color:var(--line)">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <!-- الشعار: SVG -->
+                <svg width="46" height="46" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="شعار نيلوس إيكا">
+                    <circle cx="32" cy="32" r="30" stroke="#c9a24b" stroke-width="1.4" opacity="0.5"/>
+                    <path d="M32 50C32 50 15 39 15 24C15 16 22 11 28 15C30 16.3 31.2 18.4 32 21C32.8 18.4 34 16.3 36 15C42 11 49 16 49 24C49 39 32 50 32 50Z" fill="url(#leafGrad)"/>
+                    <path d="M32 21V45" stroke="#06120f" stroke-width="1.6" stroke-linecap="round"/>
+                    <path d="M32 27 L24 22 M32 33 L40 28 M32 39 L25 35" stroke="#06120f" stroke-width="1.2" stroke-linecap="round"/>
+                    <path class="river-line" d="M11 44 Q 32 54 53 44" stroke="#5fd6c2" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+                    <defs>
+                        <linearGradient id="leafGrad" x1="15" y1="11" x2="49" y2="50" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#5fd6c2"/>
+                            <stop offset="1" stop-color="#2f9e8f"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
                 <div>
-                    <h1 class="text-base sm:text-lg font-black text-white tracking-wide">نيلوس للتقنيات الرقمية وأصول المناخ</h1>
-                    <p class="text-[11px] text-cyan-400 font-medium">الزراعة التعاقدية ومتابعة الحقول من الفضاء</p>
+                    <h1 class="font-display text-base sm:text-xl font-bold text-white tracking-wide">منظومة نيلوس الرقمية للزراعة الكربونية</h1>
+                    <p class="text-[11px] sm:text-xs" style="color:var(--muted)">في مصر وأفريقيا — تنفيذ: نيلوس إيكا للتقنيات الرقمية وأصول المناخ</p>
                 </div>
             </div>
-            <div class="flex items-center space-x-2 space-x-reverse text-xs text-cyan-300 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800 font-mono">
-                <span>محفظة التحصيل:</span>
+            <div class="flex items-center gap-2 text-xs bg-[color:var(--bg2)] px-3 py-1.5 rounded-xl border font-mono-fig" style="border-color:var(--line); color:var(--nile2)">
+                <span style="color:var(--muted)">تواصل:</span>
                 <strong class="text-white">01006269629</strong>
             </div>
         </div>
     </header>
 
-    <!-- قسم الخدمات الست الفضائية للفلاح -->
-    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 w-full">
-        <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
-            <div class="border-b border-slate-800 pb-3">
-                <h3 class="text-base sm:text-lg font-black text-cyan-400">🛰️ منظومة خدمات الأقمار الصناعية المتكاملة لخدمة الفلاح</h3>
-                <p class="text-xs text-slate-400">توظيف تقنيات الفضاء وأقمار Sentinel لتعظيم الإنتاجية وحماية المحاصيل ودعم أسواق الكربون.</p>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
-                <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-2xl space-y-1">
-                    <div class="font-bold text-white flex items-center gap-1.5"><span>📏</span> 1. تحديد المساحة بدقة شديدة</div>
-                    <p class="text-slate-400 leading-relaxed">رسم حدود الحقل بالماوس على الخريطة الفضائية لمعرفة المساحة الفعلية بالأفدنة والأمتار لضمان دقة العقود وتوزيع المستلزمات.</p>
+    <!-- الهيرو: أطروحة المشروع -->
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-6 w-full">
+        <div class="max-w-3xl">
+            <span class="inline-block text-[11px] font-bold px-3 py-1 rounded-full border" style="border-color:var(--gold); color:var(--gold2)">نموذج تجريبي — المرحلة الأولى</span>
+            <h2 class="font-display text-3xl sm:text-5xl font-bold text-white mt-4 leading-tight">
+                توثيق رقمي لأصول الكربون الزراعية،<br><span class="gold">من حقل الفلاح إلى سوق الكربون المصري.</span>
+            </h2>
+            <p class="mt-5 text-sm sm:text-base leading-relaxed" style="color:var(--muted)">
+                منظومة قياس ورصد والتحقق (MRV) رقمية تربط بيانات الأقمار الصناعية وحسابات تخزين الكربون في الأشجار الزراعية
+                بمنهجيات معتمدة دولياً، بما يتسق مع سياسة الدولة المصرية لإنشاء سوق طوعي للكربون. النموذج الحالي مطبَّق تجريبياً
+                على ست محافظات صعيدية كنقطة انطلاق قبل التوسع في باقي محافظات مصر وأفريقيا.
+            </p>
+        </div>
+    </section>
+
+    <!-- سياق السوق التنظيمي -->
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 w-full">
+        <div class="panel p-6 sm:p-8">
+            <h3 class="font-display text-lg font-bold text-white mb-2">التوافق مع الإطار التنظيمي المصري لسوق الكربون</h3>
+            <p class="text-xs sm:text-sm leading-relaxed mb-5" style="color:var(--muted)">
+                منذ مؤتمر المناخ COP27 بشرم الشيخ، تحرّكت مصر لبناء سوق طوعي منظم للكربون: قرار رئيس مجلس الوزراء رقم 4664
+                لسنة 2022 أسّس منصة تداول شهادات خفض الانبعاثات داخل البورصة المصرية، وأطلقت الهيئة العامة للرقابة المالية
+                أول سوق كربون طوعي منظم في أغسطس 2024، مدعوماً بلجنة رقابة مخصصة وعدد من جهات التحقق والمصادقة المعتمدة (VVB).
+                منظومة نيلوس مصمَّمة لتوليد بيانات جاهزة لهذا المسار التنظيمي — قابلة للتدقيق ومرتبطة بتاريخ قياس ومنهجية واضحة.
+            </p>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                <div class="bg-[color:var(--bg2)] rounded-xl p-3 border" style="border-color:var(--line)">
+                    <div class="font-mono-fig text-xl font-bold gold">2022</div>
+                    <div class="text-[10px] mt-1" style="color:var(--muted)">قرار تأسيس المنصة</div>
                 </div>
-                <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-2xl space-y-1">
-                    <div class="font-bold text-emerald-400 flex items-center gap-1.5"><span>🌿</span> 2. رصد صحة المحصول (NDVI)</div>
-                    <p class="text-slate-400 leading-relaxed">متابعة كثافة وحيوية الغطاء النباتي واكتشاف مناطق الضعف أو التراجع في النمو الخضري مبكراً قبل ظهورها بالعين المجردة.</p>
+                <div class="bg-[color:var(--bg2)] rounded-xl p-3 border" style="border-color:var(--line)">
+                    <div class="font-mono-fig text-xl font-bold gold">2024</div>
+                    <div class="text-[10px] mt-1" style="color:var(--muted)">إطلاق السوق المنظم</div>
                 </div>
-                <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-2xl space-y-1">
-                    <div class="font-bold text-cyan-400 flex items-center gap-1.5"><span>💧</span> 3. تتبع رطوبة التربة الطيفية</div>
-                    <p class="text-slate-400 leading-relaxed">قياس نسب الرطوبة السطحية وتحت السطحية ارتباطاً بالـ NDVI لمساعدة الفلاح في تحديد مواعيد الري المثلى وترشيد المياه.</p>
+                <div class="bg-[color:var(--bg2)] rounded-xl p-3 border" style="border-color:var(--line)">
+                    <div class="font-mono-fig text-xl font-bold gold">6</div>
+                    <div class="text-[10px] mt-1" style="color:var(--muted)">محافظات النموذج التجريبي</div>
                 </div>
-                <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-2xl space-y-1">
-                    <div class="font-bold text-amber-400 flex items-center gap-1.5"><span>⚠️</span> 4. الإجهاد المائي والمرضي</div>
-                    <p class="text-slate-400 leading-relaxed">تنبيه المزارع عند تعرض أجزاء من الحقل لعطش شديد أو إصابات فطرية وحشرية بناءً على التغيرات الطيفية المرصودة من الفضاء.</p>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-2xl space-y-1">
-                    <div class="font-bold text-blue-400 flex items-center gap-1.5"><span>📈</span> 5. تقدير الإنتاجية والكتلة الحيوية</div>
-                    <p class="text-slate-400 leading-relaxed">إعطاء مؤشرات أولية ومبكرة عن حجم المحصول المتوقع وقت الحصاد بناءً على تراكم النمو الخضري طوال موسم الزراعة.</p>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-2xl space-y-1">
-                    <div class="font-bold text-purple-400 flex items-center gap-1.5"><span>☁️</span> 6. حساب أصول ودخل الكربون</div>
-                    <p class="text-slate-400 leading-relaxed">تحويل الممارسات الزراعية الجيدة والبساتين إلى أصول مناخية موثقة لإدخال المزارع في أسواق الكربون الطوعية وزيادة دخله.</p>
+                <div class="bg-[color:var(--bg2)] rounded-xl p-3 border" style="border-color:var(--line)">
+                    <div class="font-mono-fig text-xl font-bold gold">VVB</div>
+                    <div class="text-[10px] mt-1" style="color:var(--muted)">جاهزية للتحقق الخارجي</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- المحتوى الرئيسي للتحري والخريطة -->
-    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8">
-        
-        <!-- بطاقات الحقول الديناميكية -->
-        <div class="bg-slate-950 border border-slate-800 rounded-3xl p-5 sm:p-8 shadow-xl">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b border-slate-800 pb-4 gap-2">
-                <div>
-                    <h3 class="text-base sm:text-lg font-black text-white">📍 مؤشرات الحقل الحية من الأقمار الصناعية</h3>
-                    <p class="text-xs text-slate-400">التحليل الطيفي الفوري للمساحة، رطوبة التربة، والإنتاجية المتوقعة.</p>
+    <!-- شريط المحافظات (العنصر المميز): تسلسل جغرافي حقيقي على امتداد النيل -->
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 w-full">
+        <div class="panel p-6 sm:p-8">
+            <div class="flex items-center justify-between mb-1">
+                <h3 class="font-display text-lg font-bold text-white">محافظات المرحلة التجريبية</h3>
+                <span class="text-[11px]" style="color:var(--muted)">شمال ← جنوب، بمسار النيل</span>
+            </div>
+            <p class="text-xs mb-6" style="color:var(--muted)">اختر محافظة لربطها ببيانات التقرير أدناه.</p>
+
+            <div class="relative">
+                <div class="hidden sm:block absolute top-[26px] right-0 left-0 h-[2px]" style="background:var(--line)"></div>
+                <div class="grid grid-cols-3 sm:grid-cols-6 gap-3 relative">
+                    <!-- ترتيب جغرافي فعلي من الشمال للجنوب -->
+                    <button type="button" onclick="selectGovernorate('الفيوم', this)" class="gov-node active flex flex-col items-center gap-2 p-3 rounded-2xl border" style="border-color:var(--line)">
+                        <span class="gov-dot w-3 h-3 rounded-full" style="background:var(--nile2)"></span>
+                        <span class="text-xs font-bold text-white">الفيوم</span>
+                    </button>
+                    <button type="button" onclick="selectGovernorate('بني سويف', this)" class="gov-node flex flex-col items-center gap-2 p-3 rounded-2xl border" style="border-color:var(--line)">
+                        <span class="gov-dot w-3 h-3 rounded-full" style="background:var(--nile2)"></span>
+                        <span class="text-xs font-bold text-white">بني سويف</span>
+                    </button>
+                    <button type="button" onclick="selectGovernorate('المنيا', this)" class="gov-node flex flex-col items-center gap-2 p-3 rounded-2xl border" style="border-color:var(--line)">
+                        <span class="gov-dot w-3 h-3 rounded-full" style="background:var(--nile2)"></span>
+                        <span class="text-xs font-bold text-white">المنيا</span>
+                    </button>
+                    <button type="button" onclick="selectGovernorate('أسيوط', this)" class="gov-node flex flex-col items-center gap-2 p-3 rounded-2xl border" style="border-color:var(--line)">
+                        <span class="gov-dot w-3 h-3 rounded-full" style="background:var(--nile2)"></span>
+                        <span class="text-xs font-bold text-white">أسيوط</span>
+                    </button>
+                    <button type="button" onclick="selectGovernorate('سوهاج', this)" class="gov-node flex flex-col items-center gap-2 p-3 rounded-2xl border" style="border-color:var(--line)">
+                        <span class="gov-dot w-3 h-3 rounded-full" style="background:var(--nile2)"></span>
+                        <span class="text-xs font-bold text-white">سوهاج</span>
+                    </button>
+                    <button type="button" onclick="selectGovernorate('قنا', this)" class="gov-node flex flex-col items-center gap-2 p-3 rounded-2xl border" style="border-color:var(--line)">
+                        <span class="gov-dot w-3 h-3 rounded-full" style="background:var(--nile2)"></span>
+                        <span class="text-xs font-bold text-white">قنا</span>
+                    </button>
                 </div>
-                <span id="dynamicFieldBadge" class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1 rounded-xl text-xs font-bold">الحقل الحالي: جاهز للرصد</span>
+            </div>
+        </div>
+    </section>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 w-full space-y-10">
+
+        <!-- الخريطة وحدود الحقل -->
+        <div class="panel p-5 sm:p-8">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+                <div>
+                    <h3 class="font-display text-lg font-bold text-white">حدود الحقل والمساحة</h3>
+                    <p class="text-xs" style="color:var(--muted)">ارسم حدود الحقل على الخريطة بنقاط GPS لحساب المساحة تلقائياً.</p>
+                </div>
+                <span id="areaBadge" class="text-xs font-bold font-mono-fig px-3 py-1.5 rounded-xl border" style="border-color:var(--nile); color:var(--nile2)">0.00 فدان</span>
+            </div>
+            <div id="map"></div>
+            <div class="flex flex-wrap gap-2 mt-4">
+                <button onclick="undoPoint()" class="text-xs font-bold px-3 py-2 rounded-xl border hover:brightness-125" style="border-color:var(--line)">↩️ تراجع عن آخر نقطة</button>
+                <button onclick="clearPolygon()" class="text-xs font-bold px-3 py-2 rounded-xl border hover:brightness-125" style="border-color:var(--line)">🗑️ مسح الحدود</button>
+                <button onclick="locateMe()" class="text-xs font-bold px-3 py-2 rounded-xl border hover:brightness-125" style="border-color:var(--line)">📍 موقعي الحالي</button>
+            </div>
+        </div>
+
+        <!-- بيانات الغطاء النباتي: وضع تجريبي واضح -->
+        <div class="panel p-5 sm:p-8">
+            <div class="flex items-center justify-between mb-2">
+                <h3 class="font-display text-lg font-bold text-white">مؤشر الغطاء النباتي (NDVI)</h3>
+                <span class="text-[10px] font-bold px-2.5 py-1 rounded-full border" style="border-color:var(--gold); color:var(--gold2)">وضع تجريبي — إدخال يدوي</span>
+            </div>
+            <p class="text-xs leading-relaxed mb-4" style="color:var(--muted)">
+                هذه الصفحة نسخة عرض ثابتة (GitHub Pages) بدون خادم خلفي، لذلك قيمة NDVI هنا تُدخَل يدوياً للتوضيح.
+                في منصة نيلوس التشغيلية، تُجلب هذه القيمة فعلياً من صور القمر الصناعي Sentinel-2 عبر Copernicus Data Space
+                Ecosystem — حساب NDVI = (الأشعة تحت الحمراء القريبة − الأحمر) ÷ (الأشعة تحت الحمراء القريبة + الأحمر).
+            </p>
+            <div class="flex items-center gap-4">
+                <input type="range" id="ndviSlider" min="0.1" max="0.95" step="0.01" value="0.62" oninput="onNdviChange(this.value)" class="flex-1 accent-[color:var(--nile)]">
+                <span id="ndviValueLabel" class="font-mono-fig text-lg font-bold gold w-16 text-center">0.62</span>
+            </div>
+        </div>
+
+        <!-- قاعدة بيانات تخزين الكربون في الأشجار -->
+        <div class="panel p-5 sm:p-8">
+            <h3 class="font-display text-lg font-bold text-white mb-1">سجل تخزين الكربون — أشجار محافظات الصعيد</h3>
+            <p class="text-xs leading-relaxed mb-5" style="color:var(--muted)">
+                معدلات امتصاص الكربون السنوية لكل شجرة، مبنية على أدبيات علمية منشورة (دراسات كربون مقارنة للأشجار المثمرة،
+                ودراسات مخزون كربون النخيل). التفاوت الكبير بين النطاقين الأدنى والأعلى طبيعي ومتوقّع — يعتمد على عمر الشجرة،
+                قطر الجذع، الكثافة الزراعية، والمنهجية المستخدمة في كل دراسة. أدخل عدد الأشجار لكل نوع لحساب التقدير الإجمالي.
+            </p>
+
+            <div class="overflow-x-auto -mx-2">
+                <table class="w-full text-xs sm:text-sm min-w-[640px]">
+                    <thead>
+                        <tr class="text-[11px]" style="color:var(--muted)">
+                            <th class="text-right px-2 pb-2 font-bold">الشجرة</th>
+                            <th class="text-right px-2 pb-2 font-bold">أكثر انتشاراً في</th>
+                            <th class="text-right px-2 pb-2 font-bold">كجم CO2 / شجرة / سنة</th>
+                            <th class="text-right px-2 pb-2 font-bold">عدد الأشجار</th>
+                            <th class="text-right px-2 pb-2 font-bold">الإجمالي (كجم CO2/سنة)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="treeLedgerBody"><!-- تُبنى بالجافاسكريبت من treeSpecies --></tbody>
+                </table>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2 hover:border-cyan-500/40 transition">
-                    <div class="flex justify-between items-center"><span class="font-bold text-sm text-white">المساحة الدقيقة</span><span class="bg-cyan-500/20 text-cyan-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">رسم بالماوس</span></div>
-                    <div class="text-2xl font-black text-cyan-400"><span id="cardAreaValue">0.00</span> <span class="text-xs text-slate-400 font-normal">فدان</span></div>
-                    <p class="text-xs text-slate-400"><span id="cardAreaSqm">0</span> م²</p>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2 hover:border-cyan-500/40 transition">
-                    <div class="flex justify-between items-center"><span class="font-bold text-sm text-white">رطوبة التربة (عكسي)</span><span class="bg-emerald-500/20 text-emerald-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">مرتبط بـ NDVI</span></div>
-                    <div class="text-2xl font-black text-emerald-400"><span id="cardMoistureValue">--</span>%</div>
-                    <p class="text-xs text-slate-400">تقدير طبقة الجذور طيفياً.</p>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2 hover:border-cyan-500/40 transition">
-                    <div class="flex justify-between items-center"><span class="font-bold text-sm text-white">الإنتاجية المتوقعة</span><span class="bg-blue-500/20 text-blue-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">تقدير مبكر</span></div>
-                    <div class="text-2xl font-black text-blue-400"><span id="cardYieldValue">--</span> <span class="text-xs text-slate-400 font-normal">طัน</span></div>
-                    <p class="text-xs text-slate-400">حسب الكتلة الحيوية الفضائية.</p>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-2 hover:border-amber-500/40 transition">
-                    <div class="flex justify-between items-center"><span class="font-bold text-sm text-white">جاهزية الكربون</span><span class="bg-amber-500/20 text-amber-400 text-[11px] font-bold px-2 py-0.5 rounded-lg">سوق طوعي</span></div>
-                    <div class="text-2xl font-black text-amber-400"><span id="cardCarbonValue">--</span> <span class="text-xs text-slate-400 font-normal">طن متوقع</span></div>
-                    <p class="text-xs text-slate-400">عائد مادي إضافي للمزارع.</p>
+            <div class="mt-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pt-4 border-t" style="border-color:var(--line)">
+                <p class="text-[11px] leading-relaxed max-w-xl" style="color:var(--muted)">
+                    ⚠️ نطاقات إرشادية من الأدبيات العلمية، وليست شهادة كربون معتمدة. أي استخدام رسمي يتطلب قياساً ميدانياً
+                    فعلياً (قطر الجذع، العمر، الكثافة) ومعايرة محلية وفق منهجية معتمدة (مثل VM0042) قبل اعتمادها من جهة تحقق.
+                </p>
+                <div class="text-left shrink-0">
+                    <div class="text-[11px]" style="color:var(--muted)">إجمالي امتصاص الأشجار</div>
+                    <div id="treeTotalCo2" class="font-mono-fig text-2xl font-bold nile-text">0</div>
+                    <div class="text-[10px]" style="color:var(--muted)">كجم CO2 / سنة</div>
                 </div>
             </div>
         </div>
 
-        <!-- قسم الخدمات المدفوعة للفلاح مع ربط المحفظة 01006269629 -->
-        <div class="bg-slate-950 border border-cyan-500/40 rounded-3xl p-5 sm:p-8 shadow-2xl space-y-6">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-4 gap-2">
+        <!-- الانبعاثات المقابلة -->
+        <div class="panel p-5 sm:p-8">
+            <h3 class="font-display text-lg font-bold text-white mb-4">الانبعاثات التشغيلية للحقل</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <h3 class="text-base sm:text-lg font-black text-cyan-400">💳 تفعيل باقات الخدمات الفضائية (محفظة التحصيل: 01006269629)</h3>
-                    <p class="text-xs text-slate-400">اشترك في الخدمات المتقدمة لتعظيم الإنتاجية وتوثيق أصول الكربون.</p>
+                    <label class="text-xs font-bold text-white block mb-1.5">استهلاك السولار الشهري (لتر)</label>
+                    <input type="number" id="dieselInput" min="0" value="0" class="w-full bg-[color:var(--bg2)] border rounded-xl px-3 py-2 text-sm" style="border-color:var(--line)">
+                    <p class="text-[10px] mt-1" style="color:var(--muted)">معامل احتراق قياسي: 2.68 كجم CO2 لكل لتر سولار</p>
                 </div>
-                <span class="bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-3 py-1 rounded-xl text-xs font-bold">فودافون كاش / محافظ إلكترونية</span>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between hover:border-cyan-500/50 transition">
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center">
-                            <h4 class="font-bold text-white text-base">الباقة الفضائية المتكاملة</h4>
-                            <span class="bg-cyan-500/20 text-cyan-400 text-xs font-bold px-2.5 py-1 rounded-lg">150 ج.م / فدان</span>
-                        </div>
-                        <p class="text-xs text-slate-400">متابعة دقيقة للمساحة، صحة الـ NDVI، والكشف المبكر عن الإجهاد المائي والمرضي طوال الموسم.</p>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between">
-                        <label class="flex items-center space-x-2 space-x-reverse cursor-pointer">
-                            <input type="checkbox" id="servicePkg1" onchange="updatePaidServicesTotal()" class="w-4 h-4 text-cyan-600 rounded bg-slate-950 border-slate-700 focus:ring-cyan-500">
-                            <span class="text-xs font-bold text-cyan-300">تفعيل الباقة</span>
-                        </label>
-                        <span class="text-xs text-slate-400 font-mono">سنوي</span>
-                    </div>
-                </div>
-
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between hover:border-amber-500/50 transition">
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center">
-                            <h4 class="font-bold text-white text-base">أصول الكربون والطوعية</h4>
-                            <span class="bg-amber-500/20 text-amber-400 text-xs font-bold px-2.5 py-1 rounded-lg">نظام نسبة 15%</span>
-                        </div>
-                        <p class="text-xs text-slate-400">توثيق الممارسات الزراعية وحساب رصيد الكربون وإدارته لزيادة دخل المزارع من الأسواق الطوعية.</p>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between">
-                        <label class="flex items-center space-x-2 space-x-reverse cursor-pointer">
-                            <input type="checkbox" id="servicePkg2" onchange="updatePaidServicesTotal()" class="w-4 h-4 text-amber-500 rounded bg-slate-950 border-slate-700 focus:ring-amber-500">
-                            <span class="text-xs font-bold text-amber-300">تفعيل الباقة</span>
-                        </label>
-                        <span class="text-xs text-slate-400 font-mono">تقاسم عوائد</span>
-                    </div>
-                </div>
-
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between hover:border-emerald-500/50 transition">
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center">
-                            <h4 class="font-bold text-white text-base">استشارات الري والإنتاجية</h4>
-                            <span class="bg-emerald-500/20 text-emerald-400 text-xs font-bold px-2.5 py-1 rounded-lg">300 ج.م / موسم</span>
-                        </div>
-                        <p class="text-xs text-slate-400">تقارير أسبوعية مخصصة لتقدير الإنتاجية، مواعيد الري المثلى بناءً على رطوبة التربة الفضائية.</p>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between">
-                        <label class="flex items-center space-x-2 space-x-reverse cursor-pointer">
-                            <input type="checkbox" id="servicePkg3" onchange="updatePaidServicesTotal()" class="w-4 h-4 text-emerald-600 rounded bg-slate-950 border-slate-700 focus:ring-emerald-500">
-                            <span class="text-xs font-bold text-emerald-300">تفعيل الباقة</span>
-                        </label>
-                        <span class="text-xs text-slate-400 font-mono">موسمي</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div>
-                    <span class="text-xs text-slate-400">إجمالي التكلفة المطلوبة للتحويل على محفظة (<strong class="text-cyan-400">01006269629</strong>):</span>
-                    <div class="text-xl font-black text-cyan-400"><span id="totalServicesPrice">0.00</span> <span class="text-xs text-slate-400">جنيه مصري</span></div>
+                    <label class="text-xs font-bold text-white block mb-1.5">كمية اليوريا الشهرية (كجم)</label>
+                    <input type="number" id="ureaInput" min="0" value="0" class="w-full bg-[color:var(--bg2)] border rounded-xl px-3 py-2 text-sm" style="border-color:var(--line)">
+                    <p class="text-[10px] mt-1" style="color:var(--muted)">معامل تقديري مبسّط (تحلل + تصنيع) — 1.3 كجم CO2 مكافئ/كجم يوريا، لأغراض التخطيط الأولي فقط</p>
                 </div>
-                <button onclick="applyPaidServicesToReport()" class="w-full sm:w-auto bg-cyan-700 hover:bg-cyan-600 text-white font-bold px-6 py-2.5 rounded-xl text-xs transition shadow">
-                    تأكيد وإضافة الخدمات لملف المزارع والتقرير 📝
-                </button>
             </div>
         </div>
 
-        <!-- الخريطة والتحليل الفضائي -->
-        <div class="bg-slate-950 border border-slate-800 rounded-3xl p-5 sm:p-10 shadow-2xl relative space-y-8">
-            <div class="bg-slate-900 border border-cyan-500/40 p-4 rounded-2xl space-y-4 shadow-lg">
-                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3">
-                    <div>
-                        <h4 class="text-md font-bold text-cyan-400">🛰️ خريطة قمر Sentinel وتحديد المساحة بالماوس</h4>
-                        <p class="text-xs text-slate-400">انقر عدة نقاط متتالية على الخريطة لتشكيل حدود الحقل وسيتم سحب الـ NDVI ورطوبة التربة حسابياً وعكسياً.</p>
-                    </div>
-                    <div class="flex flex-wrap gap-2 items-center w-full lg:w-auto">
-                        <div class="bg-slate-950 border border-slate-700 p-1 rounded-xl flex gap-1">
-                            <button onclick="switchBaseLayer('streets')" id="layerBtnStreets" class="bg-cyan-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs transition">الشوارع</button>
-                            <button onclick="switchBaseLayer('satellite')" id="layerBtnSatellite" class="bg-slate-800 text-slate-300 font-bold px-2.5 py-1.5 rounded-lg text-xs transition">فضائية</button>
-                            <button onclick="switchBaseLayer('topo')" id="layerBtnTopo" class="bg-slate-800 text-slate-300 font-bold px-2.5 py-1.5 rounded-lg text-xs transition">تضاريس</button>
-                        </div>
-                        <button onclick="undoLastPoint()" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold px-3 py-2 rounded-xl text-xs transition shadow">↩️ تراجع</button>
-                        <button onclick="clearPolygon()" class="bg-red-700 hover:bg-red-600 text-white font-bold px-3 py-2 rounded-xl text-xs transition shadow">🗑️ مسح</button>
-                        <button onclick="toggleNDVILayer()" id="ndviToggleBtn" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-xs transition shadow"><span id="ndviBtnText">NDVI</span></button>
-                        <button onclick="captureMapSnapshot()" class="bg-cyan-700 hover:bg-cyan-600 text-white font-bold px-3 py-2 rounded-xl text-xs transition shadow">📸 لقطة للخريطة</button>
-                    </div>
+        <!-- النتائج -->
+        <div class="panel p-5 sm:p-8">
+            <h3 class="font-display text-lg font-bold text-white mb-5">التقرير الإجمالي</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                <div class="bg-[color:var(--bg2)] rounded-xl p-4 border" style="border-color:var(--line)">
+                    <div class="text-[10px]" style="color:var(--muted)">المحافظة</div>
+                    <div id="resGov" class="font-bold text-white mt-1 text-sm">الفيوم</div>
                 </div>
-
-                <div id="mapContainer" class="relative rounded-2xl overflow-hidden border border-slate-700">
-                    <div class="bg-slate-950/90 text-cyan-300 text-[11px] font-mono px-3 py-1.5 border-b border-slate-700 flex justify-between items-center z-30 relative">
-                        <span>2026-08-03 - Sentinel-2 NDVI & Inverse Soil Moisture Integration</span>
-                        <span id="drawStatusIndicator" class="text-emerald-400 font-bold">وضع التحديد نشط</span>
-                    </div>
-                    <div id="map"></div>
-                    <div id="ndviOverlayLayer" class="ndvi-overlay"></div>
+                <div class="bg-[color:var(--bg2)] rounded-xl p-4 border" style="border-color:var(--line)">
+                    <div class="text-[10px]" style="color:var(--muted)">مساحة الحقل</div>
+                    <div id="resArea" class="font-mono-fig font-bold nile-text mt-1 text-sm">0.00 فدان</div>
                 </div>
-
-                <div id="snapshotPreviewArea" class="hidden pt-4 border-t border-slate-800 space-y-2">
-                    <div class="text-xs font-bold text-cyan-300 flex justify-between items-center">
-                        <span>🖼️ معاينة الصورة التوثيقية الملتقطة للخريطة النباتية:</span>
-                        <button onclick="clearSnapshot()" class="text-red-400 hover:text-red-300 text-[11px]">حذف الصورة</button>
-                    </div>
-                    <div id="snapshotImageContainer" class="flex justify-center bg-slate-950 p-2 rounded-xl border border-slate-800 overflow-hidden"></div>
+                <div class="bg-[color:var(--bg2)] rounded-xl p-4 border" style="border-color:var(--line)">
+                    <div class="text-[10px]" style="color:var(--muted)">انبعاثات تشغيلية</div>
+                    <div id="resEmissions" class="font-mono-fig font-bold text-amber-400 mt-1 text-sm">0.00 طن CO2</div>
+                </div>
+                <div class="bg-[color:var(--bg2)] rounded-xl p-4 border-2" style="border-color:var(--gold)">
+                    <div class="text-[10px] gold">صافي الكربون المرصود</div>
+                    <div id="resNet" class="font-mono-fig font-bold gold mt-1 text-sm">0.00 طن</div>
                 </div>
             </div>
 
-            <!-- بيانات الحيازة -->
-            <div class="bg-slate-900 border border-emerald-500/30 p-5 sm:p-6 rounded-2xl space-y-4">
-                <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2">بيانات الحيازة والمساحة المحسوبة</h4>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label for="ownerName" class="block text-xs font-bold text-slate-300 mb-1">اسم العميل / الجهة الزراعية</label>
-                        <input type="text" id="ownerName" placeholder="أدخل اسم العميل أو الجهة" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none">
-                    </div>
-                    <div>
-                        <label for="locationName" class="block text-xs font-bold text-slate-300 mb-1">منطقة الأرض / المحافظة</label>
-                        <input type="text" id="locationName" placeholder="أدخل اسم المنطقة أو المحافظة" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none">
-                    </div>
-                    <div>
-                        <label for="calculatedFeddan" class="block text-xs font-bold text-cyan-400 mb-1">المساحة المقدرة (بالفدان)</label>
-                        <input type="number" id="calculatedFeddan" step="0.01" placeholder="0.00" class="w-full bg-slate-950 border border-cyan-500/50 rounded-xl px-3 py-2.5 text-cyan-300 font-bold text-sm focus:outline-none">
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-                    <div>
-                        <label for="gpsLat" class="block text-xs font-bold text-slate-300 mb-1">خط العرض المركز (Latitude)</label>
-                        <input type="text" id="gpsLat" placeholder="0.0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm">
-                    </div>
-                    <div>
-                        <label for="gpsLng" class="block text-xs font-bold text-slate-300 mb-1">خط الطول المركز (Longitude)</label>
-                        <input type="text" id="gpsLng" placeholder="0.0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm">
-                    </div>
-                    <div class="flex items-end">
-                        <button onclick="getCurrentGPS()" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-md">📍 تحديد موقعي الحالي (GPS)</button>
-                    </div>
-                </div>
+            <div>
+                <label class="text-xs font-bold text-white block mb-1.5">اسم المالك / الجمعية الزراعية</label>
+                <input type="text" id="ownerName" placeholder="مثال: جمعية فلاحي ملوي الزراعية" class="w-full bg-[color:var(--bg2)] border rounded-xl px-3 py-2 text-sm mb-4" style="border-color:var(--line)">
             </div>
 
-            <!-- المؤشرات والانبعاثات -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
-                    <h4 class="text-md font-bold text-amber-400 border-b border-slate-800 pb-2">1. أنشطة الحيازة والانبعاثات</h4>
-                    <div>
-                        <label for="dieselInput" class="block text-xs font-bold text-slate-300 mb-1">الديزل (لتر/سنة)</label>
-                        <input type="number" id="dieselInput" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
-                    </div>
-                    <div>
-                        <label for="fertInput" class="block text-xs font-bold text-slate-300 mb-1">اليوريا (كجم/سنة)</label>
-                        <input type="number" id="fertInput" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
-                    </div>
-                </div>
-
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
-                    <h4 class="text-md font-bold text-emerald-400 border-b border-slate-800 pb-2">2. الأشجار ورطوبة التربة العكسية</h4>
-                    <div>
-                        <label for="palmCountInput" class="block text-xs font-bold text-slate-300 mb-1">عدد الأشجار (شجرة)</label>
-                        <input type="number" id="palmCountInput" placeholder="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold">
-                    </div>
-                    <div>
-                        <label for="soilMoisture" class="block text-xs font-bold text-emerald-300 mb-1">رطوبة التربة (حساب عكسي من NDVI %)</label>
-                        <input type="number" id="soilMoisture" readonly placeholder="--.--" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-emerald-400 text-sm font-bold">
-                    </div>
-                </div>
-
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
-                    <h4 class="text-md font-bold text-cyan-400 border-b border-slate-800 pb-2">3. مؤشرات قمر Sentinel والـ NDVI</h4>
-                    <div>
-                        <label for="ndviInput" class="block text-xs font-bold text-slate-300 mb-1">مؤشر الغطاء النباتي الفعلي (NDVI)</label>
-                        <input type="number" id="ndviInput" min="0" max="1" step="0.01" placeholder="0.75" value="0.75" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm font-bold" oninput="calculateInverseSoilMoisture()">
-                    </div>
-                    <div class="pt-2">
-                        <button onclick="fetchSentinelStatisticsApiReal()" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-2 px-3 rounded-xl text-xs transition shadow-md">📡 جلب إحصاءات Sentinel الفضائية</button>
-                    </div>
-                    <div id="sentinelStatus" class="text-[11px] text-cyan-300 pt-1">Sentinel Hub OGC API: متصل وعكسي الارتباط نشط</div>
-                </div>
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button onclick="calculateResults()" class="flex-1 btn-gold px-5 py-3 rounded-xl text-sm">📊 احتساب التقرير</button>
+                <button onclick="sendCompanyEmailReport()" class="flex-1 px-5 py-3 rounded-xl text-sm font-bold border hover:brightness-125" style="border-color:var(--nile); color:var(--nile2)">📧 إرسال التقرير لبريد الشركة</button>
             </div>
+            <p class="text-[10px] mt-3" style="color:var(--muted)">
+                نسخة العرض هذه بلا خادم خلفي، فزر الإرسال يفتح رسالة بريد جاهزة إلى waadnasr144@gmail.com عبر برنامج البريد
+                الافتراضي على جهازك. المنصة التشغيلية الكاملة ترسل التقارير تلقائياً عبر خادم مخصص.
+            </p>
+        </div>
 
-            <!-- أزرار العمليات -->
-            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4">
-                <button onclick="calculateResults()" class="w-full sm:w-auto bg-cyan-600 hover:bg-cyan-500 text-white font-black px-8 py-4 rounded-2xl text-base shadow-xl shadow-cyan-600/30 transition">
-                    تحليل أصول المناخ وحساب دخل الكربون 📊
-                </button>
-                <button onclick="sendCompanyEmailReport()" class="w-full sm:w-auto bg-blue-700 hover:bg-blue-600 text-white font-black px-8 py-4 rounded-2xl text-base shadow-xl shadow-blue-700/30 transition border border-blue-400/30">
-                    إرسال التقرير لبريد الشركة 📩
-                </button>
-            </div>
-
-            <!-- 📍 المكان المخصص لعرض التقارير والشهادات النهائية -->
-            <div id="resultsArea" class="bg-slate-900 border border-cyan-500/30 rounded-2xl p-6 hidden animate-fade-in space-y-4">
-                <h4 class="text-lg font-black text-cyan-400 border-b border-slate-800 pb-2">📜 تقرير وشهادة أصول المناخ والخدمات الفضائية (يظهر هنا فوراً)</h4>
-                <div class="text-xs text-slate-300 space-y-1 bg-slate-950 p-4 rounded-xl border border-slate-800">
-                    <div><span class="font-bold text-cyan-400">اسم المستفيد:</span> <span id="resOwnerName">-</span></div>
-                    <div><span class="font-bold text-cyan-400">المساحة الدقيقة:</span> <span id="resAreaVal" class="text-cyan-300 font-bold">-</span></div>
-                    <div><span class="font-bold text-cyan-400">مؤشر الغطاء النباتي (NDVI):</span> <span id="resNdviVal" class="text-emerald-400 font-bold">-</span></div>
-                    <div><span class="font-bold text-cyan-400">رطوبة التربة (حساب عكسي طيفي):</span> <span id="resMoistureVal" class="text-cyan-300 font-bold">-</span></div>
-                    <div><span class="font-bold text-cyan-400">الإنتاجية المتوقعة للحصول:</span> <span id="resYieldVal" class="text-blue-400 font-bold">-</span></div>
-                    <div id="resPaidServicesSummary" class="pt-2 border-t border-slate-800 text-amber-300 hidden"></div>
+        <!-- خارطة طريق التوسع -->
+        <div class="panel p-6 sm:p-8">
+            <h3 class="font-display text-lg font-bold text-white mb-4">خارطة طريق التوسع</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                <div class="bg-[color:var(--bg2)] rounded-xl p-4 border" style="border-color:var(--line)">
+                    <div class="font-bold text-white mb-1">المرحلة 1 — الصعيد</div>
+                    <p style="color:var(--muted)">تجربة ميدانية في الفيوم وبني سويف والمنيا وأسيوط وسوهاج وقنا، ومعايرة محلية للأشجار السائدة في كل محافظة.</p>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-right text-sm" aria-label="جدول النتائج">
-                        <tbody class="results-table text-slate-200">
-                            <tr>
-                                <td class="font-bold text-slate-400">إجمالي الانبعاثات الناتجة:</td>
-                                <td id="resEmissions" class="font-black text-amber-400">0 طن مكافئ CO2</td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold text-slate-400">الكربون الممتص عبر الأشجار والبساتين:</td>
-                                <td id="resTrees" class="font-black text-emerald-400">0 طن CO2 سنوياً</td>
-                            </tr>
-                            <tr class="border-b-0 bg-cyan-950/20">
-                                <td class="font-bold text-cyan-300">صافي رصيد الكربون الاقتصادي:</td>
-                                <td id="resNetCarbon" class="font-black text-cyan-400 text-base">0 طن قابل للتداول</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="bg-[color:var(--bg2)] rounded-xl p-4 border" style="border-color:var(--line)">
+                    <div class="font-bold text-white mb-1">المرحلة 2 — مصر</div>
+                    <p style="color:var(--muted)">التوسع لباقي محافظات الوادي والدلتا، وربط المنظومة بجهات التحقق (VVB) المعتمدة من الهيئة العامة للرقابة المالية.</p>
+                </div>
+                <div class="bg-[color:var(--bg2)] rounded-xl p-4 border" style="border-color:var(--line)">
+                    <div class="font-bold text-white mb-1">المرحلة 3 — أفريقيا</div>
+                    <p style="color:var(--muted)">تكييف قاعدة بيانات الأشجار والمنهجية لدول الحوض النيلي والدول الأفريقية ذات الأنماط الزراعية المشابهة.</p>
                 </div>
             </div>
         </div>
     </main>
 
-    <footer class="bg-slate-950 border-t border-slate-800 py-6 text-center text-xs text-slate-400 mt-auto">
-        <p>جميع الحقوق محفوظة © 2026 نيلوس للتقنيات الرقمية وأصول المناخ (Nilus ECA) · محفظة التحصيل: 01006269629</p>
+    <footer class="border-t py-6 px-4 text-center text-[11px]" style="border-color:var(--line); color:var(--muted)">
+        منظومة نيلوس الرقمية للزراعة الكربونية — نيلوس إيكا للتقنيات الرقمية وأصول المناخ · محافظة المنيا، مصر
     </footer>
 
-    <!-- السكريبت البرمجي المكتمل والمتكامل مع حساب رطوبة التربة العكسي للـ NDVI والخدمات الست -->
     <script>
-        let map, currentPolygon = null, polygonPoints = [];
-        let baseLayers = {};
-        let paidServicesTotalCost = 0;
-        let snapshotDataUrl = null;
+        // =====================================================================
+        // قاعدة بيانات الأشجار — معدلات كجم CO2/شجرة/سنة [منخفض, مرتفع]
+        // مصادر: دراسات مقارنة لأشجار الفاكهة (مانجو/جوافة/رمان/حمضيات)،
+        // ودراسات مخزون كربون النخيل (إثيوبيا/الوطن العربي). راجع التنويه أعلى الجدول.
+        // =====================================================================
+        const treeSpecies = [
+            { name: 'نخيل البلح', latin: 'Phoenix dactylifera', region: 'المنيا، أسيوط، سوهاج، قنا', low: 120, high: 200 },
+            { name: 'مانجو', latin: 'Mangifera indica', region: 'المنيا، الفيوم', low: 20, high: 120 },
+            { name: 'جوافة', latin: 'Psidium guajava', region: 'سوهاج، قنا', low: 12, high: 45 },
+            { name: 'رمان', latin: 'Punica granatum', region: 'قنا، أسيوط', low: 55, high: 240 },
+            { name: 'حمضيات (موالح)', latin: 'Citrus spp.', region: 'الفيوم، بني سويف', low: 40, high: 240 },
+            { name: 'زيتون', latin: 'Olea europaea', region: 'الفيوم، بني سويف', low: 15, high: 60 },
+            { name: 'سنط / كازوارينا (مصدات رياح)', latin: 'Acacia nilotica / Casuarina spp.', region: 'جميع المحافظات (حدود الحقول)', low: 10, high: 30 },
+        ];
 
+        function buildTreeLedger() {
+            const body = document.getElementById('treeLedgerBody');
+            body.innerHTML = treeSpecies.map((t, i) => `
+                <tr class="ledger-row" data-idx="${i}">
+                    <td class="px-2 py-3">
+                        <div class="font-bold text-white">${t.name}</div>
+                        <div class="text-[10px] italic" style="color:var(--muted)">${t.latin}</div>
+                    </td>
+                    <td class="px-2 py-3" style="color:var(--muted)">${t.region}</td>
+                    <td class="px-2 py-3 font-mono-fig nile-text">${t.low}–${t.high}</td>
+                    <td class="px-2 py-3">
+                        <input type="number" min="0" value="0" oninput="onTreeCountChange()" data-idx="${i}"
+                            class="tree-count-input w-20 bg-[color:var(--bg2)] border rounded-lg px-2 py-1.5 text-xs font-mono-fig" style="border-color:var(--line)">
+                    </td>
+                    <td class="px-2 py-3 font-mono-fig font-bold gold tree-row-total" data-idx="${i}">0</td>
+                </tr>
+            `).join('');
+        }
+
+        function onTreeCountChange() {
+            let total = 0;
+            document.querySelectorAll('.tree-count-input').forEach(input => {
+                const idx = Number(input.dataset.idx);
+                const count = parseFloat(input.value) || 0;
+                const mid = (treeSpecies[idx].low + treeSpecies[idx].high) / 2; // متوسط النطاق كقيمة تقديرية افتراضية
+                const rowTotal = count * mid;
+                document.querySelector(`.tree-row-total[data-idx="${idx}"]`).innerText = Math.round(rowTotal).toLocaleString('en-US');
+                total += rowTotal;
+            });
+            document.getElementById('treeTotalCo2').innerText = Math.round(total).toLocaleString('en-US');
+        }
+
+        function getTreeTotalCo2Kg() {
+            return Array.from(document.querySelectorAll('.tree-count-input')).reduce((sum, input) => {
+                const idx = Number(input.dataset.idx);
+                const count = parseFloat(input.value) || 0;
+                const mid = (treeSpecies[idx].low + treeSpecies[idx].high) / 2;
+                return sum + count * mid;
+            }, 0);
+        }
+
+        buildTreeLedger();
+
+        // =====================================================================
+        // المحافظات
+        // =====================================================================
+        let selectedGovernorate = 'الفيوم';
+        function selectGovernorate(name, btn) {
+            selectedGovernorate = name;
+            document.querySelectorAll('.gov-node').forEach(el => el.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('resGov').innerText = name;
+        }
+
+        // =====================================================================
+        // NDVI (إدخال يدوي — وضع تجريبي بلا خادم، موضّح للمستخدم أعلى القسم)
+        // =====================================================================
+        let currentNdvi = 0.62;
+        function onNdviChange(val) {
+            currentNdvi = parseFloat(val);
+            document.getElementById('ndviValueLabel').innerText = currentNdvi.toFixed(2);
+        }
+
+        // =====================================================================
+        // الخريطة وحساب المساحة (Leaflet + صيغة Shoelace لتقدير المساحة)
+        // =====================================================================
+        let map, polygonPoints = [], polygonLayer, markersLayer;
         function initMap() {
-            if (map) return;
-            map = L.map('map', { zoomControl: false }).setView([27.7061, 30.7516], 13);
-
-            baseLayers.streets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' });
-            baseLayers.satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: 'Esri Sentinel' });
-            baseLayers.topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17, attribution: 'OpenTopoMap' });
-
-            baseLayers.streets.addTo(map);
-
-            map.on('click', function(e) {
-                polygonPoints.push([e.latlng.lat, e.latlng.lng]);
-                redrawPolygon();
-            });
+            map = L.map('map', { zoomControl: true }).setView([28.0871, 30.8428], 8); // مركز تقريبي: الفيوم
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors',
+                maxZoom: 19,
+            }).addTo(map);
+            markersLayer = L.layerGroup().addTo(map);
+            map.on('click', (e) => addPoint(e.latlng));
         }
 
-        function switchBaseLayer(type) {
-            Object.values(baseLayers).forEach(layer => map.removeLayer(layer));
-            baseLayers[type].addTo(map);
-
-            ['streets', 'satellite', 'topo'].forEach(t => {
-                const btn = document.getElementById(`layerBtn${t.charAt(0).toUpperCase() + t.slice(1)}`);
-                if(btn) {
-                    btn.className = t === type ? "bg-cyan-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs transition" : "bg-slate-800 text-slate-300 font-bold px-2.5 py-1.5 rounded-lg text-xs transition";
-                }
-            });
+        function addPoint(latlng) {
+            polygonPoints.push(latlng);
+            L.circleMarker(latlng, { radius: 5, color: '#e6c675', fillColor: '#e6c675', fillOpacity: 1 }).addTo(markersLayer);
+            redrawPolygon();
         }
 
-        function redrawPolygon() {
-            if(currentPolygon) map.removeLayer(currentPolygon);
-            if(polygonPoints.length > 0) {
-                currentPolygon = L.polygon(polygonPoints, { color: '#06b6d4', fillColor: '#22c55e', fillOpacity: 0.35 }).addTo(map);
-                
-                let areaSqm = approximateArea(polygonPoints);
-                let feddan = areaSqm / 4200.83;
-
-                document.getElementById('cardAreaSqm').innerText = Math.round(areaSqm).toLocaleString();
-                document.getElementById('cardAreaValue').innerText = feddan.toFixed(2);
-                document.getElementById('calculatedFeddan').value = feddan.toFixed(2);
-
-                let center = currentPolygon.getBounds().getCenter();
-                document.getElementById('gpsLat').value = center.lat.toFixed(4);
-                document.getElementById('gpsLng').value = center.lng.toFixed(4);
-
-                // حساب رطوبة التربة العكسية والإنتاجية بناءً على المساحة والـ NDVI الافتراضي
-                calculateInverseSoilMoisture();
-            }
-        }
-
-        function approximateArea(pts) {
-            if (pts.length < 3) return 0;
-            let area = 0;
-            for (let i = 0; i < pts.length; i++) {
-                let j = (i + 1) % pts.length;
-                area += pts[i][1] * pts[j][0];
-                area -= pts[j][1] * pts[i][0];
-            }
-            return Math.abs(area) * 111319 * 111319 * Math.cos(27.7 * Math.PI / 180) / 2;
-        }
-
-        function undoLastPoint() {
+        function undoPoint() {
             polygonPoints.pop();
+            markersLayer.clearLayers();
+            polygonPoints.forEach(p => L.circleMarker(p, { radius: 5, color: '#e6c675', fillColor: '#e6c675', fillOpacity: 1 }).addTo(markersLayer));
             redrawPolygon();
         }
 
         function clearPolygon() {
             polygonPoints = [];
-            if(currentPolygon) {
-                map.removeLayer(currentPolygon);
-                currentPolygon = null;
-            }
-            document.getElementById('cardAreaSqm').innerText = '0';
-            document.getElementById('cardAreaValue').innerText = '0.00';
-            document.getElementById('calculatedFeddan').value = '';
-            document.getElementById('cardCarbonValue').innerText = '--';
-            document.getElementById('cardMoistureValue').innerText = '--';
-            document.getElementById('cardYieldValue').innerText = '--';
-            document.getElementById('soilMoisture').value = '';
+            markersLayer.clearLayers();
+            if (polygonLayer) { map.removeLayer(polygonLayer); polygonLayer = null; }
+            updateAreaBadge(0);
         }
 
-        function toggleNDVILayer() {
-            const container = document.getElementById('mapContainer');
-            const btnText = document.getElementById('ndviBtnText');
-            container.classList.toggle('ndvi-active');
-            if(container.classList.contains('ndvi-active')) {
-                btnText.innerText = 'إخفاء NDVI';
-            } else {
-                btnText.innerText = 'NDVI';
-            }
+        function redrawPolygon() {
+            if (polygonLayer) map.removeLayer(polygonLayer);
+            if (polygonPoints.length < 3) { updateAreaBadge(0); return; }
+            polygonLayer = L.polygon(polygonPoints, { color: '#5fd6c2', weight: 2, fillOpacity: 0.15 }).addTo(map);
+            updateAreaBadge(approximateAreaFeddan(polygonPoints));
         }
 
-        function captureMapSnapshot() {
-            const mapElement = document.getElementById('mapContainer');
-            html2canvas(mapElement).then(canvas => {
-                snapshotDataUrl = canvas.toDataURL('image/png');
-                const container = document.getElementById('snapshotImageContainer');
-                container.innerHTML = `<img src="${snapshotDataUrl}" class="max-h-48 rounded-lg border border-slate-700" alt="خريطة الحقل">`;
-                document.getElementById('snapshotPreviewArea').classList.remove('hidden');
-                alert('تم التقاط صورة الخريطة بنجاح!');
-            }).catch(err => {
-                console.error(err);
-                alert('حدث خطأ أثناء التقاط صورة الخريطة.');
+        // صيغة Shoelace مع تصحيح تقريبي لخطوط الطول/العرض (مناسبة لحقول صغيرة < عدة كم)
+        function approximateAreaFeddan(pts) {
+            if (pts.length < 3) return 0;
+            const R = 6371000; // نصف قطر الأرض بالمتر
+            const latRad = pts[0].lat * Math.PI / 180;
+            const toXY = (p) => ({
+                x: (p.lng * Math.PI / 180) * R * Math.cos(latRad),
+                y: (p.lat * Math.PI / 180) * R,
             });
-        }
-
-        function clearSnapshot() {
-            snapshotDataUrl = null;
-            document.getElementById('snapshotImageContainer').innerHTML = '';
-            document.getElementById('snapshotPreviewArea').classList.add('hidden');
-        }
-
-        function getCurrentGPS() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(position => {
-                    const lat = position.coords.latitude;
-                    const lng = position.coords.longitude;
-                    document.getElementById('gpsLat').value = lat.toFixed(4);
-                    document.getElementById('gpsLng').value = lng.toFixed(4);
-                    map.setView([lat, lng], 15);
-                    alert('تم تحديث الموقع الحالي بنجاح!');
-                }, () => {
-                    alert('تعذر الحصول على الموقع الجغرافي.');
-                });
-            } else {
-                alert('خاصية تحديد الموقع غير مدعومة في متصفحك.');
+            const xy = pts.map(toXY);
+            let area = 0;
+            for (let i = 0; i < xy.length; i++) {
+                const j = (i + 1) % xy.length;
+                area += xy[i].x * xy[j].y - xy[j].x * xy[i].y;
             }
+            const sqm = Math.abs(area / 2);
+            return sqm / 4200.83; // تحويل من متر مربع إلى فدان
         }
 
-        // دالة الحساب العكسي لرطوبة التربة والإنتاجية بناءً على قيمة الـ NDVI
-        function calculateInverseSoilMoisture() {
-            const ndvi = parseFloat(document.getElementById('ndviInput').value) || 0.75;
-            const feddan = parseFloat(document.getElementById('calculatedFeddan').value) || 1;
-
-            // علاقة عكسية رياضية نموذجية: زيادة استهلاك النبات للمياه (عبر الـ NDVI المرتفع) تعكس معامل سحب رطوبة جذعية
-            // معادلة تقديرية عكاسية دقيقة لرطوبة التربة السطحية وتحت السطحية
-            let soilMoistureVal = Math.max(25, Math.min(92, (95 - (ndvi * 45)) + (Math.random() * 3))).toFixed(1);
-            
-            // تقدير الإنتاجية المتوقعة (طن) بناءً على المساحة والـ NDVI
-            let estimatedYield = (feddan * ndvi * 2.8).toFixed(2);
-
-            document.getElementById('soilMoisture').value = soilMoistureVal;
-            document.getElementById('cardMoistureValue').innerText = soilMoistureVal;
-            document.getElementById('cardYieldValue').innerText = estimatedYield;
+        function updateAreaBadge(feddan) {
+            document.getElementById('areaBadge').innerText = `${feddan.toFixed(2)} فدان`;
+            document.getElementById('resArea').innerText = `${feddan.toFixed(2)} فدان`;
         }
 
-        function updatePaidServicesTotal() {
-            let total = 0;
-            const feddan = parseFloat(document.getElementById('calculatedFeddan').value) || 1;
-            
-            if (document.getElementById('servicePkg1').checked) total += 150 * feddan;
-            if (document.getElementById('servicePkg2').checked) total += 200 * feddan; 
-            if (document.getElementById('servicePkg3').checked) total += 300; 
-
-            paidServicesTotalCost = total;
-            document.getElementById('totalServicesPrice').innerText = total.toFixed(2);
-        }
-
-        function applyPaidServicesToReport() {
-            updatePaidServicesTotal();
-            if (paidServicesTotalCost > 0) {
-                alert(`تم تأكيد وباقات الخدمات بقيمة ${paidServicesTotalCost.toFixed(2)} جنيه. يرجى التحويل على محفظة التحصيل: 01006269629 وإرفاق إيصال الدفع.`);
-            } else {
-                alert('يرجى اختيار باقة واحدة على الأقل أولاً.');
+        function locateMe() {
+            if (!navigator.geolocation) {
+                alert('المتصفح لا يدعم خدمة تحديد الموقع.');
+                return;
             }
+            navigator.geolocation.getCurrentPosition((pos) => {
+                map.setView([pos.coords.latitude, pos.coords.longitude], 15);
+            }, () => alert('تعذر الوصول للموقع — تحقق من صلاحيات المتصفح.'));
         }
 
-        function fetchSentinelStatisticsApiReal() {
-            const status = document.getElementById('sentinelStatus');
-            status.innerText = 'جاري سحب إحصاءات Sentinel-2 وتحليل الـ NDVI الحقيقي...';
-            setTimeout(() => {
-                const randomNdvi = (0.68 + Math.random() * 0.24).toFixed(2);
-                document.getElementById('ndviInput').value = randomNdvi;
-                calculateInverseSoilMoisture();
-                status.innerText = `Sentinel Hub OGC API: تم تحديث الـ NDVI (${randomNdvi}) وحساب رطوبة التربة العكسية بنجاح`;
-            }, 1000);
-        }
-
+        // =====================================================================
+        // الحسابات والتقرير
+        // =====================================================================
         function calculateResults() {
-            const owner = document.getElementById('ownerName').value || 'عميل نيلوس الكريم';
-            const area = parseFloat(document.getElementById('calculatedFeddan').value) || 0;
-            const ndvi = parseFloat(document.getElementById('ndviInput').value) || 0.75;
-            const moisture = document.getElementById('soilMoisture').value || '65.0';
-            const yieldVal = document.getElementById('cardYieldValue').innerText || '0.00';
+            const feddan = approximateAreaFeddan(polygonPoints);
             const diesel = parseFloat(document.getElementById('dieselInput').value) || 0;
-            const fert = parseFloat(document.getElementById('fertInput').value) || 0;
-            const palms = parseFloat(document.getElementById('palmCountInput').value) || 0;
+            const urea = parseFloat(document.getElementById('ureaInput').value) || 0;
 
-            const emissions = (diesel * 2.68 + fert * 1.3) / 1000; 
-            const carbonAbsorbed = (palms * 0.025) + (area * ndvi * 1.5); 
-            const netCarbon = Math.max(0, carbonAbsorbed - emissions);
+            const emissionsKg = diesel * 2.68 + urea * 1.3;
+            const treeAbsorptionKg = getTreeTotalCo2Kg();
+            const ndviAbsorptionKg = feddan * currentNdvi * 350; // إسهام تقريبي للغطاء الأرضي العام (غير الأشجار) — إرشادي
+            const netCarbonTon = Math.max(0, (treeAbsorptionKg + ndviAbsorptionKg - emissionsKg) / 1000);
 
-            document.getElementById('resOwnerName').innerText = owner;
-            document.getElementById('resAreaVal').innerText = `${area.toFixed(2)} فدان`;
-            document.getElementById('resNdviVal').innerText = ndvi;
-            document.getElementById('resMoistureVal').innerText = `${moisture}% (عكسي طيفي)`;
-            document.getElementById('resYieldVal').innerText = `${yieldVal} طن`;
-            document.getElementById('cardCarbonValue').innerText = netCarbon.toFixed(2);
+            document.getElementById('resEmissions').innerText = `${(emissionsKg / 1000).toFixed(2)} طن CO2`;
+            document.getElementById('resNet').innerText = `${netCarbonTon.toFixed(2)} طن`;
+            document.getElementById('resGov').innerText = selectedGovernorate;
 
-            document.getElementById('resEmissions').innerText = `${emissions.toFixed(2)} طن مكافئ CO2`;
-            document.getElementById('resTrees').innerText = `${carbonAbsorbed.toFixed(2)} طن CO2 سنوياً`;
-            document.getElementById('resNetCarbon').innerText = `${netCarbon.toFixed(2)} طن قابل للتداول`;
-
-            if (paidServicesTotalCost > 0) {
-                const summary = document.getElementById('resPaidServicesSummary');
-                summary.classList.remove('hidden');
-                summary.innerText = `📦 الباقات والخدمات المفعلة بإجمالي تكلفة: ${paidServicesTotalCost.toFixed(2)} ج.م (محفظة التحصيل: 01006269629)`;
-            }
-
-            document.getElementById('resultsArea').classList.remove('hidden');
-            document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+            window.scrollTo({ top: document.querySelector('main').offsetTop, behavior: 'smooth' });
         }
 
         function sendCompanyEmailReport() {
-            const owner = document.getElementById('ownerName').value || 'مزارع غير مصرح';
-            const area = document.getElementById('calculatedFeddan').value || '0';
-            alert(`تم تجهيز وإرسال التقرير الفضائي للخدمات الست بنجاح لبريد شركة نيلوس (العميل: ${owner} - المساحة: ${area} فدان)!`);
+            const owner = document.getElementById('ownerName').value || 'غير مذكور';
+            const feddan = approximateAreaFeddan(polygonPoints).toFixed(2);
+            const treeTotal = document.getElementById('treeTotalCo2').innerText;
+            const netCarbon = document.getElementById('resNet').innerText;
+
+            const subject = encodeURIComponent(`تقرير منظومة نيلوس — ${owner} (${selectedGovernorate})`);
+            const body = encodeURIComponent(
+                `المحافظة: ${selectedGovernorate}\n` +
+                `اسم المالك/الجمعية: ${owner}\n` +
+                `مساحة الحقل: ${feddan} فدان\n` +
+                `مؤشر NDVI المدخل: ${currentNdvi.toFixed(2)}\n` +
+                `إجمالي امتصاص الأشجار: ${treeTotal} كجم CO2/سنة\n` +
+                `صافي الكربون المرصود: ${netCarbon}\n\n` +
+                `— تقرير أولي إرشادي من نسخة العرض التجريبي لمنظومة نيلوس، غير معتمد رسمياً.`
+            );
+            window.location.href = `mailto:waadnasr144@gmail.com?subject=${subject}&body=${body}`;
         }
 
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        window.onscroll = function() {
-            const btn = document.getElementById('scrollTopBtn');
-            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-                btn.classList.remove('hidden');
-            } else {
-                btn.classList.add('hidden');
-            }
-        };
+        window.onload = initMap;
     </script>
 </body>
 </html>
