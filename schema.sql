@@ -1,9 +1,10 @@
 -- ============================================================================
--- Nilus ECA — قاعدة بيانات الامتثال والتدقيق (PostgreSQL 14+)
+-- Nilus ECA — قاعدة بيانات الامتثال والتدقيق والمدفوعات (PostgreSQL 14+)
 -- ============================================================================
 -- يستبدل هذا الملف مخزن JSON التجريبي (reportsStore.js) بقاعدة بيانات حقيقية
 -- تدعم: سجل تدقيق (Audit Trail)، صلاحيات (RBAC مع دور VVB للقراءة فقط)،
--- وربط بيانات الأقمار الصناعية بـ Metadata موقّعة رقمياً (Audit-Ready).
+-- وربط بيانات الأقمار الصناعية بـ Metadata موقّعة رقمياً (Audit-Ready)،
+-- بالإضافة إلى إدارة طلبات الدفع والتقارير العامة (Paymob & Public Services).
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
@@ -12,10 +13,10 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 -- 1) المستخدمون والأدوار (Access Control)
 -- ---------------------------------------------------------------------------
 -- الأدوار الأربعة المقترحة:
---   admin        : صلاحية كاملة (إدارة، تعديل، مراجعة)
---   field_agent  : إدخال بيانات الحيازات/المشروعات (Onboarding) فقط
---   analyst      : تشغيل التحليل الذاتي وتوليد التقارير، بدون حذف بيانات
---   vvb_readonly : قراءة فقط — جهات التحقق والمصادقة (لا يوجد أي مسار INSERT/UPDATE/DELETE متاح لهذا الدور على مستوى الـ API، ومفروض أيضاً على مستوى قاعدة البيانات أدناه)
+--   admin         : صلاحية كاملة (إدارة، تعديل، مراجعة)
+--   field_agent   : إدخال بيانات الحيازات/المشروعات (Onboarding) فقط
+--   analyst       : تشغيل التحليل الذاتي وتوليد التقارير، بدون حذف بيانات
+--   vvb_readonly  : قراءة فقط — جهات التحقق والمصادقة (لا يوجد أي مسار INSERT/UPDATE/DELETE متاح لهذا الدور على مستوى الـ API، ومفروض أيضاً على مستوى قاعدة البيانات أدناه)
 CREATE TYPE user_role AS ENUM ('admin', 'field_agent', 'analyst', 'vvb_readonly');
 
 CREATE TABLE users (
@@ -41,10 +42,10 @@ CREATE TABLE audit_log (
     occurred_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     actor_user_id UUID REFERENCES users(id),
     actor_role user_role,
-    action TEXT NOT NULL,           -- مثال: 'CREATE_FARM', 'UPDATE_NDVI_RECORD', 'GENERATE_PDD_REPORT'
-    entity_table TEXT NOT NULL,     -- الجدول المتأثر
-    entity_id TEXT NOT NULL,        -- معرّف السجل المتأثر
-    change_summary JSONB,           -- القيم قبل/بعد (لا تُخزّن هنا بيانات حساسة خام، بل ملخص)
+    action TEXT NOT NULL,            -- مثال: 'CREATE_FARM', 'UPDATE_NDVI_RECORD', 'GENERATE_PDD_REPORT'
+    entity_table TEXT NOT NULL,      -- الجدول المتأثر
+    entity_id TEXT NOT NULL,         -- معرّف السجل المتأثر
+    change_summary JSONB,            -- القيم قبل/بعد (لا تُخزّن هنا بيانات حساسة خام، بل ملخص)
     ip_address TEXT,
     previous_record_hash TEXT NOT NULL, -- hash السجل السابق في السلسلة
     record_hash TEXT NOT NULL           -- hash هذا السجل (يُحسب من كل الحقول أعلاه + previous_record_hash)
@@ -92,12 +93,12 @@ CREATE TABLE farms (
 CREATE TABLE satellite_records (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     farm_id UUID NOT NULL REFERENCES farms(id),
-    measurement_date DATE NOT NULL,       -- تاريخ التقاط المشهد الفعلي من القمر الصناعي
+    measurement_date DATE NOT NULL,         -- تاريخ التقاط المشهد الفعلي من القمر الصناعي
     methodology TEXT NOT NULL DEFAULT 'Sentinel-2 L2A NDVI via Copernicus Statistical API',
     ndvi_mean NUMERIC(5,3) NOT NULL,
-    raw_response_s3_key TEXT NOT NULL,    -- مسار الاستجابة الخام في S3
-    raw_response_sha256 TEXT NOT NULL,    -- checksum لملف S3 وقت الحفظ
-    digital_signature TEXT NOT NULL,      -- HMAC-SHA256 لكل الحقول أعلاه مجتمعة
+    raw_response_s3_key TEXT NOT NULL,      -- مسار الاستجابة الخام في S3
+    raw_response_sha256 TEXT NOT NULL,      -- checksum لملف S3 وقت الحفظ
+    digital_signature TEXT NOT NULL,        -- HMAC-SHA256 لكل الحقول أعلاه مجتمعة
     signed_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -115,6 +116,28 @@ CREATE TABLE generated_reports (
 );
 
 -- ---------------------------------------------------------------------------
+-- 6) طلبات الدفع العامة والخدمات المدفوعة (Public Payment & Report Requests)
+-- ---------------------------------------------------------------------------
+-- استبدال مخزن ملف الـ JSON القديم (reportsStore.js) بجدول Postgres دائم للإنتاج
+CREATE TABLE public_payment_requests (
+    id SERIAL PRIMARY KEY,
+    request_id VARCHAR(100) UNIQUE NOT NULL,
+    user_email VARCHAR(255) NOT NULL,
+    service_type VARCHAR(100) NOT NULL,
+    amount NUMERIC(10, 2) NOT NULL,
+    currency VARCHAR(10) DEFAULT 'EGP',
+    payment_status VARCHAR(50) DEFAULT 'PENDING', -- PENDING, PAID, FAILED, CANCELLED
+    paymob_order_id VARCHAR(100),
+    metadata JSONB,
+    created_at TIMESTAMPTZ WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- إنشاء فهارس لتحسين أداء البحث والفلترة لطلبات الدفع
+CREATE INDEX IF NOT EXISTS idx_public_payment_email ON public_payment_requests(user_email);
+CREATE INDEX IF NOT EXISTS idx_public_payment_status ON public_payment_requests(payment_status);
+
+-- ---------------------------------------------------------------------------
 -- صلاحيات قاعدة البيانات على مستوى الدور vvb_readonly (دفاع إضافي تحت مستوى التطبيق)
 -- ---------------------------------------------------------------------------
 -- ينشئ دور Postgres مطابق (منفصل عن جدول users أعلاه، هذا على مستوى محرك قاعدة
@@ -125,5 +148,5 @@ CREATE TABLE generated_reports (
 -- CREATE ROLE nilus_vvb_readonly LOGIN PASSWORD '...ضع كلمة مرور قوية هنا...';
 -- GRANT CONNECT ON DATABASE nilus_eca TO nilus_vvb_readonly;
 -- GRANT USAGE ON SCHEMA public TO nilus_vvb_readonly;
--- GRANT SELECT ON projects, farms, satellite_records, generated_reports, audit_log TO nilus_vvb_readonly;
+-- GRANT SELECT ON projects, farms, satellite_records, generated_reports, audit_log, public_payment_requests TO nilus_vvb_readonly;
 -- -- ملاحظة: لا نمنح SELECT على جدول users لحماية بيانات حسابات المستخدمين الآخرين
