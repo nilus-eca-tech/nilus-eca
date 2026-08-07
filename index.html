@@ -40,7 +40,7 @@
         ↑
     </button>
 
-    <!-- شريط التنقل -->
+    <!-- شريط التنقل -->>
     <header class="bg-slate-950/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
             <div class="flex items-center space-x-3 space-x-reverse">
@@ -53,16 +53,14 @@
                 </div>
             </div>
             <div class="flex items-center space-x-3 space-x-reverse">
-                <a href="#aboutSection" class="text-xs text-slate-300 hover:text-cyan-400 transition font-bold">من نحن</a>
-                <a href="#faqSection" class="text-xs text-slate-300 hover:text-cyan-400 transition font-bold">الأسئلة الشائعة</a>
+                <a href="mailto:niluseca@gmail.com" class="text-xs text-cyan-300 hover:text-cyan-200 transition font-bold bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800">البريد الإلكتروني</a>
                 <div class="flex items-center space-x-2 space-x-reverse text-xs text-cyan-300 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800 font-mono">
-                    <span>محفظة التحصيل:</span>
-                    <strong class="text-white">01006269629</strong>
+                    <span>واتساب الاستفسار:</span>
+                    <a href="https://wa.me/2001006260629" target="_blank" class="text-white hover:text-cyan-400 font-bold underline">01006260629</a>
                 </div>
             </div>
         </div>
     </header>
-
     <!-- قسم الهيرو -->
     <section class="relative bg-gradient-to-b from-slate-950 to-slate-900 py-8 px-4 text-center border-b border-slate-800 overflow-hidden">
         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#06b6d4_1px,transparent_1px)] [background-size:16px_16px]"></div>
@@ -107,13 +105,13 @@
             </div>
         </div>
 
-        <!-- قسم الخدمات المدفوعة للفلاح مع ربط المحفظة 01006269629 -->
+        <!--قسم الخدمات المدفوعة للفلاح مع ربط الحساب البنكي -->
         <div class="bg-slate-950 border border-slate-800 rounded-3xl p-5 sm:p-8 shadow-xl space-y-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-4 gap-2">
                 <div>
-                    <h3 class="text-base sm:text-lg font-black text-cyan-400">💳 خدمات الفلاح والأقمار الصناعية (محفظة التحصيل: 01006269629)</h3>
+                    <h3 class="text-base sm:text-lg font-black text-cyan-400">💳 خدمات الفلاح والأقمار الصناعية (البنك الزراعي المصري)</h3>
                     <p class="text-xs text-slate-400">اختر الخدمات المطلوبة لتفعيلها وإدراج تكلفتها في التقرير والشهادة الموثقة.</p>
-                </div>
+              <p class="text-xs text-slate-400">التحويل حصرياً على الحساب البنكي المعتمد لشركة نيلوس ايكا: <strong class="text-white font-mono">10010410908001021</strong></p>
                 <span class="bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-3 py-1 rounded-xl text-xs font-bold">فودافون كاش</span>
             </div>
 
@@ -173,7 +171,7 @@
             <!-- إجمالي الحساب والتحويل -->
             <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div>
-                    <span class="text-xs text-slate-400">إجمالي التكلفة المطلوبة للتحويل على محفظة (<strong class="text-cyan-400">01006269629</strong>):</span>
+                <span class="text-xs text-slate-400">إجمالي التكلفة المطلوبة للتحويل على حساب نيلوس ايكا بالبنك الزراعي المصري (<strong class="text-cyan-400 font-mono">10010410908001021</strong>):</span>
                     <div class="text-xl font-black text-cyan-400"><span id="totalServicesPrice">0.00</span> <span class="text-xs text-slate-400">جنيه مصري</span></div>
                 </div>
                 <button onclick="applyPaidServicesToReport()" class="w-full sm:w-auto bg-cyan-700 hover:bg-cyan-600 text-white font-bold px-6 py-2.5 rounded-xl text-xs transition shadow">
@@ -651,104 +649,67 @@
         }
 
         function updatePaidServicesTotal() {
-            let total = 0;
-            let feddan = parseFloat(document.getElementById('calculatedFeddan').value) || 1;
-            selectedServicesDescriptions = [];
+            let total = 0;totalPaidServicesCost = 0;
+        let selectedServicesDescription = [];
 
-            if(document.getElementById('servicePkg1').checked) {
-                let cost1 = 150 * feddan;
-                total += cost1;
-                selectedServicesDescriptions.push(`• الرصد الفضائي ومتابعة صحة المحاصيل NDVI (بواقع ${feddan.toFixed(2)} فدان): ${cost1} ج.م`);
+        function updatePaidServicesTotal() {
+            let total = 0;
+            let list = [];
+            if (document.getElementById('servicePkg1').checked) {
+                let fed = parseFloat(document.getElementById('calculatedFeddan').value) || 1;
+                total += 150 * fed;
+                list.push('الرصد الفضائي ومتابعة صحة المحاصيل (' + fed + ' فدان)');
             }
-            if(document.getElementById('servicePkg2').checked) {
+            if (document.getElementById('servicePkg2').checked) {
                 total += 200;
-                selectedServicesDescriptions.push(`• أصول الكربون والطوعية وتسجيل البساتين: 200 ج.م`);
+                list.push('أصول الكربون والطوعية (ثابت)');
             }
-            if(document.getElementById('servicePkg3').checked) {
+            if (document.getElementById('servicePkg3').checked) {
                 total += 300;
-                selectedServicesDescriptions.push(`• رطوبة التربة وتوصيات الري الموسمية: 300 ج.م`);
+                list.push('رطوبة التربة وتوصيات الري (موسمي)');
             }
-            
-            paidServicesTotalCost = total;
-            document.getElementById('totalServicesPrice').innerText = total.toLocaleString('en-US', {minimumFractionDigits: 2});
+            totalPaidServicesCost = total;
+            selectedServicesDescription = list;
+            document.getElementById('totalServicesPrice').innerText = total.toFixed(2);
         }
 
         function applyPaidServicesToReport() {
             updatePaidServicesTotal();
-            alert('تم تأكيد الخدمات الفضائية وإضافتها بنجاح لملف المزارع والشهادة ومحفظة التحصيل: 01006269629');
-        }
-
-        function captureMapSnapshot() {
-            const mapElement = document.getElementById('mapContainer');
-            html2canvas(mapElement, {useCORS: true}).then(canvas => {
-                snapshotDataUrl = canvas.toDataURL('image/png');
-                const container = document.getElementById('snapshotImageContainer');
-                container.innerHTML = `<img src="${snapshotDataUrl}" class="max-h-48 rounded-lg border border-cyan-500/30" alt="معاينة الخريطة">`;
-                document.getElementById('snapshotPreviewArea').classList.remove('hidden');
-                alert('تم التقاط الصورة التوثيقية للخريطة الطيفية بنجاح 📸');
-            });
-        }
-
-        function clearSnapshot() {
-            snapshotDataUrl = null;
-            document.getElementById('snapshotPreviewArea').classList.add('hidden');
-            document.getElementById('snapshotImageContainer').innerHTML = '';
-        }
-
-        function getCurrentGPS() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(position => {
-                    let lat = position.coords.latitude;
-                    let lng = position.coords.longitude;
-                    document.getElementById('gpsLat').value = lat.toFixed(4);
-                    document.getElementById('gpsLng').value = lng.toFixed(4);
-                    map.setView([lat, lng], 15);
-                    polygonPoints = [[lat - 0.001, lng - 0.001], [lat - 0.001, lng + 0.001], [lat + 0.001, lng + 0.001], [lat + 0.001, lng - 0.001]];
-                    redrawPolygon();
-                }, () => {
-                    alert('تعذر تحديد الموقع الجغرافي تلقائياً، يرجى السماح للمتصفح بالوصول للموقع.');
-                });
+            if (totalPaidServicesCost === 0) {
+                alert('يرجى اختيار خدمة واحدة على الأقل لتفعيلها.');
+                return;
             }
+            alert('تمت إضافة الخدمات المختارة بنجاح وإدراجها في حساب التحويل للبنك الزراعي المصري.');
         }
 
         function calculateResults() {
-            updatePaidServicesTotal();
-            let owner = document.getElementById('ownerName').value || 'المزارع المستفيد';
-            let locationStr = document.getElementById('locationName').value || 'منطقة غير محددة';
-            let feddan = parseFloat(document.getElementById('calculatedFeddan').value) || 5;
-            let diesel = parseFloat(document.getElementById('dieselInput').value) || 120;
-            let fert = parseFloat(document.getElementById('fertInput').value) || 250;
-            let palms = parseFloat(document.getElementById('palmCountInput').value) || 50;
-            let moisture = document.getElementById('soilMoisture').value || '42.0';
-            let ndvi = document.getElementById('ndviInput').value || '0.74';
+            let owner = document.getElementById('ownerName').value || 'عميل نيلوس إيكا';
+            let location = document.getElementById('locationName').value || 'المنيا - مصر';
+            let feddan = document.getElementById('calculatedFeddan').value || '1';
+            let moisture = document.getElementById('soilMoisture').value || '35';
+            let ndvi = document.getElementById('ndviInput').value || '0.75';
+            let diesel = parseFloat(document.getElementById('dieselInput').value) || 0;
+            let fert = parseFloat(document.getElementById('fertInput').value) || 0;
+            let palms = parseFloat(document.getElementById('palmCountInput').value) || 0;
 
-            let emissions = ((diesel * 2.68) + (fert * 1.35)) / 1000;
-            let carbonAbsorbed = palms * 0.025 + (feddan * 1.85);
-            let netCarbon = carbonAbsorbed - emissions;
-            let financialValue = netCarbon * 600;
+            let emissions = ((diesel * 2.68) + (fert * 1.3)) / 1000;
+            let sequestration = (palms * 0.05) + (parseFloat(feddan) * 1.2);
+            let netCarbon = sequestration - emissions;
 
             document.getElementById('resOwnerName').innerText = owner;
-            document.getElementById('resLocationName').innerText = locationStr;
-            document.getElementById('resAreaVal').innerText = feddan.toFixed(2) + ' فدان';
+            document.getElementById('resLocationName').innerText = location;
+            document.getElementById('resAreaVal').innerText = feddan + ' فدان';
             document.getElementById('resMoistureVal').innerText = moisture + '%';
             document.getElementById('resNdviVal').innerText = ndvi;
             document.getElementById('resEmissions').innerText = emissions.toFixed(2) + ' طن مكافئ CO2';
-            document.getElementById('resTrees').innerText = carbonAbsorbed.toFixed(2) + ' طن CO2 سنوياً';
-            document.getElementById('resNetCarbon').innerText = netCarbon.toFixed(2) + ' طن قابل للتداول في سوق الكربون الطوعي';
-            document.getElementById('resFinancialValue').innerText = financialValue.toLocaleString('en-US', {maximumFractionDigits: 2}) + ' جنيه مصري';
+            document.getElementById('resTrees').innerText = sequestration.toFixed(2) + ' طن CO2 سنوياً';
 
-            const summaryEl = document.getElementById('resPaidServicesSummary');
-            const listTextEl = document.getElementById('resServicesListText');
-            const costTextEl = document.getElementById('resServicesCostText');
-
-            if(selectedServicesDescriptions.length > 0) {
-                summaryEl.classList.remove('hidden');
-                listTextEl.innerHTML = selectedServicesDescriptions.join('<br>');
-                costTextEl.innerText = `إجمالي تكلفة الخدمات والتحويل: ${paidServicesTotalCost.toLocaleString()} جنيه مصري`;
+            if (totalPaidServicesCost > 0) {
+                document.getElementById('resPaidServicesSummary').classList.remove('hidden');
+                document.getElementById('resServicesListText').innerText = selectedServicesDescription.join(' - ');
+                document.getElementById('resServicesCostText').innerText = 'الإجمالي المطلوب تحويله: ' + totalPaidServicesCost.toFixed(2) + ' جنيه مصري';
             } else {
-                summaryEl.classList.add('hidden');
-                listTextEl.innerHTML = '';
-                costTextEl.innerText = '';
+                document.getElementById('resPaidServicesSummary').classList.add('hidden');
             }
 
             document.getElementById('resultsArea').classList.remove('hidden');
@@ -756,13 +717,11 @@
         }
 
         function downloadReportPDF() {
+            const { jsPDF } = window.jspdf;
             const element = document.getElementById('pdfContentToPrint');
-            
-            html2canvas(element, { scale: 2, useCORS: true, backgroundColor: '#020617' }).then(canvas => {
+            html2canvas(element, { scale: 2 }).then(canvas => {
                 const imgData = canvas.toDataURL('image/png');
-                const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF('p', 'mm', 'a4');
-                
                 const imgWidth = 190;
                 const pageHeight = 295;
                 const imgHeight = (canvas.height * imgWidth) / canvas.width;
@@ -771,35 +730,36 @@
 
                 pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
                 heightLeft -= pageHeight;
-
                 while (heightLeft >= 0) {
                     position = heightLeft - imgHeight;
                     pdf.addPage();
                     pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
                     heightLeft -= pageHeight;
                 }
-
-                pdf.save('Nilus-ECA-Official-Certificate.pdf');
+                pdf.save('Nilus_ECA_Carbon_Certificate.pdf');
             });
         }
 
         function sendCompanyEmailReport() {
-            calculateResults();
-            alert('تم إرسال الشهادة الموثقة والتقرير الفضائي المرتبط بـ S3 بنجاح إلى البريد الإلكتروني للشركة ولجنة التوثيق 📩');
-        }
-
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            let owner = document.getElementById('ownerName').value || 'عميل نيلوس إيكا';
+            let feddan = document.getElementById('calculatedFeddan').value || '1';
+            let subject = encodeURIComponent("تقرير رصد الحقل وأرصدة الكربون - " + owner);
+            let body = encodeURIComponent("مرحباً إدارة شركة نيلوس إيكا,\n\nتم إصدار تقارير رصد الحقل ومساحة " + feddan + " فدان.\nبرجاء مراجعة البيانات المرفقة.");
+            window.location.href = `mailto:niluseca@gmail.com?subject=${subject}&body=${body}`;
         }
 
         window.onscroll = function() {
             const btn = document.getElementById('scrollTopBtn');
-            if (window.scrollY > 300) {
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
                 btn.classList.remove('hidden');
             } else {
                 btn.classList.add('hidden');
             }
         };
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     </script>
 </body>
 </html>
