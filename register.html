@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تسجيل حساب مزارع جديد - نيلوس ايكا</title>
+    <style>
+        body { font-family: Tahoma, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 400px; text-align: center; margin: 20px; }
+        h2 { color: #2c3e50; margin-bottom: 20px; font-size: 20px; }
+        .form-group { margin-bottom: 15px; text-align: right; }
+        label { display: block; margin-bottom: 5px; color: #555; font-size: 14px; }
+        input { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { background-color: #27ae60; color: white; border: none; padding: 10px; width: 100%; border-radius: 4px; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        button:hover { background-color: #219653; }
+        a { margin-top: 15px; display: block; font-size: 14px; color: #2980b9; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>تسجيل بيانات مزارع جديد - نيلوس ايكا</h2>
+    <form id="registerForm">
+        <div class="form-group">
+            <label>الاسم الكامل:</label>
+            <input type="text" name="farmerName" required>
+        </div>
+        <div class="form-group">
+            <label>البريد الإلكتروني:</label>
+            <input type="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label>رقم التواصل (الهاتف):</label>
+            <input type="tel" name="phone" required>
+        </div>
+        <div class="form-group">
+            <label>العنوان (المحافظة / المركز / القرية):</label>
+            <input type="text" name="address" required>
+        </div>
+        <div class="form-group">
+            <label>بيانات حيازة الأرض (المساحة بالفدان):</label>
+            <input type="number" step="0.1" name="feddanArea" placeholder="مثال: 5" required>
+        </div>
+        <div class="form-group">
+            <label>كلمة المرور:</label>
+            <input type="password" name="password" required>
+        </div>
+        <button type="submit">إتمام وتسجيل البيانات</button>
+    </form>
+    <a href="login.html" class="link">لديك حساب بالفعل؟ تسجيل الدخول</a>
+</div>
+
+<script>
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = {
+            farmerName: this.farmerName.value,
+            email: this.email.value,
+            phone: this.phone.value,
+            location: this.address.value,
+            feddanArea: parseFloat(this.feddanArea.value) || 1,
+            password: this.password.value,
+            selectedServices: ["تسجيل مزارع جديد", "المنظومة الرقمية للمزارع الكربون المصري"]
+        };
+
+        try {
+            const response = await fetch('http://localhost:3001/api/v1/climate-assets/register-field', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                alert(result.message + '\nرصيد الكربون المقدر: ' + result.data.estimatedCarbonCredits);
+                window.location.href = 'login.html';
+            } else {
+                alert(result.error || 'حدث خطأ أثناء التسجيل');
+            }
+        } catch (error) {
+            alert('تعذر الاتصال بالسيرفر. تأكد من تشغيل Node.js على البورت 3001');
+        }
+    });
+</script>
+
+</body>
+</html>

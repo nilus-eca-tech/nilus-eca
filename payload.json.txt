@@ -1,0 +1,48 @@
+﻿{
+  "process_graph": {
+    "loadcollection": {
+      "process_id": "load_collection",
+      "arguments": {
+        "id": "sentinel-2-l2a",
+        "spatial_extent": {
+          "west": 14.503132250376241,
+          "south": 45.98989222284457,
+          "east": 14.578437275398317,
+          "north": 46.04381770188389,
+          "width": 512,
+          "height": 512
+        },
+        "temporal_extent": [
+          "2022-03-26T00:00:00Z",
+          "2022-03-26T23:59:59Z"
+        ],
+        "bands": [
+          "B04",
+          "B08"
+        ]
+      }
+    },
+    "save": {
+      "process_id": "save_result",
+      "arguments": {
+        "data": {
+          "from_node": "ndvi4"
+        },
+        "format": "jpeg"
+      },
+      "result": true
+    },
+    "ndvi4": {
+      "process_id": "ndvi",
+      "arguments": {
+        "data": {
+          "from_node": "loadcollection"
+        },
+        "target_band": "NDVI",
+        "nir": "B08",
+        "red": "B04"
+      }
+    }
+  },
+  "parameters": []
+}

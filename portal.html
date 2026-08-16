@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>نيلوس إيكا - المنظومة الرقمية للمزارع الكربون المصري</title>
+    <style>
+        body { font-family: Tahoma, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 400px; text-align: center; margin: 20px; }
+        h2 { color: #2c3e50; margin-bottom: 20px; font-size: 20px; }
+        .form-group { margin-bottom: 15px; text-align: right; }
+        label { display: block; margin-bottom: 5px; color: #555; font-size: 14px; }
+        input { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { background-color: #27ae60; color: white; border: none; padding: 10px; width: 100%; border-radius: 4px; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        button:hover { background-color: #219653; }
+        .link-btn { margin-top: 15px; background: none; border: none; color: #2980b9; font-size: 14px; cursor: pointer; width: 100%; text-decoration: underline; }
+        .d-none { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <!-- نموذج تسجيل الدخول -->
+    <div id="loginBox">
+        <h2>تسجيل الدخول للمنظومة</h2>
+        <form onsubmit="event.preventDefault(); alert('تم تسجيل الدخول بنجاح');">
+            <div class="form-group">
+                <label>اسم المستخدم أو البريد الإلكتروني:</label>
+                <input type="text" required>
+            </div>
+            <div class="form-group">
+                <label>كلمة المرور:</label>
+                <input type="password" required>
+            </div>
+            <button type="submit">دخول للمنظومة</button>
+        </form>
+        <button type="button" class="link-btn" onclick="goToRegister()">ليس لديك حساب؟ تسجيل بيانات مستخدم جديد</button>
+    </div>
+
+    <!-- نموذج تسجيل البيانات الكاملة (إنشاء حساب جديد) -->
+    <div id="registerBox" class="d-none">
+        <h2>تسجيل بيانات مزارع / مستخدم جديد</h2>
+        <form onsubmit="event.preventDefault(); alert('تم حفظ البيانات بنجاح وإرسالها للمنظومة');">
+            <div class="form-group">
+                <label>الاسم الكامل:</label>
+                <input type="text" required>
+            </div>
+            <div class="form-group">
+                <label>البريد الإلكتروني:</label>
+                <input type="email" required>
+            </div>
+            <div class="form-group">
+                <label>رقم التواصل (الهاتف):</label>
+                <input type="tel" required>
+            </div>
+            <div class="form-group">
+                <label>العنوان (المحافظة / المركز / القرية):</label>
+                <input type="text" required>
+            </div>
+            <div class="form-group">
+                <label>بيانات حيازة الأرض (المساحة / كود الحيازة):</label>
+                <input type="text" placeholder="مثال: 5 فدان - حيازة رقم..." required>
+            </div>
+            <div class="form-group">
+                <label>كلمة المرور:</label>
+                <input type="password" required>
+            </div>
+            <button type="submit">إتمام وتسجيل البيانات</button>
+        </form>
+        <button type="button" class="link-btn" onclick="goToLogin()">لديك حساب بالفعل؟ تسجيل الدخول</button>
+    </div>
+</div>
+
+<script>
+    function goToRegister() {
+        document.getElementById('loginBox').classList.add('d-none');
+        document.getElementById('registerBox').classList.remove('d-none');
+    }
+
+    function goToLogin() {
+        document.getElementById('registerBox').classList.add('d-none');
+        document.getElementById('loginBox').classList.remove('d-none');
+    }
+</script>
+
+</body>
+</html>

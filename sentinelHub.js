@@ -1,12 +1,11 @@
-const axios = require('axios');
+﻿const axios = require('axios');
 
-// نخزّن التوكن مؤقتاً في الذاكرة (كل توكن صالح غالباً لمدة ساعة)
+// تخزين التوكن مؤقتاً في الذاكرة لتجنب التكرار (صالح غالباً لمدة ساعة)
 let cachedToken = null;
 let tokenExpiresAt = 0;
 
 /**
  * الحصول على OAuth2 access token من Copernicus Data Space Ecosystem
- * (client_credentials flow - النوع المستخدم فعلياً لـ Sentinel Hub APIs)
  */
 async function getAccessToken() {
   const now = Date.now();
@@ -30,12 +29,34 @@ async function getAccessToken() {
 }
 
 /**
+ * مكتبة المعادلات الطيفية (Evalscripts) لجميع الطبقات
+ */
+const EVALSCRIPTS = {
+  trueColor: `
+    //VERSION=3
+    function setup() { return { input: ["B04", "B03", "B02"], output: { bands: 3 } }; }
+    function evaluatePixel(sample) { return [sample.B04 * 2.5, sample.B03 * 2.5, sample.B02 * 2.5]; }
+  `,
+  falseColor: `
+    //VERSION=3
+    function setup() { return { input: ["B08", "B04", "B03"], output: { bands: 3 } }; }
+    function evaluatePixel(sample) { return [sample.B08 * 2.5, sample.B04 * 2.5, sample.B03 * 2.5]; }
+  `,
+  moisture: `
+    //VERSION=3
+    function setup() { return { input: ["B8A", "B11"], output: { bands: 1, sampleType: "FLOAT32" } }; }
+    function evaluatePixel(sample) { return [(sample.B8A - sample.B11) / (sample.B8A + sample.B11)]; }
+  `,
+  ndwi: `
+    //VERSION=3
+    function setup() { return { input: ["B03", "B08"], output: { bands: 1, sampleType: "FLOAT32" } }; }
+    function evaluatePixel(sample) { return [(sample.B03 - sample.B08) / (sample.B03 + sample.B08)]; }
+  `
+};
+
+/**
  * استدعاء حقيقي لـ Sentinel Hub Statistical API لحساب متوسط NDVI
  * لحدود حقل (GeoJSON Polygon) في نطاق زمني معيّن.
- *
- * @param {Array<[number, number]>} ring - نقاط الحدود بصيغة [lng, lat], مضلع مغلق
- * @param {string} fromDate - YYYY-MM-DD
- * @param {string} toDate   - YYYY-MM-DD
  */
 async function fetchNdviStatistics(ring, fromDate, toDate) {
   const token = await getAccessToken();
@@ -53,7 +74,6 @@ async function fetchNdviStatistics(ring, fromDate, toDate) {
     }
     function evaluatePixel(sample) {
       let ndvi = (sample.B08 - sample.B04) / (sample.B08 + sample.B04);
-      // استبعاد السحب والظلال حسب Scene Classification Layer
       let validScl = [4, 5, 6, 11].includes(sample.SCL) ? 1 : 0;
       return {
         ndvi: [ndvi],
@@ -93,7 +113,6 @@ async function fetchNdviStatistics(ring, fromDate, toDate) {
     timeout: 30000,
   });
 
-  // نستخرج آخر قراءة NDVI صالحة (أقل نسبة سحب) من السلسلة الزمنية
   const intervals = data?.data ?? [];
   const validReadings = intervals
     .map((entry) => entry?.outputs?.ndvi?.bands?.B0?.stats)
@@ -115,4 +134,52 @@ async function fetchNdviStatistics(ring, fromDate, toDate) {
   };
 }
 
-module.exports = { getAccessToken, fetchNdviStatistics };
+/**
+ * استدعاء Process API لجلب صورة مرئية لأي طبقة وعرضها على الخريطة
+ */
+async function fetchMapImageLayer(ring, layerType, date) {
+  const token = await getAccessToken();
+  const evalscript = EVALSCRIPTS[layerType] || EVALSCRIPTS.trueColor;
+
+  const requestBody = {
+    input: {
+      bounds: {
+        geometry: { type: 'Polygon', coordinates: [ring] },
+        properties: { crs: 'http://www.opengis.net/def/crs/OGC/1.3/CRS84' },
+      },
+      data: [
+        {
+          type: 'sentinel-2-l2a',
+          dataFilter: {
+            timeRange: { from: `${date}T00:00:00Z`, to: `${date}T23:59:59Z` },
+            maxCloudCoverage: 30,
+          },
+        },
+      ],
+    },
+    output: {
+      width: 512,
+      height: 512,
+      responses: [{ identifier: 'default', format: { type: 'image/png' } }],
+    },
+    evalscript,
+  };
+
+  const response = await axios.post(process.env.SENTINEL_PROCESS_URL, requestBody, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    responseType: 'arraybuffer',
+    timeout: 30000,
+  });
+
+  return response.data;
+}
+
+module.exports = {
+  getAccessToken,
+  fetchNdviStatistics,
+  fetchMapImageLayer,
+  EVALSCRIPTS
+};

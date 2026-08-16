@@ -1,0 +1,25 @@
+# ==========================================
+# ≈⁄œ«œ«  «·Œ«œ„ «·√”«”Ì…
+# ==========================================
+PORT=3001
+FRONTEND_ORIGIN=https://nilus-eca-tech.github.io
+
+# ==========================================
+# ≈⁄œ«œ«  ﬁ«⁄œ… «·»Ì«‰«  (PostgreSQL)
+# ==========================================
+DATABASE_URL=postgresql://postgres:your_password@localhost:5432/nilus_eca
+DATABASE_SSL=false
+
+# ==========================================
+# »Ì«‰«  «·«⁄ „«œ Ê«·« ’«· »‹ Copernicus Sentinel Hub
+# ==========================================
+SENTINEL_CLIENT_ID=sh-b97194a6-7b69-44e5-8237-f8d797bdf140
+SENTINEL_CLIENT_SECRET=z8Ngup25USAtKvfPsEqueuEhI1zWWNVi
+SENTINEL_TOKEN_URL=https://services.sentinel-hub.com/oauth/token
+SENTINEL_STATS_URL=https://services.sentinel-hub.com/api/v1/statistics
+SENTINEL_PROCESS_URL=https://services.sentinel-hub.com/api/v1/process
+
+# ==========================================
+# „› «Õ «· ÊﬁÌ⁄ «·—ﬁ„Ì ··»Ì«‰«  (Audit-Ready HMAC)
+# ==========================================
+SATELLITE_SIGNING_SECRET=nilus_eca_secure_signing_secret_2026
